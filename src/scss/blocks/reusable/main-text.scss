@@ -1,0 +1,11 @@
+@use '../../utils/tools' as *;
+
+.main-text {
+  @include font-sizes(var(--font-size-m));
+
+  font-weight: 500;
+
+  &_dim {
+    color: var(--dim-color);
+  }
+}

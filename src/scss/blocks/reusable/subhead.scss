@@ -1,0 +1,11 @@
+@use '../../utils/tools' as *;
+
+.subhead {
+  @include font-sizes(var(--font-size-l));
+
+  font-weight: 700;
+
+  &_dim {
+    color: var(--dim-color);
+  }
+}

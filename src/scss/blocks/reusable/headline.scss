@@ -1,0 +1,7 @@
+@use '../../utils/tools' as *;
+
+.headline {
+  @include font-sizes(var(--font-size-xl));
+
+  font-weight: 700;
+}

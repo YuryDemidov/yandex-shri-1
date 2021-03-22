@@ -1,0 +1,29 @@
+:root {
+  --font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
+  --font-size-xl: 30px;
+  --font-size-l: 20px;
+  --font-size-m: 16px;
+  --font-size-s: 14px;
+  --color-dark: #261c00;
+  --color-yellow: #f4b000;
+  --color-gray: #918f8a;
+  --color-gray-light: #bfbfbf;
+  --color-light: #fcfbf7;
+  --color-white: #ffffff;
+  --color-transparent: rgba(255, 255, 255, 0);
+}
+
+// Media queries (min-width)
+$l-desktop-min-width: 1400px;
+$desktop-min-width: 1200px;
+$s-desktop-min-width: 1024px;
+$tablet-min-width: 768px;
+$phone-landscape-min-width: 576px;
+$phone-portrait-min-width: 320px;
+
+// Media queries (max-width)
+$s-desktop-max-width: 1399px;
+$tablet-landscape-max-width: 1199px;
+$tablet-portrait-max-width: 1023px;
+$phone-landscape-max-width: 767px;
+$phone-portrait-max-width: 575px;

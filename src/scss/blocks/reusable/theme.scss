@@ -1,0 +1,18 @@
+.theme {
+  &,
+  &_dark {
+    --main-color: var(--color-light);
+    --dim-color: var(--color-gray-light);
+
+    color: var(--main-color);
+
+    background-image: radial-gradient(70.24% 70.24% at 49.87% 29.76%, rgba(18, 12, 1, 0.9) 0%, #000000 100%);
+  }
+
+  &_light {
+    --main-color: var(--color-dark);
+    --dim-color: var(--color-gray);
+
+    background-color: var(--color-white);
+  }
+}
