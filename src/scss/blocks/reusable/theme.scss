@@ -6,6 +6,7 @@
 
     color: var(--main-color);
 
+    background-color: var(--color-dark);
     background-image: radial-gradient(70.24% 70.24% at 49.87% 29.76%, rgba(18, 12, 1, 0.9) 0%, #000000 100%);
   }
 
@@ -13,6 +14,9 @@
     --main-color: var(--color-dark);
     --dim-color: var(--color-gray);
 
+    color: var(--main-color);
+
     background-color: var(--color-white);
+    background-image: none;
   }
 }

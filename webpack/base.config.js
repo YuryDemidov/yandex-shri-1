@@ -1,7 +1,9 @@
 const path = require(`path`);
-const HTMLWebpackPlugin = require(`html-webpack-plugin`);
+const HtmlWebpackPlugin = require(`html-webpack-plugin`);
+const HtmlWebpackPugPlugin = require(`html-webpack-pug-plugin`);
 const MiniCssExtractPlugin = require(`mini-css-extract-plugin`);
 const OptimizeCssAssetWebpackPlugin = require(`optimize-css-assets-webpack-plugin`);
+const CopyWebpackPlugin =require(`copy-webpack-plugin`);
 const TerserWebpackPlugin = require(`terser-webpack-plugin`);
 const StylelintPlugin = require(`stylelint-webpack-plugin`);
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -19,7 +21,7 @@ const PATHS = {
 const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
 
 const mainEntryPoint = () => {
-  const base = [`./src/stories.js`];
+  const base = [`./src/js/stories.js`];
 
   if (isDev) {
     base.unshift(`webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000`);
@@ -30,11 +32,33 @@ const mainEntryPoint = () => {
 
 const plugins = () => {
   const base = [
-    new HTMLWebpackPlugin({
-      template: `./src/html/index.html`,
-      filename: `./index.html`,
-      excludeChunks: [`server`]
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: `${PATHS.assets}/images`, to: 'assets/images' }
+      ]
     }),
+
+    new HtmlWebpackPlugin({
+      filename: `./index.pug`,
+      minify: false, // Files will be minified by pug template engine while rendering with express js
+      inject: `head`,
+      scriptLoading: `blocking`,
+      template: `./src/views/index.pug`
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: `./svg-sprite-light.pug`,
+      minify: false,
+      template: `./src/views/svg-sprite-light.pug`
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: `./svg-sprite-dark.pug`,
+      minify: false,
+      template: `./src/views/svg-sprite-dark.pug`
+    }),
+
+    new HtmlWebpackPugPlugin(),
 
     new MiniCssExtractPlugin({
       filename: `stories.css`
@@ -247,11 +271,7 @@ module.exports = {
         })
       }, {
         test: /\.(woff(2)?|ttf|eot)$/,
-        loader: `file-loader`,
-        options: {
-          name: filename(`fonts/`, `[ext]`),
-          outputPath: PATHS.assets
-        }
+        type: `asset/resource`
       }, {
         test: /\.(webp|png|jpe?g|svg)$/,
         use: [{
@@ -261,9 +281,6 @@ module.exports = {
             outputPath: (url, resourcePath, context) => path.relative(context, resourcePath),
             esModule: false
           }
-        }, {
-          loader: `image-webpack-loader`,
-          options: imageOptimOptions(`[ext]`)
         }]
       }, {
         test: /\.(mp4|ogv|webm)$/,

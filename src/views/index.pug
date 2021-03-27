@@ -1,0 +1,14 @@
+doctype html
+html(lang="ru")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible" content="ie=edge")
+    title IDC 2021 test work
+  body.theme(class=(pageData.theme ? `theme_${pageData.theme}` : ''))
+    if pageData.theme === 'light'
+      include svg-sprite-light
+    else
+      include svg-sprite-dark
+    #output
+    script!= `document.querySelector('#output').innerHTML = globalThis.renderTemplate('${pageData.slide.alias}', '${JSON.stringify(pageData.slide.data)}');`
