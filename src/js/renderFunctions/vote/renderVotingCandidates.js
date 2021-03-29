@@ -10,8 +10,8 @@ export default function renderVotingCandidates(person, slideData) {
 
   return `
     <li class="voting-layout__person">
-      <a href="#" data-action="update" data-params=${actionParams}>
-        ${renderPersonCard(person, null, person.id === slideData.selectedUserId, null)}
+      <a class="voting-layout__candidate-link" href="#" data-action="update" data-params=${actionParams}>
+        ${renderPersonCard(person, null, slideData.selectedUserId, null)}
       </a>
     </li>
   `;

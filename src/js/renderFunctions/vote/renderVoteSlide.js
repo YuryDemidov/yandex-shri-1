@@ -1,8 +1,8 @@
 import renderVotingCandidates from './renderVotingCandidates';
 import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/screenDimensions';
 
-const LANDSCAPE_CANDIDATES_QUANTITY = 8;
-const PORTRAIT_CANDIDATES_QUANTITY = 6;
+const LANDSCAPE_CANDIDATES_QUANTITY = 6;
+const PORTRAIT_CANDIDATES_QUANTITY = 8;
 
 /**
  * Render vote slide content.
@@ -15,7 +15,7 @@ export default function renderVoteSlide(data) {
   const candidatesNumber = globalThis.innerWidth > LANDSCAPE_PHONE_MIN_WIDTH
     ? LANDSCAPE_CANDIDATES_QUANTITY
     : PORTRAIT_CANDIDATES_QUANTITY;
-  const offset = data.offset || null;
+  const offset = data.offset || 0;
   const decreasedOffset = offset - candidatesNumber;
   const increasedOffset = offset + candidatesNumber;
   const maxOffset = data.users.length - candidatesNumber;

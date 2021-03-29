@@ -7,6 +7,10 @@
 
   text-align: center;
 
+  &_selected {
+    position: relative;
+  }
+
   &_low-position-selected {
     display: flex;
     flex-direction: column;
@@ -35,16 +39,25 @@
     margin: 0 auto;
 
     border-radius: 50%;
+
+    filter: grayscale(1);
+
+    .theme_light & {
+      filter: none;
+    }
   }
 
   &__emoji {
+    @include horizontally-centered();
+
+    top: -0.2rem;
+    z-index: 1;
+
     display: inline-block;
 
     font-size: 3.2rem;
     line-height: 3.2rem;
     vertical-align: top;
-
-    transform: translateY(1rem);
   }
 
   &__caption {
@@ -59,9 +72,12 @@
   &__name,
   &__surname {
     display: block;
+    overflow: hidden;
 
     font-weight: 500;
     font-size: var(--font-size-m);
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 

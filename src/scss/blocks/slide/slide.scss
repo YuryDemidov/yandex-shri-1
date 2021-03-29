@@ -12,6 +12,10 @@
   padding: 2.4rem;
   padding-top: 2rem;
 
+  &__caption {
+    margin-bottom: 2.5rem;
+  }
+
   &__title {
     margin: 0;
     margin-bottom: 0.8rem;
@@ -26,6 +30,47 @@
 
     .person-card {
       padding-top: 0;
+    }
+  }
+
+  &_vote {
+    .slide__content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .person-card {
+      border-radius: 0.6rem;
+
+      @include in-focus() {
+        background-image: radial-gradient(85.62% 148.33% at 49.85% 100%, rgba(68, 58, 42, 0.7864) 0%, rgba(0, 0, 0, 0.8) 100%);
+        box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.2), inset 2px 2px 16px rgba(255, 255, 255, 0.1);
+
+        .theme_light & {
+          background-image: linear-gradient(180deg, rgba(244, 244, 244, 0.9) 0.82%, #e9e9e9 100%, rgba(234, 234, 234, 0) 100%);
+          box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.5), inset 0 0 20 rgba(207, 207, 207, 0.5);
+        }
+      }
+
+      &_selected {
+        background: radial-gradient(91.67% 122.17% at 69.17% -11.17%, #ffa300 0%, #2d1c00 100%);
+        box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.4), inset 0 6px 15px rgba(255, 162, 0, 0.4);
+        pointer-events: none;
+
+        .theme_light & {
+          background-image: linear-gradient(180deg, #fff2d1 0.82%, #ffd66c 100%);
+          box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.5), inset 0 0 20 rgba(255, 176, 57, 0.8);
+        }
+      }
+
+      &__full-name {
+        margin-bottom: 0;
+      }
+
+      &__result {
+        display: none;
+      }
     }
   }
 }
