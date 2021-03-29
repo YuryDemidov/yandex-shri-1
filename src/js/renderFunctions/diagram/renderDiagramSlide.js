@@ -1,3 +1,5 @@
+import renderDiagram from './renderDiagram';
+
 /**
  * @typedef Category
  * @type {Object}
@@ -9,10 +11,14 @@
 /**
  * Render diagram slide content.
  *
- * @param {SlideData} data - slide data or JSON with data.
+ * @param {SlideData} data - slide data.
  *
  * @returns {string} - markup for slide.
  */
 export default function renderDiagramSlide(data) {
-
+  return `
+    <div class="diagram-wrap">
+      ${renderDiagram(data)}
+    </div>
+  `;
 }

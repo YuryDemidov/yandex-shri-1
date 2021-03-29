@@ -45,13 +45,11 @@ const plugins = () => {
       scriptLoading: `blocking`,
       template: `./src/views/index.pug`
     }),
-
     new HtmlWebpackPlugin({
       filename: `./svg-sprite-light.pug`,
       minify: false,
       template: `./src/views/svg-sprite-light.pug`
     }),
-
     new HtmlWebpackPlugin({
       filename: `./svg-sprite-dark.pug`,
       minify: false,

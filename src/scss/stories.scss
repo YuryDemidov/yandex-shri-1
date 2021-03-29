@@ -10,3 +10,8 @@
 @use 'blocks/reusable/main-text';
 @use 'blocks/reusable/caption';
 @use 'blocks/reusable/column-bar';
+
+@use 'blocks/slide/slide';
+@use 'blocks/person-card/person-card';
+@use 'blocks/leaders/leaders-histogram';
+@use 'blocks/vote/voting-layout';

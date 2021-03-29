@@ -152,7 +152,7 @@
   }
 }
 
-@mixin stroke-arrow($size: 8px, $thickness: 2px, $color: vars.$main-font-color, $direction: 'down') {
+@mixin stroke-arrow($size: 0.8rem, $thickness: 0.2rem, $color: var(--color-dark), $direction: 'down') {
   @include box($size);
 
   border-bottom: $thickness solid $color;
@@ -168,13 +168,13 @@
   @include box($size);
 
   position: absolute;
-  top: calc(#{-$size} / 2 - 1px);
+  top: calc(#{-$size} / 2 - 0.1rem);
   left: 50%;
 
   background-color: $bg-color;
   @if ($border-color) {
-    border-left: 1px solid $border-color;
-    border-top: 1px solid $border-color;
+    border-left: 0.1rem solid $border-color;
+    border-top: 0.1rem solid $border-color;
   }
 
   transform: translateX(-50%) rotate(45deg);
@@ -183,7 +183,7 @@
 @mixin filled-arrow-2($size, $color, $direction: 'down') {
   @include box(0);
 
-  border: $size solid vars.$transparent-color;
+  border: $size solid var(--color-transparent);
 
   @if ($direction == 'up') { border-bottom-color: $color; }
   @else if ($direction == 'right') { border-left-color: $color; }
@@ -192,7 +192,7 @@
 }
 
 /// For proper positioning both $size and $thickness should be odd or even number
-@mixin plus($size: 30px, $thickness: 2px, $stroke-color: vars.$main-font-color, $background-color: vars.$default-bg-color) {
+@mixin plus($size: 3rem, $thickness: 0.2rem, $stroke-color: var(--color-dark), $background-color: var(--color-white)) {
   @include box($size);
 
   background-color: $stroke-color;
@@ -211,8 +211,8 @@
   background-size: calc(50% - #{$thickness} / 2) calc(50% - #{$thickness} / 2);
 }
 
-@mixin cross($size: 20px, $stroke-width: 2px, $color: vars.$main-font-color) {
-  @include box(calc(#{$size} + 4px));
+@mixin cross($size: 2rem, $stroke-width: 0.2rem, $color: var(--color-dark)) {
+  @include box(calc(#{$size} + 0.4rem));
 
   position: relative;
 
@@ -260,7 +260,7 @@
 }
 
 // ------------------ Project mixins ------------------
-@mixin font-sizes($font-size, $line-height: $font-size + 2px) {
+@mixin font-sizes($font-size, $line-height: calc(#{$font-size} + 0.2rem)) {
   font-size: $font-size;
   line-height: $line-height;
 }

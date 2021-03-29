@@ -1,0 +1,12 @@
+@use '../../utils/tools' as *;
+
+.voting-layout {
+  position: relative;
+
+  &__candidates {
+    @include reset-list();
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,0 +1,70 @@
+@use '../../utils/tools' as *;
+
+.person-card {
+  margin: 0;
+  padding: 2rem 0.4rem;
+  padding-bottom: 1.6rem;
+
+  text-align: center;
+
+  &_low-position-selected {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    span.person-card__low-selected-position {
+      position: static;
+
+      min-width: 6rem;
+      order: 1;
+      margin-top: 0.9rem;
+      padding-top: 0.6rem;
+
+      border-top: 0.1rem solid var(--color-gray);
+
+      .theme_light & {
+        border-color: var(--color-dark);
+      }
+
+      transform: none;
+    }
+  }
+
+  &__avatar {
+    margin: 0 auto;
+
+    border-radius: 50%;
+  }
+
+  &__emoji {
+    display: inline-block;
+
+    font-size: 3.2rem;
+    line-height: 3.2rem;
+    vertical-align: top;
+
+    transform: translateY(1rem);
+  }
+
+  &__caption {
+    line-height: 1;
+  }
+
+  &__full-name {
+    margin-top: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  &__name,
+  &__surname {
+    display: block;
+
+    font-weight: 500;
+    font-size: var(--font-size-m);
+  }
+}
+
+.theme_light .person-card__result {
+  color: var(--color-dark);
+}

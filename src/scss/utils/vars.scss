@@ -1,9 +1,9 @@
 :root {
   --font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
-  --font-size-xl: 30px;
-  --font-size-l: 20px;
-  --font-size-m: 16px;
-  --font-size-s: 14px;
+  --font-size-xl: 3rem;
+  --font-size-l: 2rem;
+  --font-size-m: 1.6rem;
+  --font-size-s: 1.4rem;
   --color-dark: #261c00;
   --color-yellow: #f4b000;
   --color-gray: #918f8a;
@@ -19,7 +19,7 @@ $desktop-min-width: 1200px;
 $s-desktop-min-width: 1024px;
 $tablet-min-width: 768px;
 $phone-landscape-min-width: 576px;
-$phone-portrait-min-width: 320px;
+$phone-portrait-min-width: 376px;
 
 // Media queries (max-width)
 $s-desktop-max-width: 1399px;

@@ -1,7 +1,7 @@
 @use '../../utils/tools' as *;
 
 .caption {
-  @include font-sizes(var(--font-size-m));
+  @include font-sizes(var(--font-size-s));
 
   font-weight: 400;
 

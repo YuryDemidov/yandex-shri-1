@@ -6,19 +6,22 @@
   box-sizing: inherit;
 }
 
-html,
-body {
-  @include min-box(100%);
-}
-
+//noinspection CssOverwrittenProperties,CssInvalidPropertyValue
 html {
   box-sizing: border-box;
+  height: 100%;
+  height: stretch;
+
+  font-size: 62.5%; // For 1rem = 10px
 }
 
+//noinspection CssOverwrittenProperties,CssInvalidPropertyValue
 body {
   position: relative;
 
   min-width: $phone-portrait-min-width;
+  min-height: 100%;
+  min-height: stretch;
   padding: 0;
 
   font-family: var(--font-family);
@@ -98,6 +101,5 @@ textarea {
   padding: 0 !important;
   border: 0 !important;
   clip: rect(0, 0, 0, 0) !important;
-  -webkit-clip-path: inset(100%) !important;
   clip-path: inset(100%) !important;
 }

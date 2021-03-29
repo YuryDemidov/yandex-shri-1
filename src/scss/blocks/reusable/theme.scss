@@ -2,7 +2,7 @@
   &,
   &_dark {
     --main-color: var(--color-light);
-    --dim-color: var(--color-gray-light);
+    --dim-color: var(--color-gray);
 
     color: var(--main-color);
 
@@ -12,7 +12,7 @@
 
   &_light {
     --main-color: var(--color-dark);
-    --dim-color: var(--color-gray);
+    --dim-color: var(--color-gray-light);
 
     color: var(--main-color);
 

@@ -1,7 +1,9 @@
 import renderImg from './renderImg';
 
-export default function renderPersonCard(personData, position, isSelected, emoji) {
-  const lowPositionSelected = isSelected && position > 5;
+export default function renderPersonCard(personData, position, selectedUserId, emoji, leadersBarsCount) {
+  const isSelected = personData.id === selectedUserId;
+  const lowPositionSelected = isSelected && position > leadersBarsCount;
+  const [name, surname] = personData.name.split(` `);
   let currentEmoji = emoji;
 
   if (isSelected && position !== 1) {
@@ -16,10 +18,13 @@ export default function renderPersonCard(personData, position, isSelected, emoji
     }">
       ${lowPositionSelected ? `<span class="person-card__low-selected-position">${position}</span>` : ``}
       ${currentEmoji ? `<b class="person-card__emoji">${currentEmoji}</b>` : ``}
-      ${renderImg(personData.avatar, personData.name)}
+      ${renderImg(personData.avatar, personData.name, 'person-card__avatar')}
       <figcaption class="person-card__caption">
-        <h3 class="person-card__name">${personData.name}</h3>
-        <span class="person-card__result">${personData.valueText}</span>
+        <h3 class="person-card__full-name main-text">
+          <span class="person-card__name">${name}</span>
+          <span class="person-card__surname">${surname}</span>
+        </h3>
+        <span class="person-card__result caption caption_dim">${selectedUserId ? personData.valueText : parseInt(personData.valueText)}</span>
       </figcaption>
     </figure>
   `;

@@ -1,5 +1,5 @@
 import renderVotingCandidates from './renderVotingCandidates';
-import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/landscapePhoneMinWidth';
+import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/screenDimensions';
 
 const LANDSCAPE_CANDIDATES_QUANTITY = 8;
 const PORTRAIT_CANDIDATES_QUANTITY = 6;
@@ -7,7 +7,7 @@ const PORTRAIT_CANDIDATES_QUANTITY = 6;
 /**
  * Render vote slide content.
  *
- * @param {SlideData} data - slide data or JSON with data.
+ * @param {SlideData} data - slide data.
  *
  * @returns {string} - markup for slide.
  */
