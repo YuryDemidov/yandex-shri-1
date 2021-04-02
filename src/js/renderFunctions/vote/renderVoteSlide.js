@@ -1,8 +1,9 @@
 import renderVotingCandidates from './renderVotingCandidates';
-import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/screenDimensions';
+import { LANDSCAPE_DEFAULT_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants/screenDimensions';
 
 const LANDSCAPE_CANDIDATES_QUANTITY = 6;
 const PORTRAIT_CANDIDATES_QUANTITY = 8;
+const TABLET_CANDIDATES_QUANTITY = 10;
 
 /**
  * Render vote slide content.
@@ -12,13 +13,20 @@ const PORTRAIT_CANDIDATES_QUANTITY = 8;
  * @returns {string} - markup for slide.
  */
 export default function renderVoteSlide(data) {
-  const candidatesNumber = globalThis.innerWidth > LANDSCAPE_PHONE_MIN_WIDTH
-    ? LANDSCAPE_CANDIDATES_QUANTITY
-    : PORTRAIT_CANDIDATES_QUANTITY;
-  const offset = data.offset || 0;
+  let candidatesNumber;
+  if (globalThis.innerWidth < LANDSCAPE_DEFAULT_WIDTH) {
+    candidatesNumber = PORTRAIT_CANDIDATES_QUANTITY;
+  } else if (globalThis.innerWidth >= LANDSCAPE_DEFAULT_WIDTH && globalThis.innerWidth < TABLET_MIN_WIDTH) {
+    candidatesNumber = LANDSCAPE_CANDIDATES_QUANTITY;
+  } else {
+    candidatesNumber = TABLET_CANDIDATES_QUANTITY;
+  }
+
+  let offset = data.offset || 0;
   const decreasedOffset = offset - candidatesNumber;
   const increasedOffset = offset + candidatesNumber;
   const maxOffset = data.users.length - candidatesNumber;
+  offset = offset > maxOffset ? maxOffset : offset;
   const prevOffset = decreasedOffset > 0 ? decreasedOffset : 0;
   const nextOffset = increasedOffset < maxOffset ? increasedOffset : maxOffset;
   const actionParamsPrev = JSON.stringify({
@@ -50,8 +58,8 @@ export default function renderVoteSlide(data) {
             return markup;
           }
 
+          markup += renderVotingCandidates(user, data, currentCandidatesNumber);
           currentCandidatesNumber++;
-          markup += renderVotingCandidates(user, data);
           return markup;
         }, ``)}
       </ul>

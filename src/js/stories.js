@@ -1,10 +1,16 @@
 import '../../src/scss/stories.scss';
 
+import throttle from './utils/functions/throttle';
 import renderCaption from './renderFunctions/common/renderCaption';
 import renderSlideContent from './renderFunctions/common/renderSlideContent';
-import drawDiagram from './renderFunctions/diagram/drawDiagram';
+import drawCanvasDiagram from './renderFunctions/diagram/drawCanvasDiagram';
 import setVhCssProperty from './renderFunctions/common/setVhCssProperty';
-import debounce from './utils/functions/debounce';
+import adjustVoteSlideIndents from './renderFunctions/vote/adjustVoteSlidePaddings';
+import {
+  LANDSCAPE_DEFAULT_WIDTH,
+  LANDSCAPE_PHONE_MIN_WIDTH,
+  TABLET_MIN_WIDTH
+} from './utils/constants/screenDimensions';
 
 let previousWindowWidth = globalThis.innerWidth;
 let previousWindowHeight = globalThis.innerHeight;
@@ -71,30 +77,49 @@ globalThis.renderTemplate = function(alias, data) {
 }
 
 /**
- * Draws doughnut diagram on canvas
+ * Post render function for calculations and logic depending on the rendered content
  *
- * @param {SlideData} slideData - standard slide data for diagram slides.
+ * @param {SlideType} alias - alias of slide to render.
+ * @param {SlideData|string} data - slide data or JSON with data.
  */
-globalThis.drawCanvasDiagram = function(slideData) {
-  if (typeof slideData === `string`) {
-    slideData = JSON.parse(slideData);
+globalThis.postRenderScript = function(alias, data) {
+  if (!data) {
+    return ``;
   }
 
-  drawDiagram(slideData);
+  if (typeof data === `string`) {
+    data = JSON.parse(data);
+  }
+
+  switch (alias) {
+    case 'vote':
+      adjustVoteSlideIndents();
+      break;
+    case 'diagram':
+      drawCanvasDiagram(data);
+      break;
+    default:
+      break;
+  }
 }
 
 const RESIZE_DEBOUNCE_DELAY = 100; // ms
-const debouncedWindowResizeHandler = debounce(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);
+const throttledWindowResizeHandler = throttle(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);
 setVhCssProperty();
-globalThis.addEventListener(`resize`, debouncedWindowResizeHandler);
+globalThis.addEventListener(`resize`, throttledWindowResizeHandler);
 
 function windowResizeHandler() {
   if (previousWindowHeight !== globalThis.innerHeight) {
     setVhCssProperty();
+
+    if (document.querySelector(`.slide_vote`)) {
+      adjustVoteSlideIndents();
+    }
   }
 
-  if (isOrientationChange()) {
+  if (isRerenderNecessary()) {
     document.querySelector(`#output`).innerHTML = globalThis.renderTemplate(savedSlideName, savedSlideData);
+    globalThis.postRenderScript(savedSlideName, savedSlideData);
   }
 
   previousWindowHeight = globalThis.innerHeight;
@@ -103,4 +128,14 @@ function windowResizeHandler() {
 
 function isOrientationChange() {
   return (previousWindowWidth > previousWindowHeight && globalThis.innerWidth < globalThis.innerHeight) || (previousWindowWidth < previousWindowHeight && globalThis.innerWidth > globalThis.innerHeight);
+}
+
+function isRerenderThreshold(width) {
+  return (previousWindowWidth < width && globalThis.innerWidth >= width) ||
+    (previousWindowWidth >= width && globalThis.innerWidth < width);
+}
+
+function isRerenderNecessary() {
+  return isOrientationChange() || isRerenderThreshold(LANDSCAPE_PHONE_MIN_WIDTH) ||
+    isRerenderThreshold(LANDSCAPE_DEFAULT_WIDTH) || isRerenderThreshold(TABLET_MIN_WIDTH);
 }

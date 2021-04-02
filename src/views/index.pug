@@ -18,5 +18,4 @@ html(lang="ru")
     if pageData.slide
       #output
       script!= `document.querySelector('#output').innerHTML = globalThis.renderTemplate('${pageData.slide.alias}', '${JSON.stringify(pageData.slide.data)}');`
-      if pageData.slide.alias === 'diagram'
-        script!= `globalThis.drawCanvasDiagram('${JSON.stringify(pageData.slide.data)}')`
+      script!= `globalThis.postRenderScript('${pageData.slide.alias}', '${JSON.stringify(pageData.slide.data)}');`

@@ -3,30 +3,48 @@
 .voting-layout {
   position: relative;
 
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
 
   &__candidates {
     @include reset-list();
 
     display: grid;
+    flex-grow: 1;
     grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: calc(100% / 3);
     column-gap: 0.8rem;
+    align-items: center;
   }
 
   &__person {
-    &:last-of-type {
-      grid-column-end: -1;
+    &_2 {
+      align-self: start;
     }
 
-    &:nth-child(1),
-    &:nth-child(3),
-    &:nth-child(4),
-    &:nth-child(6) {
-      margin-bottom: 22px;
+    &_5 {
+      grid-row-start: 3;
+      grid-column: 2 / 3;
+      align-self: end;
     }
 
-    &:nth-child(3n + 2):not(:last-of-type) {
-      transform: translateY(85px);
+    &_4,
+    &_6 {
+      grid-row-start: 2;
+    }
+
+    &_6 {
+      grid-column: 3 / 4;
+    }
+
+    &_7,
+    &_8 {
+      grid-row-start: 3;
+    }
+
+    &_8 {
+      grid-column: 3 / 4;
     }
   }
 
@@ -45,18 +63,19 @@
     transition: fill 0.4s;
 
     &:disabled {
-      fill: #c4c4c4;
+      fill: var(--color-gray);
+      pointer-events: none;
     }
 
     @include in-focus() {
-      fill: #c4c4c4;
+      fill: var(--color-gray);
     }
 
     .theme_light & {
-      fill: var(--color-gray-light);
+      fill: var(--color-yellow);
 
       &:disabled {
-        fill: var(--color-yellow);
+        fill: var(--color-gray-light);
       }
 
       @include in-focus() {
@@ -65,57 +84,148 @@
     }
 
     &_prev {
+      top: 2.3rem;
+
       transform: translateX(-50%) rotate(180deg);
     }
 
     &_next {
-      bottom: 0;
+      bottom: 2.3rem;
     }
   }
 }
 
-@media (min-width: $phone-landscape-min-width) {
+@media (min-width: $phone-landscape-default-width) {
   .voting-layout {
+    justify-content: center;
+    padding-top: 0.5rem;
+
     &__candidates {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 1fr 1fr 6.4rem 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       column-gap: 3.1rem;
+      row-gap: 0.4rem;
       align-items: center;
+      flex-grow: 0;
     }
 
     &__person {
-      &:nth-child(1) {
+      margin-bottom: 0;
+
+      &_1 {
         grid-column: 1 / 2;
         grid-row: 1 / 3;
       }
 
-      &:nth-child(2) {
+      &_2 {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
       }
 
-      &:nth-child(3) {
+      &_3 {
         grid-column: 4 / 5;
         grid-row: 1 / 2;
       }
 
-      &:nth-child(4) {
+      &_4 {
         grid-column: 5 / 6;
         grid-row: 1 / 3;
       }
 
-      &:nth-child(5) {
+      &_5 {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
       }
 
-      &:nth-child(6) {
+      &_6 {
         grid-column: 4 / 5;
         grid-row: 2 / 3;
       }
+    }
 
-      &:nth-child(3n+2):not(:last-of-type) {
-        transform: none;
+    &__button {
+      &_prev {
+        top: 19.5%;
+
+        @media (min-height: $tablet-min-width) {
+          top: 35%;
+        }
+      }
+
+      &_next {
+        bottom: calc(19.5% - 0.5rem);
+
+        @media (min-height: $tablet-min-width) {
+          bottom: calc(35% - 0.5rem);
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: $tablet-min-width) {
+  .voting-layout {
+    padding-top: 0;
+
+    &__candidates {
+      grid-template-rows: 1fr 1fr 1fr;
+      column-gap: 3vw;
+      row-gap: 1vw;
+      min-height: 65vh;
+      padding: 1rem 0;
+    }
+
+    &__person {
+      align-self: initial;
+
+      &_5,
+      &_6,
+      &_7,
+      &_8 {
+        grid-row: 2 / 3;
+      }
+
+      &_5,
+      &_8 {
+        grid-row: 2 / 4;
+      }
+
+      &_5 {
+        grid-column: 1 / 2;
+      }
+
+      &_6 {
+        grid-column: 2 / 3;
+      }
+
+      &_7 {
+        grid-column: 4 / 5;
+      }
+
+      &_8 {
+        grid-column: 5 / 6;
+      }
+
+      &_9 {
+        grid-column: 2 / 3;
+      }
+
+      &_10 {
+        grid-column: 4 / 5;
+      }
+    }
+
+    &__button {
+      &_prev {
+        top: calc(100% / 3);
+
+        transform: translate(-50%, -50%) rotate(180deg);
+      }
+
+      &_next {
+        bottom: calc(100% / 3);
+
+        transform: translate(-50%, 50%);
       }
     }
   }

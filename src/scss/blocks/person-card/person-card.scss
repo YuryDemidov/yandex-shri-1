@@ -20,18 +20,21 @@
     span.person-card__low-selected-position {
       position: static;
 
-      min-width: 6rem;
+      width: 6rem;
       order: 1;
-      margin-top: 0.9rem;
-      padding-top: 0.6rem;
+      margin: 1rem auto;
+      margin-bottom: 0;
+      padding-top: 0.5rem;
 
       border-top: 0.1rem solid var(--color-gray);
 
-      .theme_light & {
-        border-color: var(--color-dark);
-      }
-
       transform: none;
+    }
+
+    @media (max-width: $phone-portrait-max-width) {
+      .person-card__result {
+        color: var(--main-color);
+      }
     }
   }
 
@@ -79,8 +82,4 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-}
-
-.theme_light .person-card__result {
-  color: var(--color-dark);
 }

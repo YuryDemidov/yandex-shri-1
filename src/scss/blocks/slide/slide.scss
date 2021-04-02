@@ -30,37 +30,70 @@
 
     .person-card {
       padding-top: 0;
+
+      &__emoji {
+        top: -2.2rem;
+      }
     }
   }
 
   &_vote {
-    .slide__content {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+    padding-bottom: 0;
+
+    .slide {
+      &__content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      &__caption {
+        margin-bottom: 0;
+      }
     }
 
     .person-card {
-      border-radius: 0.6rem;
+      position: relative;
 
-      @include in-focus() {
+      &::before {
+        @include box(100%);
+
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+
         background-image: radial-gradient(85.62% 148.33% at 49.85% 100%, rgba(68, 58, 42, 0.7864) 0%, rgba(0, 0, 0, 0.8) 100%);
-        box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.2), inset 2px 2px 16px rgba(255, 255, 255, 0.1);
+        box-shadow: inset -0.1rem 0.1rem 0.1rem rgba(255, 255, 255, 0.2), inset 0.2rem 0.2rem 10.6rem rgba(255, 255, 255, 0.1);
+        border-radius: 0.6rem;
+        opacity: 0;
+
+        transition: opacity 0.3s;
 
         .theme_light & {
           background-image: linear-gradient(180deg, rgba(244, 244, 244, 0.9) 0.82%, #e9e9e9 100%, rgba(234, 234, 234, 0) 100%);
-          box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.5), inset 0 0 20 rgba(207, 207, 207, 0.5);
+          box-shadow: inset -0.1rem 0.1rem 0.1rem rgba(255, 255, 255, 0.5), inset 0 0 2rem rgba(207, 207, 207, 0.5);
+        }
+      }
+
+      @include in-focus() {
+        &::before {
+          opacity: 1;
         }
       }
 
       &_selected {
-        background: radial-gradient(91.67% 122.17% at 69.17% -11.17%, #ffa300 0%, #2d1c00 100%);
-        box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.4), inset 0 6px 15px rgba(255, 162, 0, 0.4);
-        pointer-events: none;
+        &::before {
+          background: radial-gradient(91.67% 122.17% at 69.17% -11.17%, #ffa300 0%, #2d1c00 100%);
+          box-shadow: inset -0.1rem 0.1rem 0.1rem rgba(255, 255, 255, 0.4), inset 0 0.6rem 1.5rem rgba(255, 162, 0, 0.4);
+          opacity: 1;
+          pointer-events: none;
 
-        .theme_light & {
-          background-image: linear-gradient(180deg, #fff2d1 0.82%, #ffd66c 100%);
-          box-shadow: inset -1px 1px 1px rgba(255, 255, 255, 0.5), inset 0 0 20 rgba(255, 176, 57, 0.8);
+          .theme_light & {
+            background-image: linear-gradient(180deg, #fff2d1 0.82%, #ffd66c 100%);
+            box-shadow: inset -0.1rem 0.1rem 0.1rem rgba(255, 255, 255, 0.5), inset 0 0 2rem rgba(255, 176, 57, 0.8);
+          }
         }
       }
 
@@ -80,8 +113,20 @@
     padding-right: 3.2rem;
     padding-left: 3.2rem;
 
+    &_vote {
+      padding-bottom: 0.5rem;
+    }
+
     &__caption {
       text-align: center;
+    }
+  }
+}
+
+@media (min-width: $phone-landscape-default-width) {
+  .slide {
+    &_vote {
+      padding-bottom: 0.5rem;
     }
   }
 }

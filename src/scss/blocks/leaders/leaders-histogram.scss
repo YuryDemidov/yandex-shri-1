@@ -27,7 +27,7 @@
 
     &::before,
     .person-card__low-selected-position {
-      @include font-sizes(3.2rem);
+      @include font-sizes(3rem);
 
       position: absolute;
       left: 50%;
@@ -105,8 +105,7 @@
     --bar-height-ratio: 28.725;
 
     grid-template-columns: repeat(5, 1fr);
-    min-width: 55.2rem;
-    width: 90%;
+    width: 91.5%;
     margin: 0 auto;
 
     &__bar-wrap {

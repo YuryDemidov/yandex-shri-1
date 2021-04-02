@@ -1,6 +1,6 @@
 import CanvasDiagramDrawer from '../../classes/CanvasDiagramDrawer';
 
-export default function drawDiagram({ categories, totalText }) {
+export default function drawCanvasDiagram({ categories, totalText }) {
   const OFFSET_ANGLE = 1; // degree
   const PIE_BORDER_RADIUS = 6; // px
   const CENTER_CIRCLE_RATIO = 0.7;
