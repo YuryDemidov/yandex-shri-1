@@ -106,6 +106,22 @@
       }
     }
   }
+
+  &_diagram {
+    overflow: hidden;
+
+    .slide {
+      &__caption {
+        margin-bottom: 0;
+      }
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+    }
+  }
 }
 
 @media (min-width: $phone-landscape-min-width) {
@@ -147,6 +163,12 @@
   .slide {
     &_vote {
       padding-bottom: 0.5rem;
+    }
+
+    @media (orientation: landscape) {
+      &_diagram {
+        padding-bottom: 0;
+      }
     }
   }
 }

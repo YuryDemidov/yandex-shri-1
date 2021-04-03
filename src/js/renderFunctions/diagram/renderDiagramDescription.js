@@ -16,8 +16,8 @@ export default function renderDiagramDescription(data) {
               <tr>
                 <td><span class="description-table__category-color description-table__category-color_${i + 1}"></span></td>
                 <td class="description-table__category">${category.title}</td>
-                <td>${category.valueText}</td>
-                <td>${category.differenceText}</td>
+                <td>+${parseInt(category.differenceText)}</td>
+                <td>${parseInt(category.valueText)}</td>
               </tr>
             `;
             return markup;

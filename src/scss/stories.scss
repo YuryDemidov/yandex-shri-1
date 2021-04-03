@@ -22,3 +22,7 @@
 @use 'blocks/chart/history-histogram';
 @use 'blocks/chart/history-leaders';
 @use 'blocks/chart/chart-leader';
+
+@use 'blocks/diagram/diagram-slide';
+@use 'blocks/diagram/diagram';
+@use 'blocks/diagram/description-table';

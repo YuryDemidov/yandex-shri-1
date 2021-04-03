@@ -1,4 +1,4 @@
-import renderDiagram from './renderDiagram';
+import renderDiagramDescription from './renderDiagramDescription';
 
 /**
  * @typedef Category
@@ -17,8 +17,18 @@ import renderDiagram from './renderDiagram';
  */
 export default function renderDiagramSlide(data) {
   return `
-    <div class="diagram-wrap">
-      ${renderDiagram(data)}
-    </div>
+    <figure class="diagram">
+      <h3 class="visually-hidden">Кольцевая диаграмма</h3>
+      <div class="diagram__wrap">
+        <div class="diagram__main-description">
+          <p class="diagram__total headline">${data.totalText}</p>
+          <p class="diagram__difference subhead subhead_dim">${data.differenceText}</p>
+        </div>
+        <div class="diagram__doughnut-wrap">
+          <canvas id="doughnutDiagram" class="diagram__canvas" width="400" height="400"></canvas>
+        </div>
+      </div>
+      ${renderDiagramDescription(data)}
+    </figure>
   `;
 }

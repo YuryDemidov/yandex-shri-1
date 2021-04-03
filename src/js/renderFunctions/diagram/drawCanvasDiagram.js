@@ -12,14 +12,14 @@ export default function drawCanvasDiagram({ categories, totalText }) {
   const borderRadiusInDegrees = PIE_BORDER_RADIUS / perimeterInPixels * 360;
 
   const drawer = new CanvasDiagramDrawer(diagramCanvas);
-  let angleSum = 0;
+  let angleSum = 240; // initial angle for design purposes
 
   for (let i = 0; i < categories.length; i++) {
     const valueAngle = parseInt(categories[i].valueText) / totalValue * (360 - OFFSET_ANGLE * categories.length);
     drawer.drawSector(
       i + 1,
       diagramRadius,
-      diagramCanvas.clientWidth / 2,
+      diagramCanvas.width / 2,
       diagramRadius * (1 - CENTER_CIRCLE_RATIO) - 2 * PIE_BORDER_RADIUS,
       drawer.degreesToRadians(angleSum),
       drawer.degreesToRadians(valueAngle + angleSum),

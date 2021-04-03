@@ -1,0 +1,92 @@
+@use '../../utils/tools' as *;
+
+.diagram {
+  position: relative;
+
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+
+  &__wrap {
+    position: relative;
+
+    margin: auto 0;
+  }
+
+  &__doughnut-wrap {
+    @include centered-block(28rem);
+
+    @media (orientation: portrait) {
+      max-width: 35rem;
+    }
+
+    transform: scale(1.39);
+  }
+
+  &__canvas {
+    @include centered-block(100%);
+
+    display: block;
+  }
+
+  &__main-description {
+    @include absolute-centered();
+
+    max-width: 18rem;
+
+    text-align: center;
+  }
+
+  &__total,
+  &__difference {
+    margin: 0;
+  }
+
+  &__difference {
+    margin-top: 0.8rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .diagram {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7.71vh 1rem;
+
+    &__doughnut-wrap {
+      width: 35.928vw;
+
+      transform: scale(2);
+    }
+
+    &__canvas {
+      transform: none;
+    }
+
+    &__main-description {
+      max-width: 13rem;
+    }
+
+    &__total {
+      @include font-sizes(2rem);
+    }
+
+    &__difference {
+      @include font-sizes(1.6rem);
+
+      font-weight: 500;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: $tablet-min-width) {
+  .diagram {
+    justify-content: space-around;
+
+    &__doughnut-wrap {
+      transform: scale(1.8);
+    }
+  }
+}

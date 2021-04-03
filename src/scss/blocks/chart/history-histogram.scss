@@ -124,7 +124,7 @@
 @media (min-width: $s-desktop-min-width) {
   .history-histogram {
     &__values {
-      left: 15rem;
+      left: 8rem;
     }
 
     &__bar-wrap {
@@ -133,7 +133,7 @@
 
     &__bar {
       min-width: auto;
-      width: 5.2rem;
+      width: 5.8rem;
     }
   }
 }

@@ -15,6 +15,7 @@ export default class CanvasDiagramDrawer {
   }
 
   drawSector(sectorNumber, radius, center, ringWidth, startAngle, endAngle, borderRadiusSize, borderRadiusInRads, isAuxiliary) {
+    //this.setInitialRotation();
     const centerX = isAuxiliary ? center + this.shadowOffset : center; // For inset shadows drawing
     const centerY = center;
     const innerRadius = radius - ringWidth - 2 * borderRadiusSize;
@@ -142,16 +143,14 @@ export default class CanvasDiagramDrawer {
 
   _addShadows() {
     const slideNumber = arguments[0];
-    const mainRadius = arguments[1];
-    const ringWidth = arguments[3];
     const shadowsConfig = this._getShadows(slideNumber);
 
     this.drawSector(...arguments, true);
 
     shadowsConfig.forEach(shadow => {
       this.ctx.shadowColor = shadow.color;
-      this.ctx.shadowBlur = shadow.blur || 20;
-      this.ctx.lineWidth = shadow.blur || 20;
+      this.ctx.shadowBlur = shadow.blur || 10;
+      this.ctx.lineWidth = shadow.blur * 2 || 10;
       this.ctx.shadowOffsetX = shadow.shadowOffsetX ? -this.shadowOffset + shadow.shadowOffsetX : -this.shadowOffset;
       this.ctx.shadowOffsetY = shadow.shadowOffsetY || 0;
 
@@ -187,23 +186,23 @@ export default class CanvasDiagramDrawer {
         if (this.theme === `dark`) {
           shadows.push(
             {
-              color: `rgba(255, 162, 0, 0.9)`,
-              inset: true
-            },
-            insetBorderShadow,
-            {
               spread: -8,
               color: `rgba(248, 158, 0, 0.2)`,
               inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(255, 162, 0, 0.9)`,
+              inset: true
             }
           );
         } else {
           shadows.push(
+            insetBorderShadow,
             {
               color: `rgba(255, 176, 57, 0.9)`,
               inset: true
-            },
-            insetBorderShadow
+            }
           );
         }
         break;
@@ -211,23 +210,23 @@ export default class CanvasDiagramDrawer {
         if (this.theme === `dark`) {
           shadows.push(
             {
-              color: `rgba(202, 129, 0, 0.9)`,
-              inset: true
-            },
-            insetBorderShadow,
-            {
               spread: -8,
               color: `rgba(147, 93, 0, 0.2)`,
               inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(202, 129, 0, 0.9)`,
+              inset: true
             }
           );
         } else {
           shadows.push(
+            insetBorderShadow,
             {
               color: `rgba(255, 176, 57, 0.4)`,
               inset: true
-            },
-            insetBorderShadow
+            }
           );
         }
         break;
@@ -235,23 +234,23 @@ export default class CanvasDiagramDrawer {
         if (this.theme === `dark`) {
           shadows.push(
             {
-              color: `rgba(139, 139, 139, 0.9)`,
-              inset: true
-            },
-            insetBorderShadow,
-            {
               spread: -8,
               color: `rgba(0, 0, 0, 0.2)`,
               inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(139, 139, 139, 0.9)`,
+              inset: true
             }
           );
         } else {
           shadows.push(
+            insetBorderShadow,
             {
               color: `rgba(105, 105, 105, 0.2)`,
               inset: true
-            },
-            insetBorderShadow
+            }
           );
         }
         break;
@@ -259,23 +258,23 @@ export default class CanvasDiagramDrawer {
         if (this.theme === `dark`) {
           shadows.push(
             {
-              color: `rgba(38, 38, 38, 0.9)`,
-              inset: true
-            },
-            insetBorderShadow,
-            {
               spread: -8,
               color: `rgba(96, 96, 96, 0.2)`,
               inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(38, 38, 38, 0.9)`,
+              inset: true
             }
           );
         } else {
           shadows.push(
+            insetBorderShadow,
             {
               color: `rgba(131, 131, 131, 0.6)`,
               inset: true
-            },
-            insetBorderShadow
+            }
           );
         }
         break;
