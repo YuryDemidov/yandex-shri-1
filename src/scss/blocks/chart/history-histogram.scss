@@ -1,0 +1,147 @@
+@use '../../utils/tools' as *;
+
+.history-histogram {
+  &__chart {
+    position: relative;
+
+    overflow: hidden;
+    margin: 0 -2.4rem;
+  }
+
+  &__values {
+    @include reset-list();
+
+    position: absolute;
+    top: 0;
+    left: -12%;
+
+    display: flex;
+    height: 100%;
+
+    transform: translateX(-28%);
+
+    @media (max-width: 530px) {
+      transform: translateX(-36%);
+    }
+
+    @media (max-width: 440px) {
+      left: -10%;
+
+      transform: translateX(-42%);
+    }
+  }
+
+  &__bar {
+    @include min-box(4rem, 0.8rem);
+  }
+
+  &__value {
+    margin-bottom: 0.8rem;
+
+    font-weight: 700;
+  }
+
+  &__bar-label {
+    margin: 0;
+    margin-top: 1.2rem;
+
+    font-weight: 500;
+  }
+
+  &__bar-wrap {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 0 calc(0.6rem + 1.6vw);
+
+    &_active {
+      .history-histogram__value {
+        color: var(--main-color);
+      }
+    }
+  }
+}
+
+@media (min-width: $phone-landscape-min-width) {
+  .history-histogram {
+    &__chart {
+      margin: 0 -3.2rem;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: $phone-landscape-min-width) {
+  $bar-width: 5.994vw;
+  $gap-width: 1.794vw;
+
+  .history-histogram {
+    overflow: hidden;
+
+    &__values {
+      left: 8.2%;
+    }
+
+    &__bar-wrap {
+      margin: 0  $gap-width;
+    }
+
+    &__bar {
+      min-width: $bar-width;
+    }
+  }
+}
+
+@media (orientation: portrait) and (min-width: $phone-landscape-min-width) {
+  .history-histogram {
+    &__chart {
+      margin: 0 -4rem;
+    }
+
+    &__values {
+      left: -45%;
+
+      transform: none;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: $tablet-min-width) {
+  .history-histogram {
+    &__values {
+      left: 7.6%;
+    }
+  }
+}
+
+@media (orientation: portrait) and (min-width: $tablet-min-width) {
+  .history-histogram {
+    &__values {
+      left: -32%;
+    }
+  }
+}
+
+@media (min-width: $s-desktop-min-width) {
+  .history-histogram {
+    &__values {
+      left: 15rem;
+    }
+
+    &__bar-wrap {
+      margin: 0 1.8rem;
+    }
+
+    &__bar {
+      min-width: auto;
+      width: 5.2rem;
+    }
+  }
+}
+
+@media (orientation: portrait) and (min-width: $s-desktop-min-width) {
+  .history-histogram {
+    &__values {
+      left: -30%;
+    }
+  }
+}

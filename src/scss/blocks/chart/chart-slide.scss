@@ -1,0 +1,48 @@
+@use '../../utils/tools' as *;
+
+.chart-slide {
+  display: flex;
+  flex-direction: column;
+
+  &__histogram {
+    margin-top: auto;
+  }
+
+  &__leaders {
+    margin-top: 0.7rem;
+  }
+}
+
+@media (orientation: landscape) and (min-width: $phone-landscape-min-width) {
+  .chart-slide {
+    width: 100%;
+    padding: 0 1.5vw;
+
+    &__leaders {
+      margin-top: 2.4rem;
+    }
+  }
+}
+
+@media (min-width: $phone-landscape-default-width) {
+  .chart-slide {
+    &__leaders {
+      @include centered-block(60rem);
+
+      width: 100%;
+      margin-top: 4vh;
+    }
+  }
+}
+
+@media (orientation: landscape) and (min-width: $phone-landscape-default-width) {
+  .chart-slide {
+    padding: 0 3.9vw;
+  }
+}
+
+@media (min-width: $s-desktop-min-width) {
+  .chart-slide {
+    padding: 0 4rem;
+  }
+}

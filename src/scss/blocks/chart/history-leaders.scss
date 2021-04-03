@@ -1,0 +1,19 @@
+@use '../../utils/tools' as *;
+
+.history-leaders {
+  position: relative;
+
+  &__list {
+    @include reset-list();
+  }
+}
+
+@media (orientation: landscape) and (min-width: $phone-landscape-min-width) {
+  .history-leaders {
+    &__list {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

@@ -13,5 +13,12 @@
 
 @use 'blocks/slide/slide';
 @use 'blocks/person-card/person-card';
+
 @use 'blocks/leaders/leaders-histogram';
+
 @use 'blocks/vote/voting-layout';
+
+@use 'blocks/chart/chart-slide';
+@use 'blocks/chart/history-histogram';
+@use 'blocks/chart/history-leaders';
+@use 'blocks/chart/chart-leader';

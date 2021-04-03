@@ -1,16 +1,16 @@
 import '../../src/scss/stories.scss';
 
-import throttle from './utils/functions/throttle';
-import renderCaption from './renderFunctions/common/renderCaption';
-import renderSlideContent from './renderFunctions/common/renderSlideContent';
-import drawCanvasDiagram from './renderFunctions/diagram/drawCanvasDiagram';
-import setVhCssProperty from './renderFunctions/common/setVhCssProperty';
-import adjustVoteSlideIndents from './renderFunctions/vote/adjustVoteSlidePaddings';
 import {
   LANDSCAPE_DEFAULT_WIDTH,
   LANDSCAPE_PHONE_MIN_WIDTH,
   TABLET_MIN_WIDTH
 } from './utils/constants/screenDimensions';
+import debounce from './utils/functions/debounce';
+import renderCaption from './renderFunctions/common/renderCaption';
+import renderSlideContent from './renderFunctions/common/renderSlideContent';
+import drawCanvasDiagram from './renderFunctions/diagram/drawCanvasDiagram';
+import setVhCssProperty from './renderFunctions/common/setVhCssProperty';
+import adjustVoteSlideIndents from './renderFunctions/vote/adjustVoteSlidePaddings';
 
 let previousWindowWidth = globalThis.innerWidth;
 let previousWindowHeight = globalThis.innerHeight;
@@ -103,10 +103,15 @@ globalThis.postRenderScript = function(alias, data) {
   }
 }
 
-const RESIZE_DEBOUNCE_DELAY = 100; // ms
-const throttledWindowResizeHandler = throttle(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);
+const RESIZE_DEBOUNCE_DELAY = 120; // ms
+const debouncedWindowResizeHandler = debounce(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);
 setVhCssProperty();
-globalThis.addEventListener(`resize`, throttledWindowResizeHandler);
+globalThis.addEventListener(`resize`, debouncedWindowResizeHandler);
+
+function renderPage() {
+  document.querySelector(`#output`).innerHTML = globalThis.renderTemplate(savedSlideName, savedSlideData);
+  globalThis.postRenderScript(savedSlideName, savedSlideData);
+}
 
 function windowResizeHandler() {
   if (previousWindowHeight !== globalThis.innerHeight) {
@@ -115,11 +120,14 @@ function windowResizeHandler() {
     if (document.querySelector(`.slide_vote`)) {
       adjustVoteSlideIndents();
     }
+
+    if (document.querySelector(`.slide_chart`)) {
+      renderPage();
+    }
   }
 
   if (isRerenderNecessary()) {
-    document.querySelector(`#output`).innerHTML = globalThis.renderTemplate(savedSlideName, savedSlideData);
-    globalThis.postRenderScript(savedSlideName, savedSlideData);
+    renderPage();
   }
 
   previousWindowHeight = globalThis.innerHeight;

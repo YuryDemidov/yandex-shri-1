@@ -1,0 +1,53 @@
+@use '../../utils/tools' as *;
+
+$divider-color: rgba(191, 191, 191, 0.3);
+
+.chart-leader {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  padding: 1.6rem 0;
+
+  border-bottom: 0.2rem solid $divider-color;
+
+  &__avatar {
+    border-radius: 50%;
+
+    filter: grayscale(1);
+  }
+
+  &__text {
+    margin-left: 1.4rem;
+  }
+
+  &__name,
+  &__value {
+    margin: 0;
+  }
+
+  &__name {
+    margin-bottom: 0.4rem;
+  }
+
+  &:last-of-type {
+    padding-bottom: 0;
+
+    border-bottom: none;
+  }
+}
+
+@media (orientation: landscape) and (min-width: $phone-landscape-min-width) {
+  .chart-leader {
+    min-width: 25.3rem;
+    padding: 0 1.6rem;
+
+    border-bottom: none;
+    border-right: 0.1rem solid $divider-color;
+
+    &:last-of-type {
+      border-right: none;
+      border-left: 0.1rem solid $divider-color;
+    }
+  }
+}

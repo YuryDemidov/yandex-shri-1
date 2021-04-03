@@ -113,12 +113,32 @@
     padding-right: 3.2rem;
     padding-left: 3.2rem;
 
+    &__caption {
+      text-align: center;
+    }
+
     &_vote {
       padding-bottom: 0.5rem;
     }
 
-    &__caption {
-      text-align: center;
+    &_chart {
+      @media (orientation: landscape) {
+        justify-content: flex-start;
+        padding-bottom: 0;
+
+        .slide {
+          &__caption {
+            margin-bottom: 0;
+          }
+
+          &__content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
     }
   }
 }
@@ -127,6 +147,24 @@
   .slide {
     &_vote {
       padding-bottom: 0.5rem;
+    }
+  }
+}
+
+@media (min-width: $tablet-min-width) {
+  .slide {
+    &_chart {
+      justify-content: flex-start;
+    }
+  }
+}
+
+@media (min-width: $s-desktop-min-width) {
+  .slide {
+    &_chart {
+      .slide__content {
+        flex-grow: 0;
+      }
     }
   }
 }

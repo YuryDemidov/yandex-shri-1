@@ -1,6 +1,10 @@
 import renderHistoryHistogramBar from './renderHistoryHistogramBar';
 import renderHistoryLeadersPerson from './renderHistoryLeadersPerson';
-import { LANDSCAPE_DEFAULT_WIDTH, PORTRAIT_DEFAULT_WIDTH } from '../../utils/constants/screenDimensions';
+import {
+  LANDSCAPE_DEFAULT_WIDTH,
+  PORTRAIT_DEFAULT_WIDTH,
+  S_DESKTOP_MIN_WIDTH
+} from '../../utils/constants/screenDimensions';
 
 /**
  * @typedef HistoryValue
@@ -19,25 +23,35 @@ import { LANDSCAPE_DEFAULT_WIDTH, PORTRAIT_DEFAULT_WIDTH } from '../../utils/con
  */
 export default function renderChartSlide(data) {
   const isLandscape = globalThis.innerWidth > globalThis.innerHeight;
-  const CHART_HEIGHT_RATIO = isLandscape ? 130 / PORTRAIT_DEFAULT_WIDTH : 300 / LANDSCAPE_DEFAULT_WIDTH;
-  const CHART_TOP_GAP = 0.1; // 10% of space will not be used for drawing bars
-  const chartHeight = (globalThis.innerHeight * CHART_HEIGHT_RATIO).toPrecision(4);
+  const isDesktop = globalThis.innerWidth >= S_DESKTOP_MIN_WIDTH;
+
+  const fullChartHeightRatio = isLandscape && !isDesktop
+    ? 185 / PORTRAIT_DEFAULT_WIDTH
+    : 403 / LANDSCAPE_DEFAULT_WIDTH;
+  const maxBarHeightRatio = isLandscape && !isDesktop
+    ? 117 / PORTRAIT_DEFAULT_WIDTH
+    : 270 / LANDSCAPE_DEFAULT_WIDTH;
+
+  const fullChartHeight = (fullChartHeightRatio * globalThis.innerHeight).toPrecision(5);
+  const chartHeight = maxBarHeightRatio * globalThis.innerHeight;
   const maxValue = data.values.reduce((max, dataValue) => {
     return max < dataValue.value ? dataValue.value : max;
   }, 0);
 
   return `
-    <div class="history-histogram-wrap">
-      <section class="history-histogram">
+    <div class="chart-slide">
+      <section class="history-histogram chart-slide__histogram">
         <h3 class="visually-hidden">Диаграмма</h3>
-        <ul class="history-histogram__chart" style="height: ${chartHeight + `px`}">
-          ${data.values.reduce((markup, value) => {
-            markup += renderHistoryHistogramBar(value, maxValue, chartHeight, CHART_TOP_GAP);
-            return markup;
-          }, ``)}
-        </ul>
+        <div class="history-histogram__chart" style="height: ${fullChartHeight + `px`}">
+          <ul class="history-histogram__values">
+            ${data.values.reduce((markup, value) => {
+              markup += renderHistoryHistogramBar(value, maxValue, chartHeight);
+              return markup;
+            }, ``)}
+          </ul>
+        </div>
       </section>
-      <section class="history-leaders">
+      <section class="history-leaders chart-slide__leaders">
         <h3 class="visually-hidden">Лидеры</h3>
         <ul class="history-leaders__list">
           ${data.users.reduce((markup, user, i) => {
