@@ -19,7 +19,8 @@ For production build (minified production bundle with its analysis) run:
 npm run prod
 ```
 
-- Start Express JS web server:
+- Express JS web server:
 ```
+npm run dev
 npm start
 ```

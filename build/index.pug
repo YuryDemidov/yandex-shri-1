@@ -11,9 +11,9 @@ html(lang="ru")
     link(rel='apple-touch-icon' sizes='180x180' href=`/assets/images/apple-touch-icon_${pageData.theme}.png`)
     link(rel='icon' type='image/svg+xml' href=`/assets/images/favicon_${pageData.theme}.svg`)
     link(href="/stories.css" rel="stylesheet")
-    script(src="/js/runtime.js")
-    script(src="/js/vendor.js")
-    script(src="/js/main.js")
+    script(src="/runtime.js")
+    script(src="/vendor.js")
+    script(src="/stories.js")
   body.theme(class=(pageData.theme ? `theme_${pageData.theme}` : ''))
     if pageData.theme === 'light'
       include svg-sprite-light

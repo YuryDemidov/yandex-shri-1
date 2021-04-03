@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV === `development`;
 const PATHS = {
   src: path.join(__dirname, `../src`),
   build: path.join(__dirname, `../build`),
-  assets: `assets/`
+  assets: `assets`
 };
 
 const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
@@ -34,7 +34,7 @@ const plugins = () => {
   const base = [
     new CopyWebpackPlugin({
       patterns: [
-        { from: `${PATHS.assets}/images`, to: 'assets/images' }
+        { from: `${PATHS.assets}/images`, to: `${PATHS.assets}/images` }
       ]
     }),
 
@@ -232,10 +232,10 @@ module.exports = {
     paths: PATHS
   },
   entry: {
-    main: mainEntryPoint()
+    stories: mainEntryPoint()
   },
   output: {
-    filename: filename(`js/`, `js`),
+    filename: filename(``, `js`),
     path: PATHS.build,
     publicPath: `/`,
   },
@@ -269,7 +269,13 @@ module.exports = {
         })
       }, {
         test: /\.(woff(2)?|ttf|eot)$/,
-        type: `asset/resource`
+        use: [{
+          loader: `file-loader`,
+          options: {
+            name: filename(`${PATHS.assets}/fonts/`, `[ext]`),
+            esModule: false
+          }
+        }]
       }, {
         test: /\.(webp|png|jpe?g|svg)$/,
         use: [{
