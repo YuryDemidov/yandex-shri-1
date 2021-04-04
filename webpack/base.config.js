@@ -14,7 +14,7 @@ const isDev = process.env.NODE_ENV === `development`;
 
 const PATHS = {
   src: path.join(__dirname, `../src`),
-  dist: path.join(__dirname, `../dist`),
+  build: path.join(__dirname, `../build`),
   assets: `assets`
 };
 
@@ -238,7 +238,7 @@ module.exports = {
   },
   output: {
     filename: filename(``, `js`),
-    path: PATHS.dist,
+    path: PATHS.build,
     publicPath: `/`,
   },
   optimization: optimization(),
