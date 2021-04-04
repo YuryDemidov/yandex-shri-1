@@ -50,11 +50,11 @@ function renderCaption({ title, subtitle }) {
 
 function renderImg(fileName, alt, width, height, className) {
   return `
-    <img ${className ? `class=${className}` : ``} srcset="/assets/images/1x/${fileName},
-      /assets/images/2x/${fileName} 2x,
-      /assets/images/3x/${fileName} 3x,
-      /assets/images/4x/${fileName} 4x"
-      src="/assets/images/3x/${fileName}" width="${width}" height="${height}" alt="${alt}">
+    <img ${className ? `class=${className}` : ``} srcset="assets/images/1x/${fileName},
+      assets/images/2x/${fileName} 2x,
+      assets/images/3x/${fileName} 3x,
+      assets/images/4x/${fileName} 4x"
+      src="assets/images/3x/${fileName}" width="${width}" height="${height}" alt="${alt}">
   `;
 }
 
@@ -950,7 +950,7 @@ let savedSlideData;
  *
  * @returns {string} - markup for page rendering or empty string if there is no such slide type or data was not provided.
  */
-globalThis.renderTemplate = function(alias, data) {
+window.renderTemplate = function(alias, data) {
   if (!alias || !data) {
     return ``;
   }
@@ -978,7 +978,7 @@ globalThis.renderTemplate = function(alias, data) {
  * @param {SlideType} alias - alias of slide to render.
  * @param {SlideData|string} data - slide data or JSON with data.
  */
-globalThis.postRenderScript = function(alias, data) {
+window.postRenderScript = function(alias, data) {
   if (!data) {
     return ``;
   }
