@@ -1,11 +1,13 @@
-import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/screenDimensions';
+import isLandscape from '../../utils/functions/isLandscape';
 import getIntervals from './getIntervals';
 
 export default function renderActivityHeatmap(data) {
   const intervals = getIntervals({ data });
+
   const svgIconMap = new Map();
-  svgIconMap.set([0, 0], `bar-s`);
-  [`bar-m`, `bar-l`, `bar-xl`].forEach((iconName, i) => {
+  svgIconMap.set([0, 0], `s`);
+
+  [`m`, `l`, `xl`].forEach((iconName, i) => {
     svgIconMap.set(intervals[i], iconName);
   });
 
@@ -18,16 +20,16 @@ export default function renderActivityHeatmap(data) {
               let currentSvgIcon;
               for (const entry of svgIconMap) {
                 const interval = entry[0];
-                const svgIconName = entry[1];
+                const svgIconSize = entry[1];
 
                 if (hourValue >= interval[0] && hourValue <= interval[1]) {
-                  currentSvgIcon = `#${svgIconName}`;
+                  currentSvgIcon = `#bar-${svgIconSize}`;
                   break;
                 }
               }
               hourMarkup += `
-                <div class=${globalThis.innerWidth < LANDSCAPE_PHONE_MIN_WIDTH ? `heatmap__hour-data` : `heatmap__two-hour-data`}>
-                  <svg>
+                <div class=${isLandscape() ? `heatmap__two-hour-data` : `heatmap__hour-data`}>
+                  <svg class="heatmap__bar heatmap__${currentSvgIcon.slice(1).replace(`-`, `_`)}">
                     <use xlink:href=${currentSvgIcon}></use>
                   </svg>
                 </div>

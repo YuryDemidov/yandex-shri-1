@@ -1,4 +1,7 @@
-import renderActivityChart from './renderActivityChart';
+import processActivityData from './processActivityData';
+import renderActivityHeatmap from './renderActivityHeatmap';
+import renderActivityTableData from './renderActivityTableData';
+import renderActivityChartLegend from './renderActivityChartLegend';
 
 /**
  * Render activity slide content.
@@ -8,9 +11,15 @@ import renderActivityChart from './renderActivityChart';
  * @returns {string} - markup for slide.
  */
 export default function renderActivitySlide(data) {
+  const processedData = processActivityData(data);
+
   return `
-    <div class="activity-chart">
-      ${renderActivityChart(data)}
-    </div>
+    <figure class="activity-chart">
+      <div class="activity-chart__wrap">
+        ${renderActivityHeatmap(processedData)}
+        ${renderActivityTableData(data)}        
+      </div>
+      ${renderActivityChartLegend(processedData)}
+    </figure>
   `;
 }

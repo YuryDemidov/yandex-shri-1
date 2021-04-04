@@ -20,22 +20,24 @@ function renderActivityCells({ data }) {
 
 export default function renderActivityTableData(data) {
   return `
-    <table class="visually-hidden" aria-label="Данные с графика активности в различные часы">
-      <thead>
-        <tr>
-          <th>Временной интервал</th>
-          <th>Понедельник</th>
-          <th>Вторник</th>
-          <th>Среда</th>
-          <th>Четверг</th>
-          <th>Пятница</th>
-          <th>Суббота</th>
-          <th>Воскресенье</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${renderActivityCells(data)}
-      </tbody>
-    </table>
+    <div class="visually-hidden">
+      <table aria-label="Данные с графика активности в различные часы">
+        <thead>
+          <tr>
+            <th>Временной интервал</th>
+            <th>Понедельник</th>
+            <th>Вторник</th>
+            <th>Среда</th>
+            <th>Четверг</th>
+            <th>Пятница</th>
+            <th>Суббота</th>
+            <th>Воскресенье</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${renderActivityCells(data)}
+        </tbody>
+      </table>
+    </div>
   `;
 }

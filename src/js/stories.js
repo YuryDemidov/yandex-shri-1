@@ -115,6 +115,10 @@ function renderPage() {
 
 function windowResizeHandler() {
   if (previousWindowHeight !== globalThis.innerHeight) {
+    if (document.querySelector(`.slide_activity`)) {
+      renderPage();
+    }
+
     setVhCssProperty();
 
     if (document.querySelector(`.slide_vote`)) {

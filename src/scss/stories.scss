@@ -26,3 +26,7 @@
 @use 'blocks/diagram/diagram-slide';
 @use 'blocks/diagram/diagram';
 @use 'blocks/diagram/description-table';
+
+@use 'blocks/activity/activity-chart';
+@use 'blocks/activity/heatmap';
+@use 'blocks/activity/activity-legend';

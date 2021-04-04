@@ -1,10 +1,10 @@
-import renderHistoryHistogramBar from './renderHistoryHistogramBar';
-import renderHistoryLeadersPerson from './renderHistoryLeadersPerson';
 import {
   LANDSCAPE_DEFAULT_WIDTH,
-  PORTRAIT_DEFAULT_WIDTH,
-  S_DESKTOP_MIN_WIDTH
+  PORTRAIT_DEFAULT_WIDTH
 } from '../../utils/constants/screenDimensions';
+import isLandscape from '../../utils/functions/isLandscape';
+import renderHistoryHistogramBar from './renderHistoryHistogramBar';
+import renderHistoryLeadersPerson from './renderHistoryLeadersPerson';
 
 /**
  * @typedef HistoryValue
@@ -22,15 +22,8 @@ import {
  * @returns {string} - markup for slide.
  */
 export default function renderChartSlide(data) {
-  const isLandscape = globalThis.innerWidth > globalThis.innerHeight;
-  const isDesktop = globalThis.innerWidth >= S_DESKTOP_MIN_WIDTH;
-
-  const fullChartHeightRatio = isLandscape && !isDesktop
-    ? 185 / PORTRAIT_DEFAULT_WIDTH
-    : 403 / LANDSCAPE_DEFAULT_WIDTH;
-  const maxBarHeightRatio = isLandscape && !isDesktop
-    ? 117 / PORTRAIT_DEFAULT_WIDTH
-    : 270 / LANDSCAPE_DEFAULT_WIDTH;
+  const fullChartHeightRatio = isLandscape() ? 185 / PORTRAIT_DEFAULT_WIDTH : 403 / LANDSCAPE_DEFAULT_WIDTH;
+  const maxBarHeightRatio = isLandscape() ? 117 / PORTRAIT_DEFAULT_WIDTH : 270 / LANDSCAPE_DEFAULT_WIDTH;
 
   const fullChartHeight = (fullChartHeightRatio * globalThis.innerHeight).toPrecision(5);
   const chartHeight = maxBarHeightRatio * globalThis.innerHeight;

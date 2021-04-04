@@ -15,7 +15,6 @@ export default class CanvasDiagramDrawer {
   }
 
   drawSector(sectorNumber, radius, center, ringWidth, startAngle, endAngle, borderRadiusSize, borderRadiusInRads, isAuxiliary) {
-    //this.setInitialRotation();
     const centerX = isAuxiliary ? center + this.shadowOffset : center; // For inset shadows drawing
     const centerY = center;
     const innerRadius = radius - ringWidth - 2 * borderRadiusSize;
@@ -82,58 +81,61 @@ export default class CanvasDiagramDrawer {
    * Config of sectors gradients
    */
   _createRadialGradient(sectorNumber, center, mainRadius) {
-    let circleRadiusRatio;
+    let firstCircleRadiusRatio;
+    let secondCircleRadiusRatio;
     let firstColorStop;
     let secondColorStop;
 
     switch (sectorNumber) {
       case 1:
         if (this.theme === `dark`) {
-          circleRadiusRatio = 0.7188;
-          firstColorStop = `rgba(255, 163, 0, 0.8)`;
-          secondColorStop = `rgba(91, 58, 0, 0.8)`;
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(211, 136, 4, 1)`;
+          secondColorStop = `rgba(80, 52, 4, 1)`;
         } else {
-          circleRadiusRatio = 0.8125;
-          firstColorStop = `rgba(255, 184, 0, 0.56)`;
-          secondColorStop = `rgba(255, 239, 153, 0.32)`;
+          firstCircleRadiusRatio = 0.8125;
+          firstColorStop = `rgba(255, 215, 112, 1)`;
+          secondColorStop = `rgba(255, 250, 222, 1)`;
         }
         break;
       case 2:
         if (this.theme === `dark`) {
-          circleRadiusRatio = 0.7292;
-          firstColorStop = `rgba(99, 63, 0, 0.5)`;
-          secondColorStop = `rgba(15, 9, 0, 0.5)`;
+          firstCircleRadiusRatio = 0.7292;
+          firstColorStop = `rgba(62, 42, 7, 1)`;
+          secondColorStop = `rgba(16, 12, 5, 1)`;
         } else {
-          circleRadiusRatio = 0.8125;
-          firstColorStop = `rgba(255, 184, 0, 0.24)`;
-          secondColorStop = `rgba(255, 239, 153, 0.12)`;
+          firstCircleRadiusRatio = 0.8125;
+          firstColorStop = `rgba(255, 238, 194, 1)`;
+          secondColorStop = `rgba(255, 253, 243, 1)`;
         }
         break;
       case 3:
         if (this.theme === `dark`) {
-          circleRadiusRatio = 0.7188;
-          firstColorStop = `rgba(155, 155, 155, 0.5)`;
-          secondColorStop = `rgba(56, 41, 0, 0.5)`;
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(89, 88, 85, 1)`;
+          secondColorStop = `rgba(37, 28, 5, 1)`;
         } else {
-          circleRadiusRatio = 0.8281;
-          firstColorStop = `rgba(166, 166, 166, 0.1725)`;
-          secondColorStop = `rgba(203, 203, 203, 0.05)`;
+          firstCircleRadiusRatio = 0.8281;
+          firstColorStop = `rgba(240, 240, 240, 1)`;
+          secondCircleRadiusRatio = 0.9219;
+          secondColorStop = `rgba(252, 252, 252, 1)`;
         }
         break;
       case 4:
         if (this.theme === `dark`) {
-          circleRadiusRatio = 0.7188;
-          firstColorStop = `rgba(77, 77, 77, 0.5)`;
-          secondColorStop = `rgba(56, 41, 0, 0.5)`;
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(49, 47, 44, 1)`;
+          secondColorStop = `rgba(35, 27, 4, 1)`;
         } else {
-          circleRadiusRatio = 0.8281;
-          firstColorStop = `rgba(191, 191, 191, 0.345)`;
-          secondColorStop = `rgba(228, 228, 228, 0.1)`;
+          firstCircleRadiusRatio = 0.8281;
+          firstColorStop = `rgba(233, 233, 233, 1)`;
+          secondCircleRadiusRatio = 0.9219;
+          secondColorStop = `rgba(252, 252, 252, 1)`;
         }
         break;
     }
 
-    const gradient = this.ctx.createRadialGradient(center, center, circleRadiusRatio * mainRadius, center, center, mainRadius);
+    const gradient = this.ctx.createRadialGradient(center, center, firstCircleRadiusRatio * mainRadius, center, center, mainRadius * (secondCircleRadiusRatio || 1));
 
     gradient.addColorStop(0, firstColorStop);
     gradient.addColorStop(1, secondColorStop);
@@ -150,7 +152,7 @@ export default class CanvasDiagramDrawer {
     shadowsConfig.forEach(shadow => {
       this.ctx.shadowColor = shadow.color;
       this.ctx.shadowBlur = shadow.blur || 10;
-      this.ctx.lineWidth = shadow.blur * 2 || 10;
+      this.ctx.lineWidth = shadow.blur || 10;
       this.ctx.shadowOffsetX = shadow.shadowOffsetX ? -this.shadowOffset + shadow.shadowOffsetX : -this.shadowOffset;
       this.ctx.shadowOffsetY = shadow.shadowOffsetY || 0;
 
@@ -216,7 +218,7 @@ export default class CanvasDiagramDrawer {
             },
             insetBorderShadow,
             {
-              color: `rgba(202, 129, 0, 0.9)`,
+              color: `rgba(202, 176, 57, 0.4)`,
               inset: true
             }
           );
@@ -270,11 +272,11 @@ export default class CanvasDiagramDrawer {
           );
         } else {
           shadows.push(
-            insetBorderShadow,
             {
               color: `rgba(131, 131, 131, 0.6)`,
               inset: true
-            }
+            },
+            insetBorderShadow
           );
         }
         break;

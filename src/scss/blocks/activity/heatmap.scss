@@ -1,0 +1,111 @@
+@use '../../utils/tools' as *;
+
+.heatmap {
+  --initial-bar-size: 43.73;
+  --bar-size-ratio: 0.7675;
+  --m-bar-ratio: calc(54.02 / var(--initial-bar-size));
+  --l-bar-ratio: calc(74.6 / var(--initial-bar-size));
+  --xl-bar-ratio: calc(95.18 / var(--initial-bar-size));
+  --bar-x-size: calc((100vw - 2 * 2.4rem) / 7.5);
+  --bar-y-size: calc(var(--bar-x-size) * var(--bar-size-ratio));
+  --bar-size-diff: calc(var(--bar-x-size) - var(--bar-y-size));
+
+  @media (max-width: $phone-portrait-min-width) {
+    --bar-x-size: calc(var(--initial-bar-size) * 1px);
+  }
+
+  display: flex;
+  height: calc(12 * var(--bar-y-size) + var(--bar-x-size) - var(--bar-y-size) / 2);
+
+  &__hour-data {
+    @include box(var(--bar-x-size));
+
+    position: relative;
+
+    display: flex;
+  }
+
+  &__day-data {
+    .heatmap__hour-data {
+      @for $i from 2 through 24 {
+        &:nth-child(#{$i}) {
+          bottom: calc(#{$i - 1} * (var(--bar-x-size) - var(--bar-y-size) / 2));
+
+          @if $i % 2 == 0 {
+            left: calc(var(--bar-x-size) / 2);
+          }
+
+          z-index: $i;
+        }
+      }
+    }
+  }
+
+  &__bar {
+    display: block;
+
+    @each $size in ('m', 'l', 'xl') {
+      &_#{$size} {
+        $height: calc(var(--bar-x-size) * var(--#{$size}-bar-ratio));
+
+        height: #{$height};
+
+        transform: translateY(calc(var(--bar-x-size) - #{$height}));
+      }
+    }
+  }
+}
+
+@media (min-width: $phone-landscape-min-width) {
+  .heatmap {
+    --bar-x-size: calc(4rem + 4vw);
+
+    justify-content: center;
+    margin-right: calc(var(--bar-x-size) / 2);
+  }
+}
+
+@media (min-width: $s-desktop-min-width) {
+  .heatmap {
+    --bar-x-size: 7.5rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .heatmap {
+    --bar-size-ratio: calc(2.6 / 3.4);
+    --bar-x-size: calc((34 / 668) * 100vw);
+
+    @include box(calc(12.5 * var(--bar-x-size)), calc(3 * var(--bar-y-size) + var(--bar-x-size)));
+
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-right: 0;
+
+    &__two-hour-data {
+      @include box(var(--bar-x-size));
+
+      position: relative;
+
+      display: flex;
+    }
+
+    &__day-data {
+      display: flex;
+
+      @for $i from 2 through 7 {
+        &:nth-child(#{$i}) {
+          .heatmap__two-hour-data {
+            bottom: calc(#{$i - 1} * (var(--bar-x-size) - var(--bar-y-size) / 2));
+
+            @if $i % 2 == 0 {
+              left: calc(var(--bar-x-size) / 2);
+            }
+
+            z-index: $i;
+          }
+        }
+      }
+    }
+  }
+}

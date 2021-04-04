@@ -1,0 +1,31 @@
+@use '../../utils/tools' as *;
+
+.activity-chart {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 0;
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  &__legend {
+    margin-top: 2rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .activity-chart {
+    align-items: center;
+    padding: calc(9 * var(--vh, 1vh));
+
+    &__legend {
+      width: 100%;
+      margin-top: 2.7rem;
+    }
+  }
+}

@@ -122,6 +122,16 @@
       }
     }
   }
+
+  &_activity {
+    overflow: hidden;
+
+    .slide__content {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+  }
 }
 
 @media (min-width: $phone-landscape-min-width) {

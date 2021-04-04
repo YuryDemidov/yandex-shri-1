@@ -1,7 +1,7 @@
-import { LANDSCAPE_PHONE_MIN_WIDTH } from '../../utils/constants/screenDimensions';
+import isLandscape from '../../utils/functions/isLandscape';
 
 export default function processActivityData({ data }) {
-  if (globalThis.innerWidth < LANDSCAPE_PHONE_MIN_WIDTH) {
+  if (!isLandscape()) {
     return data;
   }
 
