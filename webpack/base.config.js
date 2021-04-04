@@ -14,13 +14,11 @@ const isDev = process.env.NODE_ENV === `development`;
 
 const PATHS = {
   src: path.join(__dirname, `../src`),
-  dist: path.join(__dirname, `../dist`),
+  build: path.join(__dirname, `../build`),
   assets: `assets`
 };
 
-// TODO Turn on contenthash in production. Was turned off for testing
-// const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
-const filename = (dir, ext) => `${dir}[name].${ext}`;
+const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
 
 const mainEntryPoint = () => {
   const base = [`./src/js/stories.js`];
@@ -238,7 +236,7 @@ module.exports = {
   },
   output: {
     filename: filename(``, `js`),
-    path: PATHS.dist,
+    path: PATHS.build,
     publicPath: `/`,
   },
   optimization: optimization(),
