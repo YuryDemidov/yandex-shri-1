@@ -21,6 +21,5 @@ npm run prod
 
 - Express JS web server:
 ```
-npm run dev
 npm start
 ```

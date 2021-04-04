@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default class CanvasDiagramDrawer {
   constructor(canvas) {
     this.canvas = canvas;

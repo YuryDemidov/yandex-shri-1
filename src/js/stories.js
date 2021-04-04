@@ -12,10 +12,9 @@ import drawCanvasDiagram from './renderFunctions/diagram/drawCanvasDiagram';
 import setVhCssProperty from './renderFunctions/common/setVhCssProperty';
 import adjustVoteSlideIndents from './renderFunctions/vote/adjustVoteSlidePaddings';
 
-// TODO Enable this block for hot module replacement in development mode
-// if (module.hot) {
-//   module.hot.accept();
-// }
+if (module.hot) {
+  module.hot.accept();
+}
 
 let previousWindowWidth = globalThis.innerWidth;
 let previousWindowHeight = globalThis.innerHeight;
