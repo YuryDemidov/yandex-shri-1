@@ -18,7 +18,9 @@ const PATHS = {
   assets: `assets`
 };
 
-const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
+// TODO Turn on contenthash in production. Was turned off for testing
+// const filename = (dir, ext) => isDev ? `${dir}[name].${ext}` : `${dir}[name].[contenthash:8].${ext}`;
+const filename = (dir, ext) => `${dir}[name].${ext}`;
 
 const mainEntryPoint = () => {
   const base = [`./src/js/stories.js`];

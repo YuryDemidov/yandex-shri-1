@@ -12,14 +12,15 @@ import drawCanvasDiagram from './renderFunctions/diagram/drawCanvasDiagram';
 import setVhCssProperty from './renderFunctions/common/setVhCssProperty';
 import adjustVoteSlideIndents from './renderFunctions/vote/adjustVoteSlidePaddings';
 
+// TODO Enable this block for hot module replacement in development mode
+// if (module.hot) {
+//   module.hot.accept();
+// }
+
 let previousWindowWidth = globalThis.innerWidth;
 let previousWindowHeight = globalThis.innerHeight;
 let savedSlideName;
 let savedSlideData;
-
-if (module.hot) {
-  module.hot.accept();
-}
 
 /**
  * @typedef SlideData
@@ -54,7 +55,7 @@ if (module.hot) {
  *
  * @returns {string} - markup for page rendering or empty string if there is no such slide type or data was not provided.
  */
-globalThis.renderTemplate = function(alias, data) {
+window.renderTemplate = function(alias, data) {
   if (!alias || !data) {
     return ``;
   }
@@ -82,7 +83,7 @@ globalThis.renderTemplate = function(alias, data) {
  * @param {SlideType} alias - alias of slide to render.
  * @param {SlideData|string} data - slide data or JSON with data.
  */
-globalThis.postRenderScript = function(alias, data) {
+window.postRenderScript = function(alias, data) {
   if (!data) {
     return ``;
   }
