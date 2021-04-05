@@ -1,338 +1,1718 @@
-/*
- * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+// Warning!
+// This is not the file you are looking for!
+// This file was created manually only for possibility to autotest it
+
+const TABLET_MIN_WIDTH = 768; // px
+const LANDSCAPE_DEFAULT_WIDTH = 668; // px
+const LANDSCAPE_PHONE_MIN_WIDTH = 576; // px
+const PORTRAIT_DEFAULT_WIDTH = 376; // px
+
+function isLandscape() {
+  return globalThis.innerWidth > globalThis.innerHeight;
+}
+
+function integerDivision(value, divider) {
+  return (value - value % divider) / divider;
+}
+
+function setVhCssProperty() {
+  document.documentElement.style.setProperty(`--vh`, `${globalThis.innerHeight * 0.01}px`);
+}
+
+function debounce(func, ms, immediate) {
+  let timeout;
+  return function() {
+    const context = this
+    const args = arguments;
+    const delayedFunc = function() {
+      timeout = null;
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(delayedFunc, ms);
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+}
+
+function renderCaption({ title, subtitle }) {
+  return `
+    <div class="slide__caption">
+      <h1 class="slide__title headline">${title}</h1>
+      <h2 class="slide__subtitle main-text main-text_dim">${subtitle}</h2>
+    </div>
+  `;
+}
+
+function renderImg(fileName, alt, width, height, className) {
+  return `
+    <img ${className ? `class=${className}` : ``} srcset="assets/images/1x/${fileName},
+      assets/images/2x/${fileName} 2x,
+      assets/images/3x/${fileName} 3x,
+      assets/images/4x/${fileName} 4x"
+      src="assets/images/3x/${fileName}" width="${width}" height="${height}" alt="${alt}">
+  `;
+}
+
+function renderPersonCard(personData, position, selectedUserId, emoji, leadersBarsCount) {
+  const isSelected = personData.id === selectedUserId;
+  const lowPositionSelected = isSelected && position > leadersBarsCount;
+  const [name, surname] = personData.name.split(` `);
+  let currentEmoji = emoji;
+
+  if (isSelected && position !== 1) {
+    currentEmoji = `👍`; // like
+  }
+
+  return `
+    <figure class="person-card ${
+    isSelected ? `person-card_selected` : ``
+  } ${
+    lowPositionSelected ? `person-card_low-position-selected` : ``
+  }">
+      ${lowPositionSelected ? `<span class="person-card__low-selected-position">${position}</span>` : ``}
+      ${currentEmoji ? `<b class="person-card__emoji">${currentEmoji}</b>` : ``}
+      ${renderImg(personData.avatar, personData.name, 64, 64, `person-card__avatar`)}
+      <figcaption class="person-card__caption">
+        <h3 class="person-card__full-name main-text">
+          <span class="person-card__name">${name}</span>
+          <span class="person-card__surname">${surname}</span>
+        </h3>
+        <span class="person-card__result caption caption_dim">${(selectedUserId && globalThis.innerWidth < LANDSCAPE_PHONE_MIN_WIDTH) ? personData.valueText : parseInt(personData.valueText)}</span>
+      </figcaption>
+    </figure>
+  `;
+}
+
+/**
+ * Render leaders slide content.
+ *
+ * @param {SlideData} data - slide data.
+ *
+ * @returns {string} - markup for slide.
  */
-(self["webpackChunkyandex_shri"] = self["webpackChunkyandex_shri"] || []).push([["stories"],{
-
-/***/ "./src/js/classes/CanvasDiagramDrawer.js":
-/*!***********************************************!*\
-  !*** ./src/js/classes/CanvasDiagramDrawer.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ CanvasDiagramDrawer)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_fill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.fill.js */ \"./node_modules/core-js/modules/es.array.fill.js\");\n/* harmony import */ var core_js_modules_es_array_fill_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_fill_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.slice.js */ \"./node_modules/core-js/modules/es.array.slice.js\");\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ \"./node_modules/core-js/modules/es.array.for-each.js\");\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each.js */ \"./node_modules/core-js/modules/web.dom-collections.for-each.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ \"./node_modules/core-js/modules/es.object.define-property.js\");\n/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_5__);\n\n\n\n\n\n\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar CanvasDiagramDrawer = /*#__PURE__*/function () {\n  function CanvasDiagramDrawer(canvas) {\n    _classCallCheck(this, CanvasDiagramDrawer);\n\n    this.canvas = canvas;\n    this.ctx = this.canvas.getContext(\"2d\");\n    this.theme = document.querySelector(\"body\").classList.contains(\"theme_light\") ? \"light\" : \"dark\";\n    this.shadowOffset = 1000; // px\n  }\n\n  _createClass(CanvasDiagramDrawer, [{\n    key: \"drawBorderRadius\",\n    value: function drawBorderRadius(centerX, centerY, radiusControlPoint, angleControlPoint, radiusEndPoint, angleEndPoint) {\n      var borderRadiusControlPoint = this.getCirclePoint(centerX, centerY, radiusControlPoint, angleControlPoint);\n      var borderRadiusEndPoint = this.getCirclePoint(centerX, centerY, radiusEndPoint, angleEndPoint);\n      this.ctx.quadraticCurveTo(borderRadiusControlPoint.x, borderRadiusControlPoint.y, borderRadiusEndPoint.x, borderRadiusEndPoint.y);\n    }\n  }, {\n    key: \"drawSector\",\n    value: function drawSector(sectorNumber, radius, center, ringWidth, startAngle, endAngle, borderRadiusSize, borderRadiusInRads, isAuxiliary) {\n      var centerX = isAuxiliary ? center + this.shadowOffset : center; // For inset shadows drawing\n\n      var centerY = center;\n      var innerRadius = radius - ringWidth - 2 * borderRadiusSize;\n      this.ctx.beginPath(); // Outer radius\n\n      this.ctx.arc(centerX, centerY, radius, startAngle + borderRadiusInRads, endAngle - borderRadiusInRads); // Outer first border radius\n\n      this.drawBorderRadius(centerX, centerY, radius, endAngle, radius - borderRadiusSize, endAngle); // Ring line border\n\n      this.moveAlongRadius(centerX, centerY, innerRadius + borderRadiusSize, endAngle); // Inner first border radius\n\n      this.drawBorderRadius(centerX, centerY, innerRadius, endAngle, innerRadius, endAngle - borderRadiusInRads); // Inner radius\n\n      this.ctx.arc(centerX, centerY, radius - ringWidth - 2 * borderRadiusSize, endAngle - borderRadiusInRads, startAngle + borderRadiusInRads, true); // Inner second border radius\n\n      this.drawBorderRadius(centerX, centerY, innerRadius, startAngle, innerRadius + borderRadiusSize, startAngle); // Ring line border\n\n      this.moveAlongRadius(centerX, centerY, radius - borderRadiusSize, startAngle); // Outer second border radius\n\n      this.drawBorderRadius(centerX, centerY, radius, startAngle, radius, startAngle + borderRadiusInRads);\n\n      if (!isAuxiliary) {\n        this.ctx.fillStyle = this._createRadialGradient(sectorNumber, centerY, radius);\n        this.ctx.fill();\n\n        this._addShadows.apply(this, arguments);\n      }\n    }\n  }, {\n    key: \"moveAlongRadius\",\n    value: function moveAlongRadius(centerX, centerY, radius, angle) {\n      var endPoint = this.getCirclePoint(centerX, centerY, radius, angle);\n      this.ctx.lineTo(endPoint.x, endPoint.y);\n    }\n  }, {\n    key: \"getCirclePoint\",\n    value: function getCirclePoint(centerX, centerY, radiusPart, angle) {\n      var point = {\n        x: 0,\n        y: 0\n      };\n\n      if (angle >= 0 && angle < Math.PI / 2) {\n        point.x = centerX + radiusPart * Math.sin(Math.PI / 2 - angle);\n        point.y = centerY + radiusPart * Math.sin(angle);\n      } else if (angle >= Math.PI / 2 && angle < Math.PI) {\n        angle = angle - Math.PI / 2;\n        point.x = centerX - radiusPart * Math.sin(angle);\n        point.y = centerY + radiusPart * Math.sin(Math.PI / 2 - angle);\n      } else if (angle >= Math.PI && angle < 3 * Math.PI / 2) {\n        angle = angle - Math.PI;\n        point.x = centerX - radiusPart * Math.sin(Math.PI / 2 - angle);\n        point.y = centerY - radiusPart * Math.sin(angle);\n      } else {\n        angle = angle - 3 * Math.PI / 2;\n        point.x = centerX + radiusPart * Math.sin(angle);\n        point.y = centerY - radiusPart * Math.sin(Math.PI / 2 - angle);\n      }\n\n      return point;\n    }\n  }, {\n    key: \"degreesToRadians\",\n    value: function degreesToRadians(degrees) {\n      return degrees * Math.PI / 180;\n    }\n    /**\n     * Config of sectors gradients\n     */\n\n  }, {\n    key: \"_createRadialGradient\",\n    value: function _createRadialGradient(sectorNumber, center, mainRadius) {\n      var firstCircleRadiusRatio;\n      var secondCircleRadiusRatio;\n      var firstColorStop;\n      var secondColorStop;\n\n      switch (sectorNumber) {\n        case 1:\n          if (this.theme === \"dark\") {\n            firstCircleRadiusRatio = 0.7188;\n            firstColorStop = \"rgba(211, 136, 4, 1)\";\n            secondColorStop = \"rgba(80, 52, 4, 1)\";\n          } else {\n            firstCircleRadiusRatio = 0.8125;\n            firstColorStop = \"rgba(255, 215, 112, 1)\";\n            secondColorStop = \"rgba(255, 250, 222, 1)\";\n          }\n\n          break;\n\n        case 2:\n          if (this.theme === \"dark\") {\n            firstCircleRadiusRatio = 0.7292;\n            firstColorStop = \"rgba(62, 42, 7, 1)\";\n            secondColorStop = \"rgba(16, 12, 5, 1)\";\n          } else {\n            firstCircleRadiusRatio = 0.8125;\n            firstColorStop = \"rgba(255, 238, 194, 1)\";\n            secondColorStop = \"rgba(255, 253, 243, 1)\";\n          }\n\n          break;\n\n        case 3:\n          if (this.theme === \"dark\") {\n            firstCircleRadiusRatio = 0.7188;\n            firstColorStop = \"rgba(89, 88, 85, 1)\";\n            secondColorStop = \"rgba(37, 28, 5, 1)\";\n          } else {\n            firstCircleRadiusRatio = 0.8281;\n            firstColorStop = \"rgba(240, 240, 240, 1)\";\n            secondCircleRadiusRatio = 0.9219;\n            secondColorStop = \"rgba(252, 252, 252, 1)\";\n          }\n\n          break;\n\n        case 4:\n          if (this.theme === \"dark\") {\n            firstCircleRadiusRatio = 0.7188;\n            firstColorStop = \"rgba(49, 47, 44, 1)\";\n            secondColorStop = \"rgba(35, 27, 4, 1)\";\n          } else {\n            firstCircleRadiusRatio = 0.8281;\n            firstColorStop = \"rgba(233, 233, 233, 1)\";\n            secondCircleRadiusRatio = 0.9219;\n            secondColorStop = \"rgba(252, 252, 252, 1)\";\n          }\n\n          break;\n      }\n\n      var gradient = this.ctx.createRadialGradient(center, center, firstCircleRadiusRatio * mainRadius, center, center, mainRadius * (secondCircleRadiusRatio || 1));\n      gradient.addColorStop(0, firstColorStop);\n      gradient.addColorStop(1, secondColorStop);\n      return gradient;\n    }\n  }, {\n    key: \"_addShadows\",\n    value: function _addShadows() {\n      var _this = this;\n\n      var slideNumber = arguments[0];\n\n      var shadowsConfig = this._getShadows(slideNumber);\n\n      this.drawSector.apply(this, Array.prototype.slice.call(arguments).concat([true]));\n      shadowsConfig.forEach(function (shadow) {\n        _this.ctx.shadowColor = shadow.color;\n        _this.ctx.shadowBlur = shadow.blur || 10;\n        _this.ctx.lineWidth = shadow.blur || 10;\n        _this.ctx.shadowOffsetX = shadow.shadowOffsetX ? -_this.shadowOffset + shadow.shadowOffsetX : -_this.shadowOffset;\n        _this.ctx.shadowOffsetY = shadow.shadowOffsetY || 0;\n\n        if (shadow.inset) {\n          _this.ctx.globalCompositeOperation = \"source-atop\";\n        }\n\n        if (shadow.spread) {\n          var scaleFactor = 0.5;\n\n          _this.ctx.save();\n\n          _this.ctx.scale(scaleFactor, scaleFactor);\n        }\n\n        _this.ctx.stroke();\n\n        _this.ctx.restore();\n\n        _this.ctx.globalCompositeOperation = \"source-over\";\n      });\n    }\n  }, {\n    key: \"_getShadows\",\n    value: function _getShadows(slideNumber) {\n      var shadows = [];\n      var insetBorderShadow = {\n        blur: 1,\n        color: \"rgba(255, 255, 255, 0.5)\",\n        shadowOffsetX: -1,\n        shadowOffsetY: 1,\n        inset: true\n      };\n\n      switch (slideNumber) {\n        case 1:\n          if (this.theme === \"dark\") {\n            shadows.push({\n              spread: -8,\n              color: \"rgba(248, 158, 0, 0.2)\",\n              inset: false\n            }, insetBorderShadow, {\n              color: \"rgba(255, 162, 0, 0.9)\",\n              inset: true\n            });\n          } else {\n            shadows.push(insetBorderShadow, {\n              color: \"rgba(255, 176, 57, 0.9)\",\n              inset: true\n            });\n          }\n\n          break;\n\n        case 2:\n          if (this.theme === \"dark\") {\n            shadows.push({\n              spread: -8,\n              color: \"rgba(147, 93, 0, 0.2)\",\n              inset: false\n            }, insetBorderShadow, {\n              color: \"rgba(202, 176, 57, 0.4)\",\n              inset: true\n            });\n          } else {\n            shadows.push(insetBorderShadow, {\n              color: \"rgba(255, 176, 57, 0.4)\",\n              inset: true\n            });\n          }\n\n          break;\n\n        case 3:\n          if (this.theme === \"dark\") {\n            shadows.push({\n              spread: -8,\n              color: \"rgba(0, 0, 0, 0.2)\",\n              inset: false\n            }, insetBorderShadow, {\n              color: \"rgba(139, 139, 139, 0.9)\",\n              inset: true\n            });\n          } else {\n            shadows.push(insetBorderShadow, {\n              color: \"rgba(105, 105, 105, 0.2)\",\n              inset: true\n            });\n          }\n\n          break;\n\n        case 4:\n          if (this.theme === \"dark\") {\n            shadows.push({\n              spread: -8,\n              color: \"rgba(96, 96, 96, 0.2)\",\n              inset: false\n            }, insetBorderShadow, {\n              color: \"rgba(38, 38, 38, 0.9)\",\n              inset: true\n            });\n          } else {\n            shadows.push({\n              color: \"rgba(131, 131, 131, 0.6)\",\n              inset: true\n            }, insetBorderShadow);\n          }\n\n          break;\n      }\n\n      return shadows;\n    }\n  }]);\n\n  return CanvasDiagramDrawer;\n}();\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvY2xhc3Nlcy9DYW52YXNEaWFncmFtRHJhd2VyLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvY2xhc3Nlcy9DYW52YXNEaWFncmFtRHJhd2VyLmpzPzQxMTkiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmZpbGwuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5zbGljZS5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmZvci1lYWNoLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvd2ViLmRvbS1jb2xsZWN0aW9ucy5mb3ItZWFjaC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLm9iamVjdC5kZWZpbmUtcHJvcGVydHkuanNcIjtcblxuZnVuY3Rpb24gX2NsYXNzQ2FsbENoZWNrKGluc3RhbmNlLCBDb25zdHJ1Y3RvcikgeyBpZiAoIShpbnN0YW5jZSBpbnN0YW5jZW9mIENvbnN0cnVjdG9yKSkgeyB0aHJvdyBuZXcgVHlwZUVycm9yKFwiQ2Fubm90IGNhbGwgYSBjbGFzcyBhcyBhIGZ1bmN0aW9uXCIpOyB9IH1cblxuZnVuY3Rpb24gX2RlZmluZVByb3BlcnRpZXModGFyZ2V0LCBwcm9wcykgeyBmb3IgKHZhciBpID0gMDsgaSA8IHByb3BzLmxlbmd0aDsgaSsrKSB7IHZhciBkZXNjcmlwdG9yID0gcHJvcHNbaV07IGRlc2NyaXB0b3IuZW51bWVyYWJsZSA9IGRlc2NyaXB0b3IuZW51bWVyYWJsZSB8fCBmYWxzZTsgZGVzY3JpcHRvci5jb25maWd1cmFibGUgPSB0cnVlOyBpZiAoXCJ2YWx1ZVwiIGluIGRlc2NyaXB0b3IpIGRlc2NyaXB0b3Iud3JpdGFibGUgPSB0cnVlOyBPYmplY3QuZGVmaW5lUHJvcGVydHkodGFyZ2V0LCBkZXNjcmlwdG9yLmtleSwgZGVzY3JpcHRvcik7IH0gfVxuXG5mdW5jdGlvbiBfY3JlYXRlQ2xhc3MoQ29uc3RydWN0b3IsIHByb3RvUHJvcHMsIHN0YXRpY1Byb3BzKSB7IGlmIChwcm90b1Byb3BzKSBfZGVmaW5lUHJvcGVydGllcyhDb25zdHJ1Y3Rvci5wcm90b3R5cGUsIHByb3RvUHJvcHMpOyBpZiAoc3RhdGljUHJvcHMpIF9kZWZpbmVQcm9wZXJ0aWVzKENvbnN0cnVjdG9yLCBzdGF0aWNQcm9wcyk7IHJldHVybiBDb25zdHJ1Y3RvcjsgfVxuXG52YXIgQ2FudmFzRGlhZ3JhbURyYXdlciA9IC8qI19fUFVSRV9fKi9mdW5jdGlvbiAoKSB7XG4gIGZ1bmN0aW9uIENhbnZhc0RpYWdyYW1EcmF3ZXIoY2FudmFzKSB7XG4gICAgX2NsYXNzQ2FsbENoZWNrKHRoaXMsIENhbnZhc0RpYWdyYW1EcmF3ZXIpO1xuXG4gICAgdGhpcy5jYW52YXMgPSBjYW52YXM7XG4gICAgdGhpcy5jdHggPSB0aGlzLmNhbnZhcy5nZXRDb250ZXh0KFwiMmRcIik7XG4gICAgdGhpcy50aGVtZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCJib2R5XCIpLmNsYXNzTGlzdC5jb250YWlucyhcInRoZW1lX2xpZ2h0XCIpID8gXCJsaWdodFwiIDogXCJkYXJrXCI7XG4gICAgdGhpcy5zaGFkb3dPZmZzZXQgPSAxMDAwOyAvLyBweFxuICB9XG5cbiAgX2NyZWF0ZUNsYXNzKENhbnZhc0RpYWdyYW1EcmF3ZXIsIFt7XG4gICAga2V5OiBcImRyYXdCb3JkZXJSYWRpdXNcIixcbiAgICB2YWx1ZTogZnVuY3Rpb24gZHJhd0JvcmRlclJhZGl1cyhjZW50ZXJYLCBjZW50ZXJZLCByYWRpdXNDb250cm9sUG9pbnQsIGFuZ2xlQ29udHJvbFBvaW50LCByYWRpdXNFbmRQb2ludCwgYW5nbGVFbmRQb2ludCkge1xuICAgICAgdmFyIGJvcmRlclJhZGl1c0NvbnRyb2xQb2ludCA9IHRoaXMuZ2V0Q2lyY2xlUG9pbnQoY2VudGVyWCwgY2VudGVyWSwgcmFkaXVzQ29udHJvbFBvaW50LCBhbmdsZUNvbnRyb2xQb2ludCk7XG4gICAgICB2YXIgYm9yZGVyUmFkaXVzRW5kUG9pbnQgPSB0aGlzLmdldENpcmNsZVBvaW50KGNlbnRlclgsIGNlbnRlclksIHJhZGl1c0VuZFBvaW50LCBhbmdsZUVuZFBvaW50KTtcbiAgICAgIHRoaXMuY3R4LnF1YWRyYXRpY0N1cnZlVG8oYm9yZGVyUmFkaXVzQ29udHJvbFBvaW50LngsIGJvcmRlclJhZGl1c0NvbnRyb2xQb2ludC55LCBib3JkZXJSYWRpdXNFbmRQb2ludC54LCBib3JkZXJSYWRpdXNFbmRQb2ludC55KTtcbiAgICB9XG4gIH0sIHtcbiAgICBrZXk6IFwiZHJhd1NlY3RvclwiLFxuICAgIHZhbHVlOiBmdW5jdGlvbiBkcmF3U2VjdG9yKHNlY3Rvck51bWJlciwgcmFkaXVzLCBjZW50ZXIsIHJpbmdXaWR0aCwgc3RhcnRBbmdsZSwgZW5kQW5nbGUsIGJvcmRlclJhZGl1c1NpemUsIGJvcmRlclJhZGl1c0luUmFkcywgaXNBdXhpbGlhcnkpIHtcbiAgICAgIHZhciBjZW50ZXJYID0gaXNBdXhpbGlhcnkgPyBjZW50ZXIgKyB0aGlzLnNoYWRvd09mZnNldCA6IGNlbnRlcjsgLy8gRm9yIGluc2V0IHNoYWRvd3MgZHJhd2luZ1xuXG4gICAgICB2YXIgY2VudGVyWSA9IGNlbnRlcjtcbiAgICAgIHZhciBpbm5lclJhZGl1cyA9IHJhZGl1cyAtIHJpbmdXaWR0aCAtIDIgKiBib3JkZXJSYWRpdXNTaXplO1xuICAgICAgdGhpcy5jdHguYmVnaW5QYXRoKCk7IC8vIE91dGVyIHJhZGl1c1xuXG4gICAgICB0aGlzLmN0eC5hcmMoY2VudGVyWCwgY2VudGVyWSwgcmFkaXVzLCBzdGFydEFuZ2xlICsgYm9yZGVyUmFkaXVzSW5SYWRzLCBlbmRBbmdsZSAtIGJvcmRlclJhZGl1c0luUmFkcyk7IC8vIE91dGVyIGZpcnN0IGJvcmRlciByYWRpdXNcblxuICAgICAgdGhpcy5kcmF3Qm9yZGVyUmFkaXVzKGNlbnRlclgsIGNlbnRlclksIHJhZGl1cywgZW5kQW5nbGUsIHJhZGl1cyAtIGJvcmRlclJhZGl1c1NpemUsIGVuZEFuZ2xlKTsgLy8gUmluZyBsaW5lIGJvcmRlclxuXG4gICAgICB0aGlzLm1vdmVBbG9uZ1JhZGl1cyhjZW50ZXJYLCBjZW50ZXJZLCBpbm5lclJhZGl1cyArIGJvcmRlclJhZGl1c1NpemUsIGVuZEFuZ2xlKTsgLy8gSW5uZXIgZmlyc3QgYm9yZGVyIHJhZGl1c1xuXG4gICAgICB0aGlzLmRyYXdCb3JkZXJSYWRpdXMoY2VudGVyWCwgY2VudGVyWSwgaW5uZXJSYWRpdXMsIGVuZEFuZ2xlLCBpbm5lclJhZGl1cywgZW5kQW5nbGUgLSBib3JkZXJSYWRpdXNJblJhZHMpOyAvLyBJbm5lciByYWRpdXNcblxuICAgICAgdGhpcy5jdHguYXJjKGNlbnRlclgsIGNlbnRlclksIHJhZGl1cyAtIHJpbmdXaWR0aCAtIDIgKiBib3JkZXJSYWRpdXNTaXplLCBlbmRBbmdsZSAtIGJvcmRlclJhZGl1c0luUmFkcywgc3RhcnRBbmdsZSArIGJvcmRlclJhZGl1c0luUmFkcywgdHJ1ZSk7IC8vIElubmVyIHNlY29uZCBib3JkZXIgcmFkaXVzXG5cbiAgICAgIHRoaXMuZHJhd0JvcmRlclJhZGl1cyhjZW50ZXJYLCBjZW50ZXJZLCBpbm5lclJhZGl1cywgc3RhcnRBbmdsZSwgaW5uZXJSYWRpdXMgKyBib3JkZXJSYWRpdXNTaXplLCBzdGFydEFuZ2xlKTsgLy8gUmluZyBsaW5lIGJvcmRlclxuXG4gICAgICB0aGlzLm1vdmVBbG9uZ1JhZGl1cyhjZW50ZXJYLCBjZW50ZXJZLCByYWRpdXMgLSBib3JkZXJSYWRpdXNTaXplLCBzdGFydEFuZ2xlKTsgLy8gT3V0ZXIgc2Vjb25kIGJvcmRlciByYWRpdXNcblxuICAgICAgdGhpcy5kcmF3Qm9yZGVyUmFkaXVzKGNlbnRlclgsIGNlbnRlclksIHJhZGl1cywgc3RhcnRBbmdsZSwgcmFkaXVzLCBzdGFydEFuZ2xlICsgYm9yZGVyUmFkaXVzSW5SYWRzKTtcblxuICAgICAgaWYgKCFpc0F1eGlsaWFyeSkge1xuICAgICAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSB0aGlzLl9jcmVhdGVSYWRpYWxHcmFkaWVudChzZWN0b3JOdW1iZXIsIGNlbnRlclksIHJhZGl1cyk7XG4gICAgICAgIHRoaXMuY3R4LmZpbGwoKTtcblxuICAgICAgICB0aGlzLl9hZGRTaGFkb3dzLmFwcGx5KHRoaXMsIGFyZ3VtZW50cyk7XG4gICAgICB9XG4gICAgfVxuICB9LCB7XG4gICAga2V5OiBcIm1vdmVBbG9uZ1JhZGl1c1wiLFxuICAgIHZhbHVlOiBmdW5jdGlvbiBtb3ZlQWxvbmdSYWRpdXMoY2VudGVyWCwgY2VudGVyWSwgcmFkaXVzLCBhbmdsZSkge1xuICAgICAgdmFyIGVuZFBvaW50ID0gdGhpcy5nZXRDaXJjbGVQb2ludChjZW50ZXJYLCBjZW50ZXJZLCByYWRpdXMsIGFuZ2xlKTtcbiAgICAgIHRoaXMuY3R4LmxpbmVUbyhlbmRQb2ludC54LCBlbmRQb2ludC55KTtcbiAgICB9XG4gIH0sIHtcbiAgICBrZXk6IFwiZ2V0Q2lyY2xlUG9pbnRcIixcbiAgICB2YWx1ZTogZnVuY3Rpb24gZ2V0Q2lyY2xlUG9pbnQoY2VudGVyWCwgY2VudGVyWSwgcmFkaXVzUGFydCwgYW5nbGUpIHtcbiAgICAgIHZhciBwb2ludCA9IHtcbiAgICAgICAgeDogMCxcbiAgICAgICAgeTogMFxuICAgICAgfTtcblxuICAgICAgaWYgKGFuZ2xlID49IDAgJiYgYW5nbGUgPCBNYXRoLlBJIC8gMikge1xuICAgICAgICBwb2ludC54ID0gY2VudGVyWCArIHJhZGl1c1BhcnQgKiBNYXRoLnNpbihNYXRoLlBJIC8gMiAtIGFuZ2xlKTtcbiAgICAgICAgcG9pbnQueSA9IGNlbnRlclkgKyByYWRpdXNQYXJ0ICogTWF0aC5zaW4oYW5nbGUpO1xuICAgICAgfSBlbHNlIGlmIChhbmdsZSA+PSBNYXRoLlBJIC8gMiAmJiBhbmdsZSA8IE1hdGguUEkpIHtcbiAgICAgICAgYW5nbGUgPSBhbmdsZSAtIE1hdGguUEkgLyAyO1xuICAgICAgICBwb2ludC54ID0gY2VudGVyWCAtIHJhZGl1c1BhcnQgKiBNYXRoLnNpbihhbmdsZSk7XG4gICAgICAgIHBvaW50LnkgPSBjZW50ZXJZICsgcmFkaXVzUGFydCAqIE1hdGguc2luKE1hdGguUEkgLyAyIC0gYW5nbGUpO1xuICAgICAgfSBlbHNlIGlmIChhbmdsZSA+PSBNYXRoLlBJICYmIGFuZ2xlIDwgMyAqIE1hdGguUEkgLyAyKSB7XG4gICAgICAgIGFuZ2xlID0gYW5nbGUgLSBNYXRoLlBJO1xuICAgICAgICBwb2ludC54ID0gY2VudGVyWCAtIHJhZGl1c1BhcnQgKiBNYXRoLnNpbihNYXRoLlBJIC8gMiAtIGFuZ2xlKTtcbiAgICAgICAgcG9pbnQueSA9IGNlbnRlclkgLSByYWRpdXNQYXJ0ICogTWF0aC5zaW4oYW5nbGUpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgYW5nbGUgPSBhbmdsZSAtIDMgKiBNYXRoLlBJIC8gMjtcbiAgICAgICAgcG9pbnQueCA9IGNlbnRlclggKyByYWRpdXNQYXJ0ICogTWF0aC5zaW4oYW5nbGUpO1xuICAgICAgICBwb2ludC55ID0gY2VudGVyWSAtIHJhZGl1c1BhcnQgKiBNYXRoLnNpbihNYXRoLlBJIC8gMiAtIGFuZ2xlKTtcbiAgICAgIH1cblxuICAgICAgcmV0dXJuIHBvaW50O1xuICAgIH1cbiAgfSwge1xuICAgIGtleTogXCJkZWdyZWVzVG9SYWRpYW5zXCIsXG4gICAgdmFsdWU6IGZ1bmN0aW9uIGRlZ3JlZXNUb1JhZGlhbnMoZGVncmVlcykge1xuICAgICAgcmV0dXJuIGRlZ3JlZXMgKiBNYXRoLlBJIC8gMTgwO1xuICAgIH1cbiAgICAvKipcbiAgICAgKiBDb25maWcgb2Ygc2VjdG9ycyBncmFkaWVudHNcbiAgICAgKi9cblxuICB9LCB7XG4gICAga2V5OiBcIl9jcmVhdGVSYWRpYWxHcmFkaWVudFwiLFxuICAgIHZhbHVlOiBmdW5jdGlvbiBfY3JlYXRlUmFkaWFsR3JhZGllbnQoc2VjdG9yTnVtYmVyLCBjZW50ZXIsIG1haW5SYWRpdXMpIHtcbiAgICAgIHZhciBmaXJzdENpcmNsZVJhZGl1c1JhdGlvO1xuICAgICAgdmFyIHNlY29uZENpcmNsZVJhZGl1c1JhdGlvO1xuICAgICAgdmFyIGZpcnN0Q29sb3JTdG9wO1xuICAgICAgdmFyIHNlY29uZENvbG9yU3RvcDtcblxuICAgICAgc3dpdGNoIChzZWN0b3JOdW1iZXIpIHtcbiAgICAgICAgY2FzZSAxOlxuICAgICAgICAgIGlmICh0aGlzLnRoZW1lID09PSBcImRhcmtcIikge1xuICAgICAgICAgICAgZmlyc3RDaXJjbGVSYWRpdXNSYXRpbyA9IDAuNzE4ODtcbiAgICAgICAgICAgIGZpcnN0Q29sb3JTdG9wID0gXCJyZ2JhKDIxMSwgMTM2LCA0LCAxKVwiO1xuICAgICAgICAgICAgc2Vjb25kQ29sb3JTdG9wID0gXCJyZ2JhKDgwLCA1MiwgNCwgMSlcIjtcbiAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgZmlyc3RDaXJjbGVSYWRpdXNSYXRpbyA9IDAuODEyNTtcbiAgICAgICAgICAgIGZpcnN0Q29sb3JTdG9wID0gXCJyZ2JhKDI1NSwgMjE1LCAxMTIsIDEpXCI7XG4gICAgICAgICAgICBzZWNvbmRDb2xvclN0b3AgPSBcInJnYmEoMjU1LCAyNTAsIDIyMiwgMSlcIjtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICBicmVhaztcblxuICAgICAgICBjYXNlIDI6XG4gICAgICAgICAgaWYgKHRoaXMudGhlbWUgPT09IFwiZGFya1wiKSB7XG4gICAgICAgICAgICBmaXJzdENpcmNsZVJhZGl1c1JhdGlvID0gMC43MjkyO1xuICAgICAgICAgICAgZmlyc3RDb2xvclN0b3AgPSBcInJnYmEoNjIsIDQyLCA3LCAxKVwiO1xuICAgICAgICAgICAgc2Vjb25kQ29sb3JTdG9wID0gXCJyZ2JhKDE2LCAxMiwgNSwgMSlcIjtcbiAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgZmlyc3RDaXJjbGVSYWRpdXNSYXRpbyA9IDAuODEyNTtcbiAgICAgICAgICAgIGZpcnN0Q29sb3JTdG9wID0gXCJyZ2JhKDI1NSwgMjM4LCAxOTQsIDEpXCI7XG4gICAgICAgICAgICBzZWNvbmRDb2xvclN0b3AgPSBcInJnYmEoMjU1LCAyNTMsIDI0MywgMSlcIjtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICBicmVhaztcblxuICAgICAgICBjYXNlIDM6XG4gICAgICAgICAgaWYgKHRoaXMudGhlbWUgPT09IFwiZGFya1wiKSB7XG4gICAgICAgICAgICBmaXJzdENpcmNsZVJhZGl1c1JhdGlvID0gMC43MTg4O1xuICAgICAgICAgICAgZmlyc3RDb2xvclN0b3AgPSBcInJnYmEoODksIDg4LCA4NSwgMSlcIjtcbiAgICAgICAgICAgIHNlY29uZENvbG9yU3RvcCA9IFwicmdiYSgzNywgMjgsIDUsIDEpXCI7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIGZpcnN0Q2lyY2xlUmFkaXVzUmF0aW8gPSAwLjgyODE7XG4gICAgICAgICAgICBmaXJzdENvbG9yU3RvcCA9IFwicmdiYSgyNDAsIDI0MCwgMjQwLCAxKVwiO1xuICAgICAgICAgICAgc2Vjb25kQ2lyY2xlUmFkaXVzUmF0aW8gPSAwLjkyMTk7XG4gICAgICAgICAgICBzZWNvbmRDb2xvclN0b3AgPSBcInJnYmEoMjUyLCAyNTIsIDI1MiwgMSlcIjtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICBicmVhaztcblxuICAgICAgICBjYXNlIDQ6XG4gICAgICAgICAgaWYgKHRoaXMudGhlbWUgPT09IFwiZGFya1wiKSB7XG4gICAgICAgICAgICBmaXJzdENpcmNsZVJhZGl1c1JhdGlvID0gMC43MTg4O1xuICAgICAgICAgICAgZmlyc3RDb2xvclN0b3AgPSBcInJnYmEoNDksIDQ3LCA0NCwgMSlcIjtcbiAgICAgICAgICAgIHNlY29uZENvbG9yU3RvcCA9IFwicmdiYSgzNSwgMjcsIDQsIDEpXCI7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIGZpcnN0Q2lyY2xlUmFkaXVzUmF0aW8gPSAwLjgyODE7XG4gICAgICAgICAgICBmaXJzdENvbG9yU3RvcCA9IFwicmdiYSgyMzMsIDIzMywgMjMzLCAxKVwiO1xuICAgICAgICAgICAgc2Vjb25kQ2lyY2xlUmFkaXVzUmF0aW8gPSAwLjkyMTk7XG4gICAgICAgICAgICBzZWNvbmRDb2xvclN0b3AgPSBcInJnYmEoMjUyLCAyNTIsIDI1MiwgMSlcIjtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICBicmVhaztcbiAgICAgIH1cblxuICAgICAgdmFyIGdyYWRpZW50ID0gdGhpcy5jdHguY3JlYXRlUmFkaWFsR3JhZGllbnQoY2VudGVyLCBjZW50ZXIsIGZpcnN0Q2lyY2xlUmFkaXVzUmF0aW8gKiBtYWluUmFkaXVzLCBjZW50ZXIsIGNlbnRlciwgbWFpblJhZGl1cyAqIChzZWNvbmRDaXJjbGVSYWRpdXNSYXRpbyB8fCAxKSk7XG4gICAgICBncmFkaWVudC5hZGRDb2xvclN0b3AoMCwgZmlyc3RDb2xvclN0b3ApO1xuICAgICAgZ3JhZGllbnQuYWRkQ29sb3JTdG9wKDEsIHNlY29uZENvbG9yU3RvcCk7XG4gICAgICByZXR1cm4gZ3JhZGllbnQ7XG4gICAgfVxuICB9LCB7XG4gICAga2V5OiBcIl9hZGRTaGFkb3dzXCIsXG4gICAgdmFsdWU6IGZ1bmN0aW9uIF9hZGRTaGFkb3dzKCkge1xuICAgICAgdmFyIF90aGlzID0gdGhpcztcblxuICAgICAgdmFyIHNsaWRlTnVtYmVyID0gYXJndW1lbnRzWzBdO1xuXG4gICAgICB2YXIgc2hhZG93c0NvbmZpZyA9IHRoaXMuX2dldFNoYWRvd3Moc2xpZGVOdW1iZXIpO1xuXG4gICAgICB0aGlzLmRyYXdTZWN0b3IuYXBwbHkodGhpcywgQXJyYXkucHJvdG90eXBlLnNsaWNlLmNhbGwoYXJndW1lbnRzKS5jb25jYXQoW3RydWVdKSk7XG4gICAgICBzaGFkb3dzQ29uZmlnLmZvckVhY2goZnVuY3Rpb24gKHNoYWRvdykge1xuICAgICAgICBfdGhpcy5jdHguc2hhZG93Q29sb3IgPSBzaGFkb3cuY29sb3I7XG4gICAgICAgIF90aGlzLmN0eC5zaGFkb3dCbHVyID0gc2hhZG93LmJsdXIgfHwgMTA7XG4gICAgICAgIF90aGlzLmN0eC5saW5lV2lkdGggPSBzaGFkb3cuYmx1ciB8fCAxMDtcbiAgICAgICAgX3RoaXMuY3R4LnNoYWRvd09mZnNldFggPSBzaGFkb3cuc2hhZG93T2Zmc2V0WCA/IC1fdGhpcy5zaGFkb3dPZmZzZXQgKyBzaGFkb3cuc2hhZG93T2Zmc2V0WCA6IC1fdGhpcy5zaGFkb3dPZmZzZXQ7XG4gICAgICAgIF90aGlzLmN0eC5zaGFkb3dPZmZzZXRZID0gc2hhZG93LnNoYWRvd09mZnNldFkgfHwgMDtcblxuICAgICAgICBpZiAoc2hhZG93Lmluc2V0KSB7XG4gICAgICAgICAgX3RoaXMuY3R4Lmdsb2JhbENvbXBvc2l0ZU9wZXJhdGlvbiA9IFwic291cmNlLWF0b3BcIjtcbiAgICAgICAgfVxuXG4gICAgICAgIGlmIChzaGFkb3cuc3ByZWFkKSB7XG4gICAgICAgICAgdmFyIHNjYWxlRmFjdG9yID0gMC41O1xuXG4gICAgICAgICAgX3RoaXMuY3R4LnNhdmUoKTtcblxuICAgICAgICAgIF90aGlzLmN0eC5zY2FsZShzY2FsZUZhY3Rvciwgc2NhbGVGYWN0b3IpO1xuICAgICAgICB9XG5cbiAgICAgICAgX3RoaXMuY3R4LnN0cm9rZSgpO1xuXG4gICAgICAgIF90aGlzLmN0eC5yZXN0b3JlKCk7XG5cbiAgICAgICAgX3RoaXMuY3R4Lmdsb2JhbENvbXBvc2l0ZU9wZXJhdGlvbiA9IFwic291cmNlLW92ZXJcIjtcbiAgICAgIH0pO1xuICAgIH1cbiAgfSwge1xuICAgIGtleTogXCJfZ2V0U2hhZG93c1wiLFxuICAgIHZhbHVlOiBmdW5jdGlvbiBfZ2V0U2hhZG93cyhzbGlkZU51bWJlcikge1xuICAgICAgdmFyIHNoYWRvd3MgPSBbXTtcbiAgICAgIHZhciBpbnNldEJvcmRlclNoYWRvdyA9IHtcbiAgICAgICAgYmx1cjogMSxcbiAgICAgICAgY29sb3I6IFwicmdiYSgyNTUsIDI1NSwgMjU1LCAwLjUpXCIsXG4gICAgICAgIHNoYWRvd09mZnNldFg6IC0xLFxuICAgICAgICBzaGFkb3dPZmZzZXRZOiAxLFxuICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgfTtcblxuICAgICAgc3dpdGNoIChzbGlkZU51bWJlcikge1xuICAgICAgICBjYXNlIDE6XG4gICAgICAgICAgaWYgKHRoaXMudGhlbWUgPT09IFwiZGFya1wiKSB7XG4gICAgICAgICAgICBzaGFkb3dzLnB1c2goe1xuICAgICAgICAgICAgICBzcHJlYWQ6IC04LFxuICAgICAgICAgICAgICBjb2xvcjogXCJyZ2JhKDI0OCwgMTU4LCAwLCAwLjIpXCIsXG4gICAgICAgICAgICAgIGluc2V0OiBmYWxzZVxuICAgICAgICAgICAgfSwgaW5zZXRCb3JkZXJTaGFkb3csIHtcbiAgICAgICAgICAgICAgY29sb3I6IFwicmdiYSgyNTUsIDE2MiwgMCwgMC45KVwiLFxuICAgICAgICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgICAgICAgfSk7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHNoYWRvd3MucHVzaChpbnNldEJvcmRlclNoYWRvdywge1xuICAgICAgICAgICAgICBjb2xvcjogXCJyZ2JhKDI1NSwgMTc2LCA1NywgMC45KVwiLFxuICAgICAgICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgICAgICAgfSk7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgYnJlYWs7XG5cbiAgICAgICAgY2FzZSAyOlxuICAgICAgICAgIGlmICh0aGlzLnRoZW1lID09PSBcImRhcmtcIikge1xuICAgICAgICAgICAgc2hhZG93cy5wdXNoKHtcbiAgICAgICAgICAgICAgc3ByZWFkOiAtOCxcbiAgICAgICAgICAgICAgY29sb3I6IFwicmdiYSgxNDcsIDkzLCAwLCAwLjIpXCIsXG4gICAgICAgICAgICAgIGluc2V0OiBmYWxzZVxuICAgICAgICAgICAgfSwgaW5zZXRCb3JkZXJTaGFkb3csIHtcbiAgICAgICAgICAgICAgY29sb3I6IFwicmdiYSgyMDIsIDE3NiwgNTcsIDAuNClcIixcbiAgICAgICAgICAgICAgaW5zZXQ6IHRydWVcbiAgICAgICAgICAgIH0pO1xuICAgICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBzaGFkb3dzLnB1c2goaW5zZXRCb3JkZXJTaGFkb3csIHtcbiAgICAgICAgICAgICAgY29sb3I6IFwicmdiYSgyNTUsIDE3NiwgNTcsIDAuNClcIixcbiAgICAgICAgICAgICAgaW5zZXQ6IHRydWVcbiAgICAgICAgICAgIH0pO1xuICAgICAgICAgIH1cblxuICAgICAgICAgIGJyZWFrO1xuXG4gICAgICAgIGNhc2UgMzpcbiAgICAgICAgICBpZiAodGhpcy50aGVtZSA9PT0gXCJkYXJrXCIpIHtcbiAgICAgICAgICAgIHNoYWRvd3MucHVzaCh7XG4gICAgICAgICAgICAgIHNwcmVhZDogLTgsXG4gICAgICAgICAgICAgIGNvbG9yOiBcInJnYmEoMCwgMCwgMCwgMC4yKVwiLFxuICAgICAgICAgICAgICBpbnNldDogZmFsc2VcbiAgICAgICAgICAgIH0sIGluc2V0Qm9yZGVyU2hhZG93LCB7XG4gICAgICAgICAgICAgIGNvbG9yOiBcInJnYmEoMTM5LCAxMzksIDEzOSwgMC45KVwiLFxuICAgICAgICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgICAgICAgfSk7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHNoYWRvd3MucHVzaChpbnNldEJvcmRlclNoYWRvdywge1xuICAgICAgICAgICAgICBjb2xvcjogXCJyZ2JhKDEwNSwgMTA1LCAxMDUsIDAuMilcIixcbiAgICAgICAgICAgICAgaW5zZXQ6IHRydWVcbiAgICAgICAgICAgIH0pO1xuICAgICAgICAgIH1cblxuICAgICAgICAgIGJyZWFrO1xuXG4gICAgICAgIGNhc2UgNDpcbiAgICAgICAgICBpZiAodGhpcy50aGVtZSA9PT0gXCJkYXJrXCIpIHtcbiAgICAgICAgICAgIHNoYWRvd3MucHVzaCh7XG4gICAgICAgICAgICAgIHNwcmVhZDogLTgsXG4gICAgICAgICAgICAgIGNvbG9yOiBcInJnYmEoOTYsIDk2LCA5NiwgMC4yKVwiLFxuICAgICAgICAgICAgICBpbnNldDogZmFsc2VcbiAgICAgICAgICAgIH0sIGluc2V0Qm9yZGVyU2hhZG93LCB7XG4gICAgICAgICAgICAgIGNvbG9yOiBcInJnYmEoMzgsIDM4LCAzOCwgMC45KVwiLFxuICAgICAgICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgICAgICAgfSk7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHNoYWRvd3MucHVzaCh7XG4gICAgICAgICAgICAgIGNvbG9yOiBcInJnYmEoMTMxLCAxMzEsIDEzMSwgMC42KVwiLFxuICAgICAgICAgICAgICBpbnNldDogdHJ1ZVxuICAgICAgICAgICAgfSwgaW5zZXRCb3JkZXJTaGFkb3cpO1xuICAgICAgICAgIH1cblxuICAgICAgICAgIGJyZWFrO1xuICAgICAgfVxuXG4gICAgICByZXR1cm4gc2hhZG93cztcbiAgICB9XG4gIH1dKTtcblxuICByZXR1cm4gQ2FudmFzRGlhZ3JhbURyYXdlcjtcbn0oKTtcblxuZXhwb3J0IHsgQ2FudmFzRGlhZ3JhbURyYXdlciBhcyBkZWZhdWx0IH07Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/classes/CanvasDiagramDrawer.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/getIntervals.js":
-/*!*********************************************************!*\
-  !*** ./src/js/renderFunctions/activity/getIntervals.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ getIntervals)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_object_values_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.values.js */ \"./node_modules/core-js/modules/es.object.values.js\");\n/* harmony import */ var core_js_modules_es_object_values_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_values_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.reverse.js */ \"./node_modules/core-js/modules/es.array.reverse.js\");\n/* harmony import */ var core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _utils_functions_integerDivision__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/functions/integerDivision */ \"./src/js/utils/functions/integerDivision.js\");\n\n\n\n\nfunction getIntervals(_ref) {\n  var data = _ref.data;\n  var CALCULATED_INTERVALS_COUNT = 3;\n  var currentMaxValue = +Object.values(data).reduce(function (max, dayValues) {\n    var dayMax = 0;\n\n    for (var i = 0; i < dayValues.length; i++) {\n      if (dayValues[i] > dayMax) {\n        dayMax = dayValues[i];\n      }\n    }\n\n    return dayMax > max ? dayMax : max;\n  }, 0);\n  var intervals = [];\n  var interval = (0,_utils_functions_integerDivision__WEBPACK_IMPORTED_MODULE_3__.default)(currentMaxValue, CALCULATED_INTERVALS_COUNT);\n  var reminder = currentMaxValue - interval * CALCULATED_INTERVALS_COUNT;\n\n  for (var i = 0; i < CALCULATED_INTERVALS_COUNT; i++) {\n    var intervalMaximum = currentMaxValue;\n    currentMaxValue -= interval;\n\n    if (reminder) {\n      currentMaxValue--;\n      reminder--;\n    }\n\n    intervals.push([currentMaxValue + 1, intervalMaximum]);\n  }\n\n  return intervals.reverse();\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L2dldEludGVydmFscy5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3JlbmRlckZ1bmN0aW9ucy9hY3Rpdml0eS9nZXRJbnRlcnZhbHMuanM/N2M0ZCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkucmVkdWNlLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMub2JqZWN0LnZhbHVlcy5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LnJldmVyc2UuanNcIjtcbmltcG9ydCBpbnRlZ2VyRGl2aXNpb24gZnJvbSAnLi4vLi4vdXRpbHMvZnVuY3Rpb25zL2ludGVnZXJEaXZpc2lvbic7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBnZXRJbnRlcnZhbHMoX3JlZikge1xuICB2YXIgZGF0YSA9IF9yZWYuZGF0YTtcbiAgdmFyIENBTENVTEFURURfSU5URVJWQUxTX0NPVU5UID0gMztcbiAgdmFyIGN1cnJlbnRNYXhWYWx1ZSA9ICtPYmplY3QudmFsdWVzKGRhdGEpLnJlZHVjZShmdW5jdGlvbiAobWF4LCBkYXlWYWx1ZXMpIHtcbiAgICB2YXIgZGF5TWF4ID0gMDtcblxuICAgIGZvciAodmFyIGkgPSAwOyBpIDwgZGF5VmFsdWVzLmxlbmd0aDsgaSsrKSB7XG4gICAgICBpZiAoZGF5VmFsdWVzW2ldID4gZGF5TWF4KSB7XG4gICAgICAgIGRheU1heCA9IGRheVZhbHVlc1tpXTtcbiAgICAgIH1cbiAgICB9XG5cbiAgICByZXR1cm4gZGF5TWF4ID4gbWF4ID8gZGF5TWF4IDogbWF4O1xuICB9LCAwKTtcbiAgdmFyIGludGVydmFscyA9IFtdO1xuICB2YXIgaW50ZXJ2YWwgPSBpbnRlZ2VyRGl2aXNpb24oY3VycmVudE1heFZhbHVlLCBDQUxDVUxBVEVEX0lOVEVSVkFMU19DT1VOVCk7XG4gIHZhciByZW1pbmRlciA9IGN1cnJlbnRNYXhWYWx1ZSAtIGludGVydmFsICogQ0FMQ1VMQVRFRF9JTlRFUlZBTFNfQ09VTlQ7XG5cbiAgZm9yICh2YXIgaSA9IDA7IGkgPCBDQUxDVUxBVEVEX0lOVEVSVkFMU19DT1VOVDsgaSsrKSB7XG4gICAgdmFyIGludGVydmFsTWF4aW11bSA9IGN1cnJlbnRNYXhWYWx1ZTtcbiAgICBjdXJyZW50TWF4VmFsdWUgLT0gaW50ZXJ2YWw7XG5cbiAgICBpZiAocmVtaW5kZXIpIHtcbiAgICAgIGN1cnJlbnRNYXhWYWx1ZS0tO1xuICAgICAgcmVtaW5kZXItLTtcbiAgICB9XG5cbiAgICBpbnRlcnZhbHMucHVzaChbY3VycmVudE1heFZhbHVlICsgMSwgaW50ZXJ2YWxNYXhpbXVtXSk7XG4gIH1cblxuICByZXR1cm4gaW50ZXJ2YWxzLnJldmVyc2UoKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/getIntervals.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/processActivityData.js":
-/*!****************************************************************!*\
-  !*** ./src/js/renderFunctions/activity/processActivityData.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ processActivityData)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ \"./node_modules/core-js/modules/es.array.for-each.js\");\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each.js */ \"./node_modules/core-js/modules/web.dom-collections.for-each.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.object.keys.js */ \"./node_modules/core-js/modules/es.object.keys.js\");\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/functions/isLandscape */ \"./src/js/utils/functions/isLandscape.js\");\n\n\n\n\nfunction processActivityData(_ref) {\n  var data = _ref.data;\n\n  if (!(0,_utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_3__.default)()) {\n    return data;\n  }\n\n  var processedData = {};\n  Object.keys(data).forEach(function (day) {\n    data[day].forEach(function (hourValue, hour) {\n      processedData[day] = processedData[day] || [];\n\n      if (hour % 2 === 0) {\n        processedData[day].push(hourValue + data[day][hour + 1]);\n      }\n    });\n  });\n  return processedData;\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3Byb2Nlc3NBY3Rpdml0eURhdGEuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvYWN0aXZpdHkvcHJvY2Vzc0FjdGl2aXR5RGF0YS5qcz83N2Q3Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5mb3ItZWFjaC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL3dlYi5kb20tY29sbGVjdGlvbnMuZm9yLWVhY2guanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5vYmplY3Qua2V5cy5qc1wiO1xuaW1wb3J0IGlzTGFuZHNjYXBlIGZyb20gJy4uLy4uL3V0aWxzL2Z1bmN0aW9ucy9pc0xhbmRzY2FwZSc7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwcm9jZXNzQWN0aXZpdHlEYXRhKF9yZWYpIHtcbiAgdmFyIGRhdGEgPSBfcmVmLmRhdGE7XG5cbiAgaWYgKCFpc0xhbmRzY2FwZSgpKSB7XG4gICAgcmV0dXJuIGRhdGE7XG4gIH1cblxuICB2YXIgcHJvY2Vzc2VkRGF0YSA9IHt9O1xuICBPYmplY3Qua2V5cyhkYXRhKS5mb3JFYWNoKGZ1bmN0aW9uIChkYXkpIHtcbiAgICBkYXRhW2RheV0uZm9yRWFjaChmdW5jdGlvbiAoaG91clZhbHVlLCBob3VyKSB7XG4gICAgICBwcm9jZXNzZWREYXRhW2RheV0gPSBwcm9jZXNzZWREYXRhW2RheV0gfHwgW107XG5cbiAgICAgIGlmIChob3VyICUgMiA9PT0gMCkge1xuICAgICAgICBwcm9jZXNzZWREYXRhW2RheV0ucHVzaChob3VyVmFsdWUgKyBkYXRhW2RheV1baG91ciArIDFdKTtcbiAgICAgIH1cbiAgICB9KTtcbiAgfSk7XG4gIHJldHVybiBwcm9jZXNzZWREYXRhO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/processActivityData.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/renderActivityChartLegend.js":
-/*!**********************************************************************!*\
-  !*** ./src/js/renderFunctions/activity/renderActivityChartLegend.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderActivityChartLegend)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/functions/isLandscape */ \"./src/js/utils/functions/isLandscape.js\");\n/* harmony import */ var _getIntervals__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getIntervals */ \"./src/js/renderFunctions/activity/getIntervals.js\");\n\n\n\n\nfunction renderActivityChartLegend(data) {\n  var intervals = (0,_getIntervals__WEBPACK_IMPORTED_MODULE_3__.default)({\n    data: data\n  });\n  return \"\\n    <figcaption class=\\\"activity-chart__legend activity-legend\\\">\\n      <ul class=\\\"activity-legend__categories\\\">\\n        <li class=\\\"activity-legend__category activity-legend__category_scale\\\">\\n          <span class=\\\"activity-legend__scale-line\\\"></span>\\n          <span class=\\\"activity-legend__value main-text main-text_dim\\\">\".concat((0,_utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_2__.default)() ? \"2 \\u0447\\u0430\\u0441\\u0430\" : \"1 \\u0447\\u0430\\u0441\", \"</span>\\n        </li>\\n        <li class=\\\"activity-legend__category activity-legend__category_0\\\">\\n          <span class=\\\"activity-legend__bar\\\"></span>\\n          <span class=\\\"activity-legend__value main-text main-text_dim\\\">0</span>\\n        </li>\\n        \").concat(intervals.reduce(function (markup, interval, i) {\n    markup += \"\\n            <li class=\\\"activity-legend__category activity-legend__category_\".concat(i + 1, \"\\\">\\n              <span class=\\\"activity-legend__bar\\\"></span>\\n              <span class=\\\"activity-legend__value main-text main-text_dim\\\">\").concat(interval[0] === interval[1] ? interval[0] : \"\".concat(interval[0], \" \\u2014 \").concat(interval[1]), \"</span>\\n            </li>\\n          \");\n    return markup;\n  }, \"\"), \"\\n      </ul>\\n    </figcaption>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3JlbmRlckFjdGl2aXR5Q2hhcnRMZWdlbmQuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvYWN0aXZpdHkvcmVuZGVyQWN0aXZpdHlDaGFydExlZ2VuZC5qcz82NTU4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5yZWR1Y2UuanNcIjtcbmltcG9ydCBpc0xhbmRzY2FwZSBmcm9tICcuLi8uLi91dGlscy9mdW5jdGlvbnMvaXNMYW5kc2NhcGUnO1xuaW1wb3J0IGdldEludGVydmFscyBmcm9tICcuL2dldEludGVydmFscyc7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJBY3Rpdml0eUNoYXJ0TGVnZW5kKGRhdGEpIHtcbiAgdmFyIGludGVydmFscyA9IGdldEludGVydmFscyh7XG4gICAgZGF0YTogZGF0YVxuICB9KTtcbiAgcmV0dXJuIFwiXFxuICAgIDxmaWdjYXB0aW9uIGNsYXNzPVxcXCJhY3Rpdml0eS1jaGFydF9fbGVnZW5kIGFjdGl2aXR5LWxlZ2VuZFxcXCI+XFxuICAgICAgPHVsIGNsYXNzPVxcXCJhY3Rpdml0eS1sZWdlbmRfX2NhdGVnb3JpZXNcXFwiPlxcbiAgICAgICAgPGxpIGNsYXNzPVxcXCJhY3Rpdml0eS1sZWdlbmRfX2NhdGVnb3J5IGFjdGl2aXR5LWxlZ2VuZF9fY2F0ZWdvcnlfc2NhbGVcXFwiPlxcbiAgICAgICAgICA8c3BhbiBjbGFzcz1cXFwiYWN0aXZpdHktbGVnZW5kX19zY2FsZS1saW5lXFxcIj48L3NwYW4+XFxuICAgICAgICAgIDxzcGFuIGNsYXNzPVxcXCJhY3Rpdml0eS1sZWdlbmRfX3ZhbHVlIG1haW4tdGV4dCBtYWluLXRleHRfZGltXFxcIj5cIi5jb25jYXQoaXNMYW5kc2NhcGUoKSA/IFwiMiBcXHUwNDQ3XFx1MDQzMFxcdTA0NDFcXHUwNDMwXCIgOiBcIjEgXFx1MDQ0N1xcdTA0MzBcXHUwNDQxXCIsIFwiPC9zcGFuPlxcbiAgICAgICAgPC9saT5cXG4gICAgICAgIDxsaSBjbGFzcz1cXFwiYWN0aXZpdHktbGVnZW5kX19jYXRlZ29yeSBhY3Rpdml0eS1sZWdlbmRfX2NhdGVnb3J5XzBcXFwiPlxcbiAgICAgICAgICA8c3BhbiBjbGFzcz1cXFwiYWN0aXZpdHktbGVnZW5kX19iYXJcXFwiPjwvc3Bhbj5cXG4gICAgICAgICAgPHNwYW4gY2xhc3M9XFxcImFjdGl2aXR5LWxlZ2VuZF9fdmFsdWUgbWFpbi10ZXh0IG1haW4tdGV4dF9kaW1cXFwiPjA8L3NwYW4+XFxuICAgICAgICA8L2xpPlxcbiAgICAgICAgXCIpLmNvbmNhdChpbnRlcnZhbHMucmVkdWNlKGZ1bmN0aW9uIChtYXJrdXAsIGludGVydmFsLCBpKSB7XG4gICAgbWFya3VwICs9IFwiXFxuICAgICAgICAgICAgPGxpIGNsYXNzPVxcXCJhY3Rpdml0eS1sZWdlbmRfX2NhdGVnb3J5IGFjdGl2aXR5LWxlZ2VuZF9fY2F0ZWdvcnlfXCIuY29uY2F0KGkgKyAxLCBcIlxcXCI+XFxuICAgICAgICAgICAgICA8c3BhbiBjbGFzcz1cXFwiYWN0aXZpdHktbGVnZW5kX19iYXJcXFwiPjwvc3Bhbj5cXG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzPVxcXCJhY3Rpdml0eS1sZWdlbmRfX3ZhbHVlIG1haW4tdGV4dCBtYWluLXRleHRfZGltXFxcIj5cIikuY29uY2F0KGludGVydmFsWzBdID09PSBpbnRlcnZhbFsxXSA/IGludGVydmFsWzBdIDogXCJcIi5jb25jYXQoaW50ZXJ2YWxbMF0sIFwiIFxcdTIwMTQgXCIpLmNvbmNhdChpbnRlcnZhbFsxXSksIFwiPC9zcGFuPlxcbiAgICAgICAgICAgIDwvbGk+XFxuICAgICAgICAgIFwiKTtcbiAgICByZXR1cm4gbWFya3VwO1xuICB9LCBcIlwiKSwgXCJcXG4gICAgICA8L3VsPlxcbiAgICA8L2ZpZ2NhcHRpb24+XFxuICBcIik7XG59Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/renderActivityChartLegend.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/renderActivityHeatmap.js":
-/*!******************************************************************!*\
-  !*** ./src/js/renderFunctions/activity/renderActivityHeatmap.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderActivityHeatmap)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_map_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.map.js */ \"./node_modules/core-js/modules/es.map.js\");\n/* harmony import */ var core_js_modules_es_map_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_map_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ \"./node_modules/core-js/modules/es.object.to-string.js\");\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ \"./node_modules/core-js/modules/es.string.iterator.js\");\n/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ \"./node_modules/core-js/modules/es.array.iterator.js\");\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ \"./node_modules/core-js/modules/web.dom-collections.iterator.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ \"./node_modules/core-js/modules/es.array.for-each.js\");\n/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.object.keys.js */ \"./node_modules/core-js/modules/es.object.keys.js\");\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ \"./node_modules/core-js/modules/es.string.replace.js\");\n/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ \"./node_modules/core-js/modules/es.regexp.exec.js\");\n/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.array.slice.js */ \"./node_modules/core-js/modules/es.array.slice.js\");\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ \"./node_modules/core-js/modules/es.function.name.js\");\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_12__);\n/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/es.array.from.js */ \"./node_modules/core-js/modules/es.array.from.js\");\n/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_13__);\n/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ \"./node_modules/core-js/modules/es.symbol.js\");\n/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_14__);\n/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ \"./node_modules/core-js/modules/es.symbol.description.js\");\n/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_15__);\n/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ \"./node_modules/core-js/modules/es.symbol.iterator.js\");\n/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_16__);\n/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ \"./node_modules/core-js/modules/es.array.is-array.js\");\n/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_17__);\n/* harmony import */ var _utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../utils/functions/isLandscape */ \"./src/js/utils/functions/isLandscape.js\");\n/* harmony import */ var _getIntervals__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./getIntervals */ \"./src/js/renderFunctions/activity/getIntervals.js\");\nfunction _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === \"undefined\" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === \"number\") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError(\"Invalid attempt to iterate non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it[\"return\"] != null) it[\"return\"](); } finally { if (didErr) throw err; } } }; }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfunction renderActivityHeatmap(data) {\n  var intervals = (0,_getIntervals__WEBPACK_IMPORTED_MODULE_19__.default)({\n    data: data\n  });\n  var svgIconMap = new Map();\n  svgIconMap.set([0, 0], \"s\");\n  [\"m\", \"l\", \"xl\"].forEach(function (iconName, i) {\n    svgIconMap.set(intervals[i], iconName);\n  });\n  return \"\\n    <div class=\\\"heatmap\\\">\\n      \".concat(Object.keys(data).reduce(function (dayMarkup, day) {\n    dayMarkup += \"\\n          <div class=\\\"heatmap__day-data\\\">\\n            \".concat(data[day].reduce(function (hourMarkup, hourValue) {\n      var currentSvgIcon;\n\n      var _iterator = _createForOfIteratorHelper(svgIconMap),\n          _step;\n\n      try {\n        for (_iterator.s(); !(_step = _iterator.n()).done;) {\n          var entry = _step.value;\n          var interval = entry[0];\n          var svgIconSize = entry[1];\n\n          if (hourValue >= interval[0] && hourValue <= interval[1]) {\n            currentSvgIcon = \"#bar-\".concat(svgIconSize);\n            break;\n          }\n        }\n      } catch (err) {\n        _iterator.e(err);\n      } finally {\n        _iterator.f();\n      }\n\n      hourMarkup += \"\\n                <div class=\".concat((0,_utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_18__.default)() ? \"heatmap__two-hour-data\" : \"heatmap__hour-data\", \">\\n                  <svg class=\\\"heatmap__bar heatmap__\").concat(currentSvgIcon.slice(1).replace(\"-\", \"_\"), \"\\\">\\n                    <use xlink:href=\").concat(currentSvgIcon, \"></use>\\n                  </svg>\\n                </div>\\n              \");\n      return hourMarkup;\n    }, \"\"), \"\\n          </div>\\n        \");\n    return dayMarkup;\n  }, \"\"), \"\\n    </div>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3JlbmRlckFjdGl2aXR5SGVhdG1hcC5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3JlbmRlckZ1bmN0aW9ucy9hY3Rpdml0eS9yZW5kZXJBY3Rpdml0eUhlYXRtYXAuanM/NzkwYiJdLCJzb3VyY2VzQ29udGVudCI6WyJmdW5jdGlvbiBfY3JlYXRlRm9yT2ZJdGVyYXRvckhlbHBlcihvLCBhbGxvd0FycmF5TGlrZSkgeyB2YXIgaXQ7IGlmICh0eXBlb2YgU3ltYm9sID09PSBcInVuZGVmaW5lZFwiIHx8IG9bU3ltYm9sLml0ZXJhdG9yXSA9PSBudWxsKSB7IGlmIChBcnJheS5pc0FycmF5KG8pIHx8IChpdCA9IF91bnN1cHBvcnRlZEl0ZXJhYmxlVG9BcnJheShvKSkgfHwgYWxsb3dBcnJheUxpa2UgJiYgbyAmJiB0eXBlb2Ygby5sZW5ndGggPT09IFwibnVtYmVyXCIpIHsgaWYgKGl0KSBvID0gaXQ7IHZhciBpID0gMDsgdmFyIEYgPSBmdW5jdGlvbiBGKCkge307IHJldHVybiB7IHM6IEYsIG46IGZ1bmN0aW9uIG4oKSB7IGlmIChpID49IG8ubGVuZ3RoKSByZXR1cm4geyBkb25lOiB0cnVlIH07IHJldHVybiB7IGRvbmU6IGZhbHNlLCB2YWx1ZTogb1tpKytdIH07IH0sIGU6IGZ1bmN0aW9uIGUoX2UpIHsgdGhyb3cgX2U7IH0sIGY6IEYgfTsgfSB0aHJvdyBuZXcgVHlwZUVycm9yKFwiSW52YWxpZCBhdHRlbXB0IHRvIGl0ZXJhdGUgbm9uLWl0ZXJhYmxlIGluc3RhbmNlLlxcbkluIG9yZGVyIHRvIGJlIGl0ZXJhYmxlLCBub24tYXJyYXkgb2JqZWN0cyBtdXN0IGhhdmUgYSBbU3ltYm9sLml0ZXJhdG9yXSgpIG1ldGhvZC5cIik7IH0gdmFyIG5vcm1hbENvbXBsZXRpb24gPSB0cnVlLCBkaWRFcnIgPSBmYWxzZSwgZXJyOyByZXR1cm4geyBzOiBmdW5jdGlvbiBzKCkgeyBpdCA9IG9bU3ltYm9sLml0ZXJhdG9yXSgpOyB9LCBuOiBmdW5jdGlvbiBuKCkgeyB2YXIgc3RlcCA9IGl0Lm5leHQoKTsgbm9ybWFsQ29tcGxldGlvbiA9IHN0ZXAuZG9uZTsgcmV0dXJuIHN0ZXA7IH0sIGU6IGZ1bmN0aW9uIGUoX2UyKSB7IGRpZEVyciA9IHRydWU7IGVyciA9IF9lMjsgfSwgZjogZnVuY3Rpb24gZigpIHsgdHJ5IHsgaWYgKCFub3JtYWxDb21wbGV0aW9uICYmIGl0W1wicmV0dXJuXCJdICE9IG51bGwpIGl0W1wicmV0dXJuXCJdKCk7IH0gZmluYWxseSB7IGlmIChkaWRFcnIpIHRocm93IGVycjsgfSB9IH07IH1cblxuZnVuY3Rpb24gX3Vuc3VwcG9ydGVkSXRlcmFibGVUb0FycmF5KG8sIG1pbkxlbikgeyBpZiAoIW8pIHJldHVybjsgaWYgKHR5cGVvZiBvID09PSBcInN0cmluZ1wiKSByZXR1cm4gX2FycmF5TGlrZVRvQXJyYXkobywgbWluTGVuKTsgdmFyIG4gPSBPYmplY3QucHJvdG90eXBlLnRvU3RyaW5nLmNhbGwobykuc2xpY2UoOCwgLTEpOyBpZiAobiA9PT0gXCJPYmplY3RcIiAmJiBvLmNvbnN0cnVjdG9yKSBuID0gby5jb25zdHJ1Y3Rvci5uYW1lOyBpZiAobiA9PT0gXCJNYXBcIiB8fCBuID09PSBcIlNldFwiKSByZXR1cm4gQXJyYXkuZnJvbShvKTsgaWYgKG4gPT09IFwiQXJndW1lbnRzXCIgfHwgL14oPzpVaXxJKW50KD86OHwxNnwzMikoPzpDbGFtcGVkKT9BcnJheSQvLnRlc3QobikpIHJldHVybiBfYXJyYXlMaWtlVG9BcnJheShvLCBtaW5MZW4pOyB9XG5cbmZ1bmN0aW9uIF9hcnJheUxpa2VUb0FycmF5KGFyciwgbGVuKSB7IGlmIChsZW4gPT0gbnVsbCB8fCBsZW4gPiBhcnIubGVuZ3RoKSBsZW4gPSBhcnIubGVuZ3RoOyBmb3IgKHZhciBpID0gMCwgYXJyMiA9IG5ldyBBcnJheShsZW4pOyBpIDwgbGVuOyBpKyspIHsgYXJyMltpXSA9IGFycltpXTsgfSByZXR1cm4gYXJyMjsgfVxuXG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMubWFwLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMub2JqZWN0LnRvLXN0cmluZy5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnN0cmluZy5pdGVyYXRvci5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5Lml0ZXJhdG9yLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvd2ViLmRvbS1jb2xsZWN0aW9ucy5pdGVyYXRvci5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmZvci1lYWNoLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkucmVkdWNlLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMub2JqZWN0LmtleXMuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5zdHJpbmcucmVwbGFjZS5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnJlZ2V4cC5leGVjLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuc2xpY2UuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5mdW5jdGlvbi5uYW1lLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuZnJvbS5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnN5bWJvbC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnN5bWJvbC5kZXNjcmlwdGlvbi5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnN5bWJvbC5pdGVyYXRvci5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmlzLWFycmF5LmpzXCI7XG5pbXBvcnQgaXNMYW5kc2NhcGUgZnJvbSAnLi4vLi4vdXRpbHMvZnVuY3Rpb25zL2lzTGFuZHNjYXBlJztcbmltcG9ydCBnZXRJbnRlcnZhbHMgZnJvbSAnLi9nZXRJbnRlcnZhbHMnO1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyQWN0aXZpdHlIZWF0bWFwKGRhdGEpIHtcbiAgdmFyIGludGVydmFscyA9IGdldEludGVydmFscyh7XG4gICAgZGF0YTogZGF0YVxuICB9KTtcbiAgdmFyIHN2Z0ljb25NYXAgPSBuZXcgTWFwKCk7XG4gIHN2Z0ljb25NYXAuc2V0KFswLCAwXSwgXCJzXCIpO1xuICBbXCJtXCIsIFwibFwiLCBcInhsXCJdLmZvckVhY2goZnVuY3Rpb24gKGljb25OYW1lLCBpKSB7XG4gICAgc3ZnSWNvbk1hcC5zZXQoaW50ZXJ2YWxzW2ldLCBpY29uTmFtZSk7XG4gIH0pO1xuICByZXR1cm4gXCJcXG4gICAgPGRpdiBjbGFzcz1cXFwiaGVhdG1hcFxcXCI+XFxuICAgICAgXCIuY29uY2F0KE9iamVjdC5rZXlzKGRhdGEpLnJlZHVjZShmdW5jdGlvbiAoZGF5TWFya3VwLCBkYXkpIHtcbiAgICBkYXlNYXJrdXAgKz0gXCJcXG4gICAgICAgICAgPGRpdiBjbGFzcz1cXFwiaGVhdG1hcF9fZGF5LWRhdGFcXFwiPlxcbiAgICAgICAgICAgIFwiLmNvbmNhdChkYXRhW2RheV0ucmVkdWNlKGZ1bmN0aW9uIChob3VyTWFya3VwLCBob3VyVmFsdWUpIHtcbiAgICAgIHZhciBjdXJyZW50U3ZnSWNvbjtcblxuICAgICAgdmFyIF9pdGVyYXRvciA9IF9jcmVhdGVGb3JPZkl0ZXJhdG9ySGVscGVyKHN2Z0ljb25NYXApLFxuICAgICAgICAgIF9zdGVwO1xuXG4gICAgICB0cnkge1xuICAgICAgICBmb3IgKF9pdGVyYXRvci5zKCk7ICEoX3N0ZXAgPSBfaXRlcmF0b3IubigpKS5kb25lOykge1xuICAgICAgICAgIHZhciBlbnRyeSA9IF9zdGVwLnZhbHVlO1xuICAgICAgICAgIHZhciBpbnRlcnZhbCA9IGVudHJ5WzBdO1xuICAgICAgICAgIHZhciBzdmdJY29uU2l6ZSA9IGVudHJ5WzFdO1xuXG4gICAgICAgICAgaWYgKGhvdXJWYWx1ZSA+PSBpbnRlcnZhbFswXSAmJiBob3VyVmFsdWUgPD0gaW50ZXJ2YWxbMV0pIHtcbiAgICAgICAgICAgIGN1cnJlbnRTdmdJY29uID0gXCIjYmFyLVwiLmNvbmNhdChzdmdJY29uU2l6ZSk7XG4gICAgICAgICAgICBicmVhaztcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH0gY2F0Y2ggKGVycikge1xuICAgICAgICBfaXRlcmF0b3IuZShlcnIpO1xuICAgICAgfSBmaW5hbGx5IHtcbiAgICAgICAgX2l0ZXJhdG9yLmYoKTtcbiAgICAgIH1cblxuICAgICAgaG91ck1hcmt1cCArPSBcIlxcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiLmNvbmNhdChpc0xhbmRzY2FwZSgpID8gXCJoZWF0bWFwX190d28taG91ci1kYXRhXCIgOiBcImhlYXRtYXBfX2hvdXItZGF0YVwiLCBcIj5cXG4gICAgICAgICAgICAgICAgICA8c3ZnIGNsYXNzPVxcXCJoZWF0bWFwX19iYXIgaGVhdG1hcF9fXCIpLmNvbmNhdChjdXJyZW50U3ZnSWNvbi5zbGljZSgxKS5yZXBsYWNlKFwiLVwiLCBcIl9cIiksIFwiXFxcIj5cXG4gICAgICAgICAgICAgICAgICAgIDx1c2UgeGxpbms6aHJlZj1cIikuY29uY2F0KGN1cnJlbnRTdmdJY29uLCBcIj48L3VzZT5cXG4gICAgICAgICAgICAgICAgICA8L3N2Zz5cXG4gICAgICAgICAgICAgICAgPC9kaXY+XFxuICAgICAgICAgICAgICBcIik7XG4gICAgICByZXR1cm4gaG91ck1hcmt1cDtcbiAgICB9LCBcIlwiKSwgXCJcXG4gICAgICAgICAgPC9kaXY+XFxuICAgICAgICBcIik7XG4gICAgcmV0dXJuIGRheU1hcmt1cDtcbiAgfSwgXCJcIiksIFwiXFxuICAgIDwvZGl2PlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/renderActivityHeatmap.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/renderActivitySlide.js":
-/*!****************************************************************!*\
-  !*** ./src/js/renderFunctions/activity/renderActivitySlide.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderActivitySlide)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _processActivityData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./processActivityData */ \"./src/js/renderFunctions/activity/processActivityData.js\");\n/* harmony import */ var _renderActivityHeatmap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./renderActivityHeatmap */ \"./src/js/renderFunctions/activity/renderActivityHeatmap.js\");\n/* harmony import */ var _renderActivityTableData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./renderActivityTableData */ \"./src/js/renderFunctions/activity/renderActivityTableData.js\");\n/* harmony import */ var _renderActivityChartLegend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./renderActivityChartLegend */ \"./src/js/renderFunctions/activity/renderActivityChartLegend.js\");\n\n\n\n\n\n/**\n * Render activity slide content.\n *\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup for slide.\n */\n\nfunction renderActivitySlide(data) {\n  var processedData = (0,_processActivityData__WEBPACK_IMPORTED_MODULE_1__.default)(data);\n  return \"\\n    <figure class=\\\"activity-chart\\\">\\n      <div class=\\\"activity-chart__wrap\\\">\\n        \".concat((0,_renderActivityHeatmap__WEBPACK_IMPORTED_MODULE_2__.default)(processedData), \"\\n        \").concat((0,_renderActivityTableData__WEBPACK_IMPORTED_MODULE_3__.default)(data), \"        \\n      </div>\\n      \").concat((0,_renderActivityChartLegend__WEBPACK_IMPORTED_MODULE_4__.default)(processedData), \"\\n    </figure>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3JlbmRlckFjdGl2aXR5U2xpZGUuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvYWN0aXZpdHkvcmVuZGVyQWN0aXZpdHlTbGlkZS5qcz82N2ZiIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmltcG9ydCBwcm9jZXNzQWN0aXZpdHlEYXRhIGZyb20gJy4vcHJvY2Vzc0FjdGl2aXR5RGF0YSc7XG5pbXBvcnQgcmVuZGVyQWN0aXZpdHlIZWF0bWFwIGZyb20gJy4vcmVuZGVyQWN0aXZpdHlIZWF0bWFwJztcbmltcG9ydCByZW5kZXJBY3Rpdml0eVRhYmxlRGF0YSBmcm9tICcuL3JlbmRlckFjdGl2aXR5VGFibGVEYXRhJztcbmltcG9ydCByZW5kZXJBY3Rpdml0eUNoYXJ0TGVnZW5kIGZyb20gJy4vcmVuZGVyQWN0aXZpdHlDaGFydExlZ2VuZCc7XG4vKipcbiAqIFJlbmRlciBhY3Rpdml0eSBzbGlkZSBjb250ZW50LlxuICpcbiAqIEBwYXJhbSB7U2xpZGVEYXRhfSBkYXRhIC0gc2xpZGUgZGF0YS5cbiAqXG4gKiBAcmV0dXJucyB7c3RyaW5nfSAtIG1hcmt1cCBmb3Igc2xpZGUuXG4gKi9cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyQWN0aXZpdHlTbGlkZShkYXRhKSB7XG4gIHZhciBwcm9jZXNzZWREYXRhID0gcHJvY2Vzc0FjdGl2aXR5RGF0YShkYXRhKTtcbiAgcmV0dXJuIFwiXFxuICAgIDxmaWd1cmUgY2xhc3M9XFxcImFjdGl2aXR5LWNoYXJ0XFxcIj5cXG4gICAgICA8ZGl2IGNsYXNzPVxcXCJhY3Rpdml0eS1jaGFydF9fd3JhcFxcXCI+XFxuICAgICAgICBcIi5jb25jYXQocmVuZGVyQWN0aXZpdHlIZWF0bWFwKHByb2Nlc3NlZERhdGEpLCBcIlxcbiAgICAgICAgXCIpLmNvbmNhdChyZW5kZXJBY3Rpdml0eVRhYmxlRGF0YShkYXRhKSwgXCIgICAgICAgIFxcbiAgICAgIDwvZGl2PlxcbiAgICAgIFwiKS5jb25jYXQocmVuZGVyQWN0aXZpdHlDaGFydExlZ2VuZChwcm9jZXNzZWREYXRhKSwgXCJcXG4gICAgPC9maWd1cmU+XFxuICBcIik7XG59Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/renderActivitySlide.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/activity/renderActivityTableData.js":
-/*!********************************************************************!*\
-  !*** ./src/js/renderFunctions/activity/renderActivityTableData.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderActivityTableData)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.keys.js */ \"./node_modules/core-js/modules/es.object.keys.js\");\n/* harmony import */ var core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_keys_js__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\nfunction renderActivityCells(_ref) {\n  var data = _ref.data;\n  var DAY_HOURS = 24;\n  var tableBody = \"\";\n\n  for (var hour = 0; hour < DAY_HOURS; hour++) {\n    tableBody += \"\\n      <tr>\\n        <th>\".concat(hour, \":00 - \").concat(hour + 1, \":00</th>\\n    \");\n\n    for (var _i = 0, _Object$keys = Object.keys(data); _i < _Object$keys.length; _i++) {\n      var day = _Object$keys[_i];\n      tableBody += \"\\n        <td>\".concat(data[day][hour], \"</td>\\n      \");\n    }\n\n    tableBody += \"</tr>\";\n  }\n\n  return tableBody;\n}\n\nfunction renderActivityTableData(data) {\n  return \"\\n    <div class=\\\"visually-hidden\\\">\\n      <table aria-label=\\\"\\u0414\\u0430\\u043D\\u043D\\u044B\\u0435 \\u0441 \\u0433\\u0440\\u0430\\u0444\\u0438\\u043A\\u0430 \\u0430\\u043A\\u0442\\u0438\\u0432\\u043D\\u043E\\u0441\\u0442\\u0438 \\u0432 \\u0440\\u0430\\u0437\\u043B\\u0438\\u0447\\u043D\\u044B\\u0435 \\u0447\\u0430\\u0441\\u044B\\\">\\n        <thead>\\n          <tr>\\n            <th>\\u0412\\u0440\\u0435\\u043C\\u0435\\u043D\\u043D\\u043E\\u0439 \\u0438\\u043D\\u0442\\u0435\\u0440\\u0432\\u0430\\u043B</th>\\n            <th>\\u041F\\u043E\\u043D\\u0435\\u0434\\u0435\\u043B\\u044C\\u043D\\u0438\\u043A</th>\\n            <th>\\u0412\\u0442\\u043E\\u0440\\u043D\\u0438\\u043A</th>\\n            <th>\\u0421\\u0440\\u0435\\u0434\\u0430</th>\\n            <th>\\u0427\\u0435\\u0442\\u0432\\u0435\\u0440\\u0433</th>\\n            <th>\\u041F\\u044F\\u0442\\u043D\\u0438\\u0446\\u0430</th>\\n            <th>\\u0421\\u0443\\u0431\\u0431\\u043E\\u0442\\u0430</th>\\n            <th>\\u0412\\u043E\\u0441\\u043A\\u0440\\u0435\\u0441\\u0435\\u043D\\u044C\\u0435</th>\\n          </tr>\\n        </thead>\\n        <tbody>\\n          \".concat(renderActivityCells(data), \"\\n        </tbody>\\n      </table>\\n    </div>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3JlbmRlckFjdGl2aXR5VGFibGVEYXRhLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2FjdGl2aXR5L3JlbmRlckFjdGl2aXR5VGFibGVEYXRhLmpzPzM2ZWQiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLm9iamVjdC5rZXlzLmpzXCI7XG5cbmZ1bmN0aW9uIHJlbmRlckFjdGl2aXR5Q2VsbHMoX3JlZikge1xuICB2YXIgZGF0YSA9IF9yZWYuZGF0YTtcbiAgdmFyIERBWV9IT1VSUyA9IDI0O1xuICB2YXIgdGFibGVCb2R5ID0gXCJcIjtcblxuICBmb3IgKHZhciBob3VyID0gMDsgaG91ciA8IERBWV9IT1VSUzsgaG91cisrKSB7XG4gICAgdGFibGVCb2R5ICs9IFwiXFxuICAgICAgPHRyPlxcbiAgICAgICAgPHRoPlwiLmNvbmNhdChob3VyLCBcIjowMCAtIFwiKS5jb25jYXQoaG91ciArIDEsIFwiOjAwPC90aD5cXG4gICAgXCIpO1xuXG4gICAgZm9yICh2YXIgX2kgPSAwLCBfT2JqZWN0JGtleXMgPSBPYmplY3Qua2V5cyhkYXRhKTsgX2kgPCBfT2JqZWN0JGtleXMubGVuZ3RoOyBfaSsrKSB7XG4gICAgICB2YXIgZGF5ID0gX09iamVjdCRrZXlzW19pXTtcbiAgICAgIHRhYmxlQm9keSArPSBcIlxcbiAgICAgICAgPHRkPlwiLmNvbmNhdChkYXRhW2RheV1baG91cl0sIFwiPC90ZD5cXG4gICAgICBcIik7XG4gICAgfVxuXG4gICAgdGFibGVCb2R5ICs9IFwiPC90cj5cIjtcbiAgfVxuXG4gIHJldHVybiB0YWJsZUJvZHk7XG59XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIHJlbmRlckFjdGl2aXR5VGFibGVEYXRhKGRhdGEpIHtcbiAgcmV0dXJuIFwiXFxuICAgIDxkaXYgY2xhc3M9XFxcInZpc3VhbGx5LWhpZGRlblxcXCI+XFxuICAgICAgPHRhYmxlIGFyaWEtbGFiZWw9XFxcIlxcdTA0MTRcXHUwNDMwXFx1MDQzRFxcdTA0M0RcXHUwNDRCXFx1MDQzNSBcXHUwNDQxIFxcdTA0MzNcXHUwNDQwXFx1MDQzMFxcdTA0NDRcXHUwNDM4XFx1MDQzQVxcdTA0MzAgXFx1MDQzMFxcdTA0M0FcXHUwNDQyXFx1MDQzOFxcdTA0MzJcXHUwNDNEXFx1MDQzRVxcdTA0NDFcXHUwNDQyXFx1MDQzOCBcXHUwNDMyIFxcdTA0NDBcXHUwNDMwXFx1MDQzN1xcdTA0M0JcXHUwNDM4XFx1MDQ0N1xcdTA0M0RcXHUwNDRCXFx1MDQzNSBcXHUwNDQ3XFx1MDQzMFxcdTA0NDFcXHUwNDRCXFxcIj5cXG4gICAgICAgIDx0aGVhZD5cXG4gICAgICAgICAgPHRyPlxcbiAgICAgICAgICAgIDx0aD5cXHUwNDEyXFx1MDQ0MFxcdTA0MzVcXHUwNDNDXFx1MDQzNVxcdTA0M0RcXHUwNDNEXFx1MDQzRVxcdTA0MzkgXFx1MDQzOFxcdTA0M0RcXHUwNDQyXFx1MDQzNVxcdTA0NDBcXHUwNDMyXFx1MDQzMFxcdTA0M0I8L3RoPlxcbiAgICAgICAgICAgIDx0aD5cXHUwNDFGXFx1MDQzRVxcdTA0M0RcXHUwNDM1XFx1MDQzNFxcdTA0MzVcXHUwNDNCXFx1MDQ0Q1xcdTA0M0RcXHUwNDM4XFx1MDQzQTwvdGg+XFxuICAgICAgICAgICAgPHRoPlxcdTA0MTJcXHUwNDQyXFx1MDQzRVxcdTA0NDBcXHUwNDNEXFx1MDQzOFxcdTA0M0E8L3RoPlxcbiAgICAgICAgICAgIDx0aD5cXHUwNDIxXFx1MDQ0MFxcdTA0MzVcXHUwNDM0XFx1MDQzMDwvdGg+XFxuICAgICAgICAgICAgPHRoPlxcdTA0MjdcXHUwNDM1XFx1MDQ0MlxcdTA0MzJcXHUwNDM1XFx1MDQ0MFxcdTA0MzM8L3RoPlxcbiAgICAgICAgICAgIDx0aD5cXHUwNDFGXFx1MDQ0RlxcdTA0NDJcXHUwNDNEXFx1MDQzOFxcdTA0NDZcXHUwNDMwPC90aD5cXG4gICAgICAgICAgICA8dGg+XFx1MDQyMVxcdTA0NDNcXHUwNDMxXFx1MDQzMVxcdTA0M0VcXHUwNDQyXFx1MDQzMDwvdGg+XFxuICAgICAgICAgICAgPHRoPlxcdTA0MTJcXHUwNDNFXFx1MDQ0MVxcdTA0M0FcXHUwNDQwXFx1MDQzNVxcdTA0NDFcXHUwNDM1XFx1MDQzRFxcdTA0NENcXHUwNDM1PC90aD5cXG4gICAgICAgICAgPC90cj5cXG4gICAgICAgIDwvdGhlYWQ+XFxuICAgICAgICA8dGJvZHk+XFxuICAgICAgICAgIFwiLmNvbmNhdChyZW5kZXJBY3Rpdml0eUNlbGxzKGRhdGEpLCBcIlxcbiAgICAgICAgPC90Ym9keT5cXG4gICAgICA8L3RhYmxlPlxcbiAgICA8L2Rpdj5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/activity/renderActivityTableData.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/chart/renderChartSlide.js":
-/*!**********************************************************!*\
-  !*** ./src/js/renderFunctions/chart/renderChartSlide.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderChartSlide)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.to-precision.js */ \"./node_modules/core-js/modules/es.number.to-precision.js\");\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ \"./node_modules/core-js/modules/es.object.to-string.js\");\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ \"./node_modules/core-js/modules/es.array.iterator.js\");\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ \"./node_modules/core-js/modules/web.dom-collections.iterator.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n/* harmony import */ var _utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/functions/isLandscape */ \"./src/js/utils/functions/isLandscape.js\");\n/* harmony import */ var _renderHistoryHistogramBar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./renderHistoryHistogramBar */ \"./src/js/renderFunctions/chart/renderHistoryHistogramBar.js\");\n/* harmony import */ var _renderHistoryLeadersPerson__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./renderHistoryLeadersPerson */ \"./src/js/renderFunctions/chart/renderHistoryLeadersPerson.js\");\n\n\n\n\n\n\n\n\n\n\n\n/**\n * @typedef HistoryValue\n * @type {Object}\n * @property {string} title - title of time period.\n * @property {number} value - value for period.\n * @property {boolean} active - true if period is active else false.\n */\n\n/**\n * Render chart slide content.\n *\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup for slide.\n */\n\nfunction renderChartSlide(data) {\n  var fullChartHeightRatio = (0,_utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_8__.default)() ? 185 / _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_7__.PORTRAIT_DEFAULT_WIDTH : 403 / _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_7__.LANDSCAPE_DEFAULT_WIDTH;\n  var maxBarHeightRatio = (0,_utils_functions_isLandscape__WEBPACK_IMPORTED_MODULE_8__.default)() ? 117 / _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_7__.PORTRAIT_DEFAULT_WIDTH : 270 / _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_7__.LANDSCAPE_DEFAULT_WIDTH;\n  var fullChartHeight = (fullChartHeightRatio * globalThis.innerHeight).toPrecision(5);\n  var chartHeight = maxBarHeightRatio * globalThis.innerHeight;\n  var maxValue = data.values.reduce(function (max, dataValue) {\n    return max < dataValue.value ? dataValue.value : max;\n  }, 0);\n  return \"\\n    <div class=\\\"chart-slide\\\">\\n      <section class=\\\"history-histogram chart-slide__histogram\\\">\\n        <h3 class=\\\"visually-hidden\\\">\\u0414\\u0438\\u0430\\u0433\\u0440\\u0430\\u043C\\u043C\\u0430</h3>\\n        <div class=\\\"history-histogram__chart\\\" style=\\\"height: \".concat(fullChartHeight + \"px\", \"\\\">\\n          <ul class=\\\"history-histogram__values\\\">\\n            \").concat(data.values.reduce(function (markup, value) {\n    markup += (0,_renderHistoryHistogramBar__WEBPACK_IMPORTED_MODULE_9__.default)(value, maxValue, chartHeight);\n    return markup;\n  }, \"\"), \"\\n          </ul>\\n        </div>\\n      </section>\\n      <section class=\\\"history-leaders chart-slide__leaders\\\">\\n        <h3 class=\\\"visually-hidden\\\">\\u041B\\u0438\\u0434\\u0435\\u0440\\u044B</h3>\\n        <ul class=\\\"history-leaders__list\\\">\\n          \").concat(data.users.reduce(function (markup, user, i) {\n    if (i < 2) {\n      markup += (0,_renderHistoryLeadersPerson__WEBPACK_IMPORTED_MODULE_10__.default)(user);\n    }\n\n    return markup;\n  }, \"\"), \"\\n        </ul>\\n      </section>\\n    </div>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NoYXJ0L3JlbmRlckNoYXJ0U2xpZGUuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvY2hhcnQvcmVuZGVyQ2hhcnRTbGlkZS5qcz8wNTQ4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5udW1iZXIudG8tcHJlY2lzaW9uLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuZ2xvYmFsLXRoaXMuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5yZWR1Y2UuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5vYmplY3QudG8tc3RyaW5nLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuaXRlcmF0b3IuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy93ZWIuZG9tLWNvbGxlY3Rpb25zLml0ZXJhdG9yLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuY29uY2F0LmpzXCI7XG5pbXBvcnQgeyBMQU5EU0NBUEVfREVGQVVMVF9XSURUSCwgUE9SVFJBSVRfREVGQVVMVF9XSURUSCB9IGZyb20gJy4uLy4uL3V0aWxzL2NvbnN0YW50cy9zY3JlZW5EaW1lbnNpb25zJztcbmltcG9ydCBpc0xhbmRzY2FwZSBmcm9tICcuLi8uLi91dGlscy9mdW5jdGlvbnMvaXNMYW5kc2NhcGUnO1xuaW1wb3J0IHJlbmRlckhpc3RvcnlIaXN0b2dyYW1CYXIgZnJvbSAnLi9yZW5kZXJIaXN0b3J5SGlzdG9ncmFtQmFyJztcbmltcG9ydCByZW5kZXJIaXN0b3J5TGVhZGVyc1BlcnNvbiBmcm9tICcuL3JlbmRlckhpc3RvcnlMZWFkZXJzUGVyc29uJztcbi8qKlxuICogQHR5cGVkZWYgSGlzdG9yeVZhbHVlXG4gKiBAdHlwZSB7T2JqZWN0fVxuICogQHByb3BlcnR5IHtzdHJpbmd9IHRpdGxlIC0gdGl0bGUgb2YgdGltZSBwZXJpb2QuXG4gKiBAcHJvcGVydHkge251bWJlcn0gdmFsdWUgLSB2YWx1ZSBmb3IgcGVyaW9kLlxuICogQHByb3BlcnR5IHtib29sZWFufSBhY3RpdmUgLSB0cnVlIGlmIHBlcmlvZCBpcyBhY3RpdmUgZWxzZSBmYWxzZS5cbiAqL1xuXG4vKipcbiAqIFJlbmRlciBjaGFydCBzbGlkZSBjb250ZW50LlxuICpcbiAqIEBwYXJhbSB7U2xpZGVEYXRhfSBkYXRhIC0gc2xpZGUgZGF0YS5cbiAqXG4gKiBAcmV0dXJucyB7c3RyaW5nfSAtIG1hcmt1cCBmb3Igc2xpZGUuXG4gKi9cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyQ2hhcnRTbGlkZShkYXRhKSB7XG4gIHZhciBmdWxsQ2hhcnRIZWlnaHRSYXRpbyA9IGlzTGFuZHNjYXBlKCkgPyAxODUgLyBQT1JUUkFJVF9ERUZBVUxUX1dJRFRIIDogNDAzIC8gTEFORFNDQVBFX0RFRkFVTFRfV0lEVEg7XG4gIHZhciBtYXhCYXJIZWlnaHRSYXRpbyA9IGlzTGFuZHNjYXBlKCkgPyAxMTcgLyBQT1JUUkFJVF9ERUZBVUxUX1dJRFRIIDogMjcwIC8gTEFORFNDQVBFX0RFRkFVTFRfV0lEVEg7XG4gIHZhciBmdWxsQ2hhcnRIZWlnaHQgPSAoZnVsbENoYXJ0SGVpZ2h0UmF0aW8gKiBnbG9iYWxUaGlzLmlubmVySGVpZ2h0KS50b1ByZWNpc2lvbig1KTtcbiAgdmFyIGNoYXJ0SGVpZ2h0ID0gbWF4QmFySGVpZ2h0UmF0aW8gKiBnbG9iYWxUaGlzLmlubmVySGVpZ2h0O1xuICB2YXIgbWF4VmFsdWUgPSBkYXRhLnZhbHVlcy5yZWR1Y2UoZnVuY3Rpb24gKG1heCwgZGF0YVZhbHVlKSB7XG4gICAgcmV0dXJuIG1heCA8IGRhdGFWYWx1ZS52YWx1ZSA/IGRhdGFWYWx1ZS52YWx1ZSA6IG1heDtcbiAgfSwgMCk7XG4gIHJldHVybiBcIlxcbiAgICA8ZGl2IGNsYXNzPVxcXCJjaGFydC1zbGlkZVxcXCI+XFxuICAgICAgPHNlY3Rpb24gY2xhc3M9XFxcImhpc3RvcnktaGlzdG9ncmFtIGNoYXJ0LXNsaWRlX19oaXN0b2dyYW1cXFwiPlxcbiAgICAgICAgPGgzIGNsYXNzPVxcXCJ2aXN1YWxseS1oaWRkZW5cXFwiPlxcdTA0MTRcXHUwNDM4XFx1MDQzMFxcdTA0MzNcXHUwNDQwXFx1MDQzMFxcdTA0M0NcXHUwNDNDXFx1MDQzMDwvaDM+XFxuICAgICAgICA8ZGl2IGNsYXNzPVxcXCJoaXN0b3J5LWhpc3RvZ3JhbV9fY2hhcnRcXFwiIHN0eWxlPVxcXCJoZWlnaHQ6IFwiLmNvbmNhdChmdWxsQ2hhcnRIZWlnaHQgKyBcInB4XCIsIFwiXFxcIj5cXG4gICAgICAgICAgPHVsIGNsYXNzPVxcXCJoaXN0b3J5LWhpc3RvZ3JhbV9fdmFsdWVzXFxcIj5cXG4gICAgICAgICAgICBcIikuY29uY2F0KGRhdGEudmFsdWVzLnJlZHVjZShmdW5jdGlvbiAobWFya3VwLCB2YWx1ZSkge1xuICAgIG1hcmt1cCArPSByZW5kZXJIaXN0b3J5SGlzdG9ncmFtQmFyKHZhbHVlLCBtYXhWYWx1ZSwgY2hhcnRIZWlnaHQpO1xuICAgIHJldHVybiBtYXJrdXA7XG4gIH0sIFwiXCIpLCBcIlxcbiAgICAgICAgICA8L3VsPlxcbiAgICAgICAgPC9kaXY+XFxuICAgICAgPC9zZWN0aW9uPlxcbiAgICAgIDxzZWN0aW9uIGNsYXNzPVxcXCJoaXN0b3J5LWxlYWRlcnMgY2hhcnQtc2xpZGVfX2xlYWRlcnNcXFwiPlxcbiAgICAgICAgPGgzIGNsYXNzPVxcXCJ2aXN1YWxseS1oaWRkZW5cXFwiPlxcdTA0MUJcXHUwNDM4XFx1MDQzNFxcdTA0MzVcXHUwNDQwXFx1MDQ0QjwvaDM+XFxuICAgICAgICA8dWwgY2xhc3M9XFxcImhpc3RvcnktbGVhZGVyc19fbGlzdFxcXCI+XFxuICAgICAgICAgIFwiKS5jb25jYXQoZGF0YS51c2Vycy5yZWR1Y2UoZnVuY3Rpb24gKG1hcmt1cCwgdXNlciwgaSkge1xuICAgIGlmIChpIDwgMikge1xuICAgICAgbWFya3VwICs9IHJlbmRlckhpc3RvcnlMZWFkZXJzUGVyc29uKHVzZXIpO1xuICAgIH1cblxuICAgIHJldHVybiBtYXJrdXA7XG4gIH0sIFwiXCIpLCBcIlxcbiAgICAgICAgPC91bD5cXG4gICAgICA8L3NlY3Rpb24+XFxuICAgIDwvZGl2PlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/chart/renderChartSlide.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/chart/renderHistoryHistogramBar.js":
-/*!*******************************************************************!*\
-  !*** ./src/js/renderFunctions/chart/renderHistoryHistogramBar.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderHistoryHistogramBar)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.to-precision.js */ \"./node_modules/core-js/modules/es.number.to-precision.js\");\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ \"./node_modules/core-js/modules/es.parse-int.js\");\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\nfunction renderHistoryHistogramBar(itemValue, maxValue, chartHeight) {\n  var barPercentageHeight = itemValue.value / maxValue;\n  var barHeight = \"\".concat((barPercentageHeight * chartHeight).toPrecision(4), \"px\");\n  var value = parseInt(itemValue.value);\n  return \"\\n    <li class=\\\"history-histogram__bar-wrap \".concat(itemValue.active ? \"history-histogram__bar-wrap_active\" : \"\", \"\\\">\\n      <h4 class=\\\"history-histogram__bar-label main-text main-text_dim\\\">\").concat(itemValue.title, \"</h4>\\n      <div class=\\\"history-histogram__bar column-bar \").concat(itemValue.active ? \"column-bar_active\" : \"\", \"\\\" style=\\\"height: \").concat(barHeight, \"\\\" aria-label=\\\"\\u0417\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u0435: \").concat(itemValue.value, \"\\\"></div>\\n      <span class=\\\"history-histogram__value subhead subhead_dim\\\" aria-hidden=\\\"true\\\">\").concat(value || '', \"</span>\\n    </li>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NoYXJ0L3JlbmRlckhpc3RvcnlIaXN0b2dyYW1CYXIuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvY2hhcnQvcmVuZGVySGlzdG9yeUhpc3RvZ3JhbUJhci5qcz9kNzRlIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5udW1iZXIudG8tcHJlY2lzaW9uLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMucGFyc2UtaW50LmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuY29uY2F0LmpzXCI7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJIaXN0b3J5SGlzdG9ncmFtQmFyKGl0ZW1WYWx1ZSwgbWF4VmFsdWUsIGNoYXJ0SGVpZ2h0KSB7XG4gIHZhciBiYXJQZXJjZW50YWdlSGVpZ2h0ID0gaXRlbVZhbHVlLnZhbHVlIC8gbWF4VmFsdWU7XG4gIHZhciBiYXJIZWlnaHQgPSBcIlwiLmNvbmNhdCgoYmFyUGVyY2VudGFnZUhlaWdodCAqIGNoYXJ0SGVpZ2h0KS50b1ByZWNpc2lvbig0KSwgXCJweFwiKTtcbiAgdmFyIHZhbHVlID0gcGFyc2VJbnQoaXRlbVZhbHVlLnZhbHVlKTtcbiAgcmV0dXJuIFwiXFxuICAgIDxsaSBjbGFzcz1cXFwiaGlzdG9yeS1oaXN0b2dyYW1fX2Jhci13cmFwIFwiLmNvbmNhdChpdGVtVmFsdWUuYWN0aXZlID8gXCJoaXN0b3J5LWhpc3RvZ3JhbV9fYmFyLXdyYXBfYWN0aXZlXCIgOiBcIlwiLCBcIlxcXCI+XFxuICAgICAgPGg0IGNsYXNzPVxcXCJoaXN0b3J5LWhpc3RvZ3JhbV9fYmFyLWxhYmVsIG1haW4tdGV4dCBtYWluLXRleHRfZGltXFxcIj5cIikuY29uY2F0KGl0ZW1WYWx1ZS50aXRsZSwgXCI8L2g0PlxcbiAgICAgIDxkaXYgY2xhc3M9XFxcImhpc3RvcnktaGlzdG9ncmFtX19iYXIgY29sdW1uLWJhciBcIikuY29uY2F0KGl0ZW1WYWx1ZS5hY3RpdmUgPyBcImNvbHVtbi1iYXJfYWN0aXZlXCIgOiBcIlwiLCBcIlxcXCIgc3R5bGU9XFxcImhlaWdodDogXCIpLmNvbmNhdChiYXJIZWlnaHQsIFwiXFxcIiBhcmlhLWxhYmVsPVxcXCJcXHUwNDE3XFx1MDQzRFxcdTA0MzBcXHUwNDQ3XFx1MDQzNVxcdTA0M0RcXHUwNDM4XFx1MDQzNTogXCIpLmNvbmNhdChpdGVtVmFsdWUudmFsdWUsIFwiXFxcIj48L2Rpdj5cXG4gICAgICA8c3BhbiBjbGFzcz1cXFwiaGlzdG9yeS1oaXN0b2dyYW1fX3ZhbHVlIHN1YmhlYWQgc3ViaGVhZF9kaW1cXFwiIGFyaWEtaGlkZGVuPVxcXCJ0cnVlXFxcIj5cIikuY29uY2F0KHZhbHVlIHx8ICcnLCBcIjwvc3Bhbj5cXG4gICAgPC9saT5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/chart/renderHistoryHistogramBar.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/chart/renderHistoryLeadersPerson.js":
-/*!********************************************************************!*\
-  !*** ./src/js/renderFunctions/chart/renderHistoryLeadersPerson.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderHistoryLeadersPerson)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ \"./node_modules/core-js/modules/es.function.name.js\");\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _common_renderImg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../common/renderImg */ \"./src/js/renderFunctions/common/renderImg.js\");\n\n\n\nfunction renderHistoryLeadersPerson(person) {\n  return \"\\n    <li class=\\\"history-leaders__person chart-leader\\\">\\n      \".concat((0,_common_renderImg__WEBPACK_IMPORTED_MODULE_2__.default)(person.avatar, person.name, 40, 40, \"chart-leader__avatar\"), \"\\n      <div class=\\\"chart-leader__text\\\">\\n        <h4 class=\\\"chart-leader__name\\\">\").concat(person.name, \"</h4>\\n        <p class=\\\"chart-leader__value caption caption_dim\\\">\").concat(person.valueText, \"</p>\\n      </div>\\n    </li>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NoYXJ0L3JlbmRlckhpc3RvcnlMZWFkZXJzUGVyc29uLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NoYXJ0L3JlbmRlckhpc3RvcnlMZWFkZXJzUGVyc29uLmpzP2U4NWIiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmZ1bmN0aW9uLm5hbWUuanNcIjtcbmltcG9ydCByZW5kZXJJbWcgZnJvbSAnLi4vY29tbW9uL3JlbmRlckltZyc7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJIaXN0b3J5TGVhZGVyc1BlcnNvbihwZXJzb24pIHtcbiAgcmV0dXJuIFwiXFxuICAgIDxsaSBjbGFzcz1cXFwiaGlzdG9yeS1sZWFkZXJzX19wZXJzb24gY2hhcnQtbGVhZGVyXFxcIj5cXG4gICAgICBcIi5jb25jYXQocmVuZGVySW1nKHBlcnNvbi5hdmF0YXIsIHBlcnNvbi5uYW1lLCA0MCwgNDAsIFwiY2hhcnQtbGVhZGVyX19hdmF0YXJcIiksIFwiXFxuICAgICAgPGRpdiBjbGFzcz1cXFwiY2hhcnQtbGVhZGVyX190ZXh0XFxcIj5cXG4gICAgICAgIDxoNCBjbGFzcz1cXFwiY2hhcnQtbGVhZGVyX19uYW1lXFxcIj5cIikuY29uY2F0KHBlcnNvbi5uYW1lLCBcIjwvaDQ+XFxuICAgICAgICA8cCBjbGFzcz1cXFwiY2hhcnQtbGVhZGVyX192YWx1ZSBjYXB0aW9uIGNhcHRpb25fZGltXFxcIj5cIikuY29uY2F0KHBlcnNvbi52YWx1ZVRleHQsIFwiPC9wPlxcbiAgICAgIDwvZGl2PlxcbiAgICA8L2xpPlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/chart/renderHistoryLeadersPerson.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/common/renderCaption.js":
-/*!********************************************************!*\
-  !*** ./src/js/renderFunctions/common/renderCaption.js ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderCaption)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction renderCaption(_ref) {\n  var title = _ref.title,\n      subtitle = _ref.subtitle;\n  return \"\\n    <div class=\\\"slide__caption\\\">\\n      <h1 class=\\\"slide__title headline\\\">\".concat(title, \"</h1>\\n      <h2 class=\\\"slide__subtitle main-text main-text_dim\\\">\").concat(subtitle, \"</h2>\\n    </div>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJDYXB0aW9uLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJDYXB0aW9uLmpzP2RmYWIiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyQ2FwdGlvbihfcmVmKSB7XG4gIHZhciB0aXRsZSA9IF9yZWYudGl0bGUsXG4gICAgICBzdWJ0aXRsZSA9IF9yZWYuc3VidGl0bGU7XG4gIHJldHVybiBcIlxcbiAgICA8ZGl2IGNsYXNzPVxcXCJzbGlkZV9fY2FwdGlvblxcXCI+XFxuICAgICAgPGgxIGNsYXNzPVxcXCJzbGlkZV9fdGl0bGUgaGVhZGxpbmVcXFwiPlwiLmNvbmNhdCh0aXRsZSwgXCI8L2gxPlxcbiAgICAgIDxoMiBjbGFzcz1cXFwic2xpZGVfX3N1YnRpdGxlIG1haW4tdGV4dCBtYWluLXRleHRfZGltXFxcIj5cIikuY29uY2F0KHN1YnRpdGxlLCBcIjwvaDI+XFxuICAgIDwvZGl2PlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/common/renderCaption.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/common/renderImg.js":
-/*!****************************************************!*\
-  !*** ./src/js/renderFunctions/common/renderImg.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderImg)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction renderImg(fileName, alt, width, height, className) {\n  return \"\\n    <img \".concat(className ? \"class=\".concat(className) : \"\", \" srcset=\\\"/assets/images/1x/\").concat(fileName, \",\\n      /assets/images/2x/\").concat(fileName, \" 2x,\\n      /assets/images/3x/\").concat(fileName, \" 3x,\\n      /assets/images/4x/\").concat(fileName, \" 4x\\\"\\n      src=\\\"/assets/images/3x/\").concat(fileName, \"\\\" width=\\\"\").concat(width, \"\\\" height=\\\"\").concat(height, \"\\\" alt=\\\"\").concat(alt, \"\\\">\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJJbWcuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvY29tbW9uL3JlbmRlckltZy5qcz8zYmRmIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIHJlbmRlckltZyhmaWxlTmFtZSwgYWx0LCB3aWR0aCwgaGVpZ2h0LCBjbGFzc05hbWUpIHtcbiAgcmV0dXJuIFwiXFxuICAgIDxpbWcgXCIuY29uY2F0KGNsYXNzTmFtZSA/IFwiY2xhc3M9XCIuY29uY2F0KGNsYXNzTmFtZSkgOiBcIlwiLCBcIiBzcmNzZXQ9XFxcIi9hc3NldHMvaW1hZ2VzLzF4L1wiKS5jb25jYXQoZmlsZU5hbWUsIFwiLFxcbiAgICAgIC9hc3NldHMvaW1hZ2VzLzJ4L1wiKS5jb25jYXQoZmlsZU5hbWUsIFwiIDJ4LFxcbiAgICAgIC9hc3NldHMvaW1hZ2VzLzN4L1wiKS5jb25jYXQoZmlsZU5hbWUsIFwiIDN4LFxcbiAgICAgIC9hc3NldHMvaW1hZ2VzLzR4L1wiKS5jb25jYXQoZmlsZU5hbWUsIFwiIDR4XFxcIlxcbiAgICAgIHNyYz1cXFwiL2Fzc2V0cy9pbWFnZXMvM3gvXCIpLmNvbmNhdChmaWxlTmFtZSwgXCJcXFwiIHdpZHRoPVxcXCJcIikuY29uY2F0KHdpZHRoLCBcIlxcXCIgaGVpZ2h0PVxcXCJcIikuY29uY2F0KGhlaWdodCwgXCJcXFwiIGFsdD1cXFwiXCIpLmNvbmNhdChhbHQsIFwiXFxcIj5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/common/renderImg.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/common/renderPersonCard.js":
-/*!***********************************************************!*\
-  !*** ./src/js/renderFunctions/common/renderPersonCard.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderPersonCard)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_string_split_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.split.js */ \"./node_modules/core-js/modules/es.string.split.js\");\n/* harmony import */ var core_js_modules_es_string_split_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_split_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ \"./node_modules/core-js/modules/es.regexp.exec.js\");\n/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ \"./node_modules/core-js/modules/es.function.name.js\");\n/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ \"./node_modules/core-js/modules/es.parse-int.js\");\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ \"./node_modules/core-js/modules/es.array.is-array.js\");\n/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ \"./node_modules/core-js/modules/es.symbol.js\");\n/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ \"./node_modules/core-js/modules/es.symbol.description.js\");\n/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ \"./node_modules/core-js/modules/es.object.to-string.js\");\n/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ \"./node_modules/core-js/modules/es.symbol.iterator.js\");\n/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ \"./node_modules/core-js/modules/es.string.iterator.js\");\n/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ \"./node_modules/core-js/modules/es.array.iterator.js\");\n/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12__);\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ \"./node_modules/core-js/modules/web.dom-collections.iterator.js\");\n/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13__);\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.array.slice.js */ \"./node_modules/core-js/modules/es.array.slice.js\");\n/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_14__);\n/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.array.from.js */ \"./node_modules/core-js/modules/es.array.from.js\");\n/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_15__);\n/* harmony import */ var _renderImg__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./renderImg */ \"./src/js/renderFunctions/common/renderImg.js\");\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfunction _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }\n\nfunction _nonIterableRest() { throw new TypeError(\"Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\n\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\n\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }\n\nfunction _iterableToArrayLimit(arr, i) { if (typeof Symbol === \"undefined\" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i[\"return\"] != null) _i[\"return\"](); } finally { if (_d) throw _e; } } return _arr; }\n\nfunction _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }\n\n\n\nfunction renderPersonCard(personData, position, selectedUserId, emoji, leadersBarsCount) {\n  var isSelected = personData.id === selectedUserId;\n  var lowPositionSelected = isSelected && position > leadersBarsCount;\n\n  var _personData$name$spli = personData.name.split(\" \"),\n      _personData$name$spli2 = _slicedToArray(_personData$name$spli, 2),\n      name = _personData$name$spli2[0],\n      surname = _personData$name$spli2[1];\n\n  var currentEmoji = emoji;\n\n  if (isSelected && position !== 1) {\n    currentEmoji = \"\\uD83D\\uDC4D\"; // like\n  }\n\n  return \"\\n    <figure class=\\\"person-card \".concat(isSelected ? \"person-card_selected\" : \"\", \" \").concat(lowPositionSelected ? \"person-card_low-position-selected\" : \"\", \"\\\">\\n      \").concat(lowPositionSelected ? \"<span class=\\\"person-card__low-selected-position\\\">\".concat(position, \"</span>\") : \"\", \"\\n      \").concat(currentEmoji ? \"<b class=\\\"person-card__emoji\\\">\".concat(currentEmoji, \"</b>\") : \"\", \"\\n      \").concat((0,_renderImg__WEBPACK_IMPORTED_MODULE_16__.default)(personData.avatar, personData.name, 64, 64, \"person-card__avatar\"), \"\\n      <figcaption class=\\\"person-card__caption\\\">\\n        <h3 class=\\\"person-card__full-name main-text\\\">\\n          <span class=\\\"person-card__name\\\">\").concat(name, \"</span>\\n          <span class=\\\"person-card__surname\\\">\").concat(surname, \"</span>\\n        </h3>\\n        <span class=\\\"person-card__result caption caption_dim\\\">\").concat(selectedUserId && globalThis.innerWidth < _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_17__.LANDSCAPE_PHONE_MIN_WIDTH ? personData.valueText : parseInt(personData.valueText), \"</span>\\n      </figcaption>\\n    </figure>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJQZXJzb25DYXJkLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJQZXJzb25DYXJkLmpzPzZjMzEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnN0cmluZy5zcGxpdC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnJlZ2V4cC5leGVjLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuZnVuY3Rpb24ubmFtZS5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmdsb2JhbC10aGlzLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMucGFyc2UtaW50LmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuaXMtYXJyYXkuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5zeW1ib2wuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5zeW1ib2wuZGVzY3JpcHRpb24uanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5vYmplY3QudG8tc3RyaW5nLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuc3ltYm9sLml0ZXJhdG9yLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuc3RyaW5nLml0ZXJhdG9yLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuaXRlcmF0b3IuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy93ZWIuZG9tLWNvbGxlY3Rpb25zLml0ZXJhdG9yLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuc2xpY2UuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5mcm9tLmpzXCI7XG5cbmZ1bmN0aW9uIF9zbGljZWRUb0FycmF5KGFyciwgaSkgeyByZXR1cm4gX2FycmF5V2l0aEhvbGVzKGFycikgfHwgX2l0ZXJhYmxlVG9BcnJheUxpbWl0KGFyciwgaSkgfHwgX3Vuc3VwcG9ydGVkSXRlcmFibGVUb0FycmF5KGFyciwgaSkgfHwgX25vbkl0ZXJhYmxlUmVzdCgpOyB9XG5cbmZ1bmN0aW9uIF9ub25JdGVyYWJsZVJlc3QoKSB7IHRocm93IG5ldyBUeXBlRXJyb3IoXCJJbnZhbGlkIGF0dGVtcHQgdG8gZGVzdHJ1Y3R1cmUgbm9uLWl0ZXJhYmxlIGluc3RhbmNlLlxcbkluIG9yZGVyIHRvIGJlIGl0ZXJhYmxlLCBub24tYXJyYXkgb2JqZWN0cyBtdXN0IGhhdmUgYSBbU3ltYm9sLml0ZXJhdG9yXSgpIG1ldGhvZC5cIik7IH1cblxuZnVuY3Rpb24gX3Vuc3VwcG9ydGVkSXRlcmFibGVUb0FycmF5KG8sIG1pbkxlbikgeyBpZiAoIW8pIHJldHVybjsgaWYgKHR5cGVvZiBvID09PSBcInN0cmluZ1wiKSByZXR1cm4gX2FycmF5TGlrZVRvQXJyYXkobywgbWluTGVuKTsgdmFyIG4gPSBPYmplY3QucHJvdG90eXBlLnRvU3RyaW5nLmNhbGwobykuc2xpY2UoOCwgLTEpOyBpZiAobiA9PT0gXCJPYmplY3RcIiAmJiBvLmNvbnN0cnVjdG9yKSBuID0gby5jb25zdHJ1Y3Rvci5uYW1lOyBpZiAobiA9PT0gXCJNYXBcIiB8fCBuID09PSBcIlNldFwiKSByZXR1cm4gQXJyYXkuZnJvbShvKTsgaWYgKG4gPT09IFwiQXJndW1lbnRzXCIgfHwgL14oPzpVaXxJKW50KD86OHwxNnwzMikoPzpDbGFtcGVkKT9BcnJheSQvLnRlc3QobikpIHJldHVybiBfYXJyYXlMaWtlVG9BcnJheShvLCBtaW5MZW4pOyB9XG5cbmZ1bmN0aW9uIF9hcnJheUxpa2VUb0FycmF5KGFyciwgbGVuKSB7IGlmIChsZW4gPT0gbnVsbCB8fCBsZW4gPiBhcnIubGVuZ3RoKSBsZW4gPSBhcnIubGVuZ3RoOyBmb3IgKHZhciBpID0gMCwgYXJyMiA9IG5ldyBBcnJheShsZW4pOyBpIDwgbGVuOyBpKyspIHsgYXJyMltpXSA9IGFycltpXTsgfSByZXR1cm4gYXJyMjsgfVxuXG5mdW5jdGlvbiBfaXRlcmFibGVUb0FycmF5TGltaXQoYXJyLCBpKSB7IGlmICh0eXBlb2YgU3ltYm9sID09PSBcInVuZGVmaW5lZFwiIHx8ICEoU3ltYm9sLml0ZXJhdG9yIGluIE9iamVjdChhcnIpKSkgcmV0dXJuOyB2YXIgX2FyciA9IFtdOyB2YXIgX24gPSB0cnVlOyB2YXIgX2QgPSBmYWxzZTsgdmFyIF9lID0gdW5kZWZpbmVkOyB0cnkgeyBmb3IgKHZhciBfaSA9IGFycltTeW1ib2wuaXRlcmF0b3JdKCksIF9zOyAhKF9uID0gKF9zID0gX2kubmV4dCgpKS5kb25lKTsgX24gPSB0cnVlKSB7IF9hcnIucHVzaChfcy52YWx1ZSk7IGlmIChpICYmIF9hcnIubGVuZ3RoID09PSBpKSBicmVhazsgfSB9IGNhdGNoIChlcnIpIHsgX2QgPSB0cnVlOyBfZSA9IGVycjsgfSBmaW5hbGx5IHsgdHJ5IHsgaWYgKCFfbiAmJiBfaVtcInJldHVyblwiXSAhPSBudWxsKSBfaVtcInJldHVyblwiXSgpOyB9IGZpbmFsbHkgeyBpZiAoX2QpIHRocm93IF9lOyB9IH0gcmV0dXJuIF9hcnI7IH1cblxuZnVuY3Rpb24gX2FycmF5V2l0aEhvbGVzKGFycikgeyBpZiAoQXJyYXkuaXNBcnJheShhcnIpKSByZXR1cm4gYXJyOyB9XG5cbmltcG9ydCByZW5kZXJJbWcgZnJvbSAnLi9yZW5kZXJJbWcnO1xuaW1wb3J0IHsgTEFORFNDQVBFX1BIT05FX01JTl9XSURUSCB9IGZyb20gJy4uLy4uL3V0aWxzL2NvbnN0YW50cy9zY3JlZW5EaW1lbnNpb25zJztcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIHJlbmRlclBlcnNvbkNhcmQocGVyc29uRGF0YSwgcG9zaXRpb24sIHNlbGVjdGVkVXNlcklkLCBlbW9qaSwgbGVhZGVyc0JhcnNDb3VudCkge1xuICB2YXIgaXNTZWxlY3RlZCA9IHBlcnNvbkRhdGEuaWQgPT09IHNlbGVjdGVkVXNlcklkO1xuICB2YXIgbG93UG9zaXRpb25TZWxlY3RlZCA9IGlzU2VsZWN0ZWQgJiYgcG9zaXRpb24gPiBsZWFkZXJzQmFyc0NvdW50O1xuXG4gIHZhciBfcGVyc29uRGF0YSRuYW1lJHNwbGkgPSBwZXJzb25EYXRhLm5hbWUuc3BsaXQoXCIgXCIpLFxuICAgICAgX3BlcnNvbkRhdGEkbmFtZSRzcGxpMiA9IF9zbGljZWRUb0FycmF5KF9wZXJzb25EYXRhJG5hbWUkc3BsaSwgMiksXG4gICAgICBuYW1lID0gX3BlcnNvbkRhdGEkbmFtZSRzcGxpMlswXSxcbiAgICAgIHN1cm5hbWUgPSBfcGVyc29uRGF0YSRuYW1lJHNwbGkyWzFdO1xuXG4gIHZhciBjdXJyZW50RW1vamkgPSBlbW9qaTtcblxuICBpZiAoaXNTZWxlY3RlZCAmJiBwb3NpdGlvbiAhPT0gMSkge1xuICAgIGN1cnJlbnRFbW9qaSA9IFwiXFx1RDgzRFxcdURDNERcIjsgLy8gbGlrZVxuICB9XG5cbiAgcmV0dXJuIFwiXFxuICAgIDxmaWd1cmUgY2xhc3M9XFxcInBlcnNvbi1jYXJkIFwiLmNvbmNhdChpc1NlbGVjdGVkID8gXCJwZXJzb24tY2FyZF9zZWxlY3RlZFwiIDogXCJcIiwgXCIgXCIpLmNvbmNhdChsb3dQb3NpdGlvblNlbGVjdGVkID8gXCJwZXJzb24tY2FyZF9sb3ctcG9zaXRpb24tc2VsZWN0ZWRcIiA6IFwiXCIsIFwiXFxcIj5cXG4gICAgICBcIikuY29uY2F0KGxvd1Bvc2l0aW9uU2VsZWN0ZWQgPyBcIjxzcGFuIGNsYXNzPVxcXCJwZXJzb24tY2FyZF9fbG93LXNlbGVjdGVkLXBvc2l0aW9uXFxcIj5cIi5jb25jYXQocG9zaXRpb24sIFwiPC9zcGFuPlwiKSA6IFwiXCIsIFwiXFxuICAgICAgXCIpLmNvbmNhdChjdXJyZW50RW1vamkgPyBcIjxiIGNsYXNzPVxcXCJwZXJzb24tY2FyZF9fZW1vamlcXFwiPlwiLmNvbmNhdChjdXJyZW50RW1vamksIFwiPC9iPlwiKSA6IFwiXCIsIFwiXFxuICAgICAgXCIpLmNvbmNhdChyZW5kZXJJbWcocGVyc29uRGF0YS5hdmF0YXIsIHBlcnNvbkRhdGEubmFtZSwgNjQsIDY0LCBcInBlcnNvbi1jYXJkX19hdmF0YXJcIiksIFwiXFxuICAgICAgPGZpZ2NhcHRpb24gY2xhc3M9XFxcInBlcnNvbi1jYXJkX19jYXB0aW9uXFxcIj5cXG4gICAgICAgIDxoMyBjbGFzcz1cXFwicGVyc29uLWNhcmRfX2Z1bGwtbmFtZSBtYWluLXRleHRcXFwiPlxcbiAgICAgICAgICA8c3BhbiBjbGFzcz1cXFwicGVyc29uLWNhcmRfX25hbWVcXFwiPlwiKS5jb25jYXQobmFtZSwgXCI8L3NwYW4+XFxuICAgICAgICAgIDxzcGFuIGNsYXNzPVxcXCJwZXJzb24tY2FyZF9fc3VybmFtZVxcXCI+XCIpLmNvbmNhdChzdXJuYW1lLCBcIjwvc3Bhbj5cXG4gICAgICAgIDwvaDM+XFxuICAgICAgICA8c3BhbiBjbGFzcz1cXFwicGVyc29uLWNhcmRfX3Jlc3VsdCBjYXB0aW9uIGNhcHRpb25fZGltXFxcIj5cIikuY29uY2F0KHNlbGVjdGVkVXNlcklkICYmIGdsb2JhbFRoaXMuaW5uZXJXaWR0aCA8IExBTkRTQ0FQRV9QSE9ORV9NSU5fV0lEVEggPyBwZXJzb25EYXRhLnZhbHVlVGV4dCA6IHBhcnNlSW50KHBlcnNvbkRhdGEudmFsdWVUZXh0KSwgXCI8L3NwYW4+XFxuICAgICAgPC9maWdjYXB0aW9uPlxcbiAgICA8L2ZpZ3VyZT5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/common/renderPersonCard.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/common/renderSlideContent.js":
-/*!*************************************************************!*\
-  !*** ./src/js/renderFunctions/common/renderSlideContent.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderSlideContent)\n/* harmony export */ });\n/* harmony import */ var _leaders_renderLeadersSlide__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../leaders/renderLeadersSlide */ \"./src/js/renderFunctions/leaders/renderLeadersSlide.js\");\n/* harmony import */ var _vote_renderVoteSlide__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../vote/renderVoteSlide */ \"./src/js/renderFunctions/vote/renderVoteSlide.js\");\n/* harmony import */ var _activity_renderActivitySlide__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../activity/renderActivitySlide */ \"./src/js/renderFunctions/activity/renderActivitySlide.js\");\n/* harmony import */ var _chart_renderChartSlide__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../chart/renderChartSlide */ \"./src/js/renderFunctions/chart/renderChartSlide.js\");\n/* harmony import */ var _diagram_renderDiagramSlide__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../diagram/renderDiagramSlide */ \"./src/js/renderFunctions/diagram/renderDiagramSlide.js\");\n\n\n\n\n\n/**\n * @typedef {'leaders' | 'vote' | 'activity' | 'chart' | 'diagram'} SlideType\n */\n\n/**\n * Render content of the slide of the required type.\n *\n * @param {SlideType} slideType - alias of slide to render.\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup with slide content.\n */\n\nfunction renderSlideContent(slideType, data) {\n  switch (slideType) {\n    case 'leaders':\n      return (0,_leaders_renderLeadersSlide__WEBPACK_IMPORTED_MODULE_0__.default)(data);\n\n    case 'vote':\n      return (0,_vote_renderVoteSlide__WEBPACK_IMPORTED_MODULE_1__.default)(data);\n\n    case 'activity':\n      return (0,_activity_renderActivitySlide__WEBPACK_IMPORTED_MODULE_2__.default)(data);\n\n    case 'chart':\n      return (0,_chart_renderChartSlide__WEBPACK_IMPORTED_MODULE_3__.default)(data);\n\n    case 'diagram':\n      return (0,_diagram_renderDiagramSlide__WEBPACK_IMPORTED_MODULE_4__.default)(data);\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9yZW5kZXJTbGlkZUNvbnRlbnQuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvY29tbW9uL3JlbmRlclNsaWRlQ29udGVudC5qcz84ZDFiIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCByZW5kZXJMZWFkZXJzU2xpZGUgZnJvbSAnLi4vbGVhZGVycy9yZW5kZXJMZWFkZXJzU2xpZGUnO1xuaW1wb3J0IHJlbmRlclZvdGVTbGlkZSBmcm9tICcuLi92b3RlL3JlbmRlclZvdGVTbGlkZSc7XG5pbXBvcnQgcmVuZGVyQWN0aXZpdHlTbGlkZSBmcm9tICcuLi9hY3Rpdml0eS9yZW5kZXJBY3Rpdml0eVNsaWRlJztcbmltcG9ydCByZW5kZXJDaGFydFNsaWRlIGZyb20gJy4uL2NoYXJ0L3JlbmRlckNoYXJ0U2xpZGUnO1xuaW1wb3J0IHJlbmRlckRpYWdyYW1TbGlkZSBmcm9tICcuLi9kaWFncmFtL3JlbmRlckRpYWdyYW1TbGlkZSc7XG4vKipcbiAqIEB0eXBlZGVmIHsnbGVhZGVycycgfCAndm90ZScgfCAnYWN0aXZpdHknIHwgJ2NoYXJ0JyB8ICdkaWFncmFtJ30gU2xpZGVUeXBlXG4gKi9cblxuLyoqXG4gKiBSZW5kZXIgY29udGVudCBvZiB0aGUgc2xpZGUgb2YgdGhlIHJlcXVpcmVkIHR5cGUuXG4gKlxuICogQHBhcmFtIHtTbGlkZVR5cGV9IHNsaWRlVHlwZSAtIGFsaWFzIG9mIHNsaWRlIHRvIHJlbmRlci5cbiAqIEBwYXJhbSB7U2xpZGVEYXRhfSBkYXRhIC0gc2xpZGUgZGF0YS5cbiAqXG4gKiBAcmV0dXJucyB7c3RyaW5nfSAtIG1hcmt1cCB3aXRoIHNsaWRlIGNvbnRlbnQuXG4gKi9cblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyU2xpZGVDb250ZW50KHNsaWRlVHlwZSwgZGF0YSkge1xuICBzd2l0Y2ggKHNsaWRlVHlwZSkge1xuICAgIGNhc2UgJ2xlYWRlcnMnOlxuICAgICAgcmV0dXJuIHJlbmRlckxlYWRlcnNTbGlkZShkYXRhKTtcblxuICAgIGNhc2UgJ3ZvdGUnOlxuICAgICAgcmV0dXJuIHJlbmRlclZvdGVTbGlkZShkYXRhKTtcblxuICAgIGNhc2UgJ2FjdGl2aXR5JzpcbiAgICAgIHJldHVybiByZW5kZXJBY3Rpdml0eVNsaWRlKGRhdGEpO1xuXG4gICAgY2FzZSAnY2hhcnQnOlxuICAgICAgcmV0dXJuIHJlbmRlckNoYXJ0U2xpZGUoZGF0YSk7XG5cbiAgICBjYXNlICdkaWFncmFtJzpcbiAgICAgIHJldHVybiByZW5kZXJEaWFncmFtU2xpZGUoZGF0YSk7XG4gIH1cbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/common/renderSlideContent.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/common/setVhCssProperty.js":
-/*!***********************************************************!*\
-  !*** ./src/js/renderFunctions/common/setVhCssProperty.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ setVhCssProperty)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction setVhCssProperty() {\n  document.documentElement.style.setProperty(\"--vh\", \"\".concat(globalThis.innerHeight * 0.01, \"px\"));\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9zZXRWaENzc1Byb3BlcnR5LmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9zZXRWaENzc1Byb3BlcnR5LmpzPzU4YjMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmdsb2JhbC10aGlzLmpzXCI7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBzZXRWaENzc1Byb3BlcnR5KCkge1xuICBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQuc3R5bGUuc2V0UHJvcGVydHkoXCItLXZoXCIsIFwiXCIuY29uY2F0KGdsb2JhbFRoaXMuaW5uZXJIZWlnaHQgKiAwLjAxLCBcInB4XCIpKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/common/setVhCssProperty.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/diagram/drawCanvasDiagram.js":
-/*!*************************************************************!*\
-  !*** ./src/js/renderFunctions/diagram/drawCanvasDiagram.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ drawCanvasDiagram)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ \"./node_modules/core-js/modules/es.parse-int.js\");\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _classes_CanvasDiagramDrawer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../classes/CanvasDiagramDrawer */ \"./src/js/classes/CanvasDiagramDrawer.js\");\n\n\nfunction drawCanvasDiagram(_ref) {\n  var categories = _ref.categories,\n      totalText = _ref.totalText;\n  var OFFSET_ANGLE = 1; // degree\n\n  var PIE_BORDER_RADIUS = 6; // px\n\n  var CENTER_CIRCLE_RATIO = 0.7;\n  var diagramCanvas = document.querySelector(\"#doughnutDiagram\");\n  var diagramSize = diagramCanvas.clientWidth - 40;\n  var diagramRadius = diagramSize / 2;\n  var totalValue = parseInt(totalText);\n  var perimeterInPixels = 2 * Math.PI * diagramRadius;\n  var borderRadiusInDegrees = PIE_BORDER_RADIUS / perimeterInPixels * 360;\n  var drawer = new _classes_CanvasDiagramDrawer__WEBPACK_IMPORTED_MODULE_1__.default(diagramCanvas);\n  var angleSum = 240; // initial angle for design purposes\n\n  for (var i = 0; i < categories.length; i++) {\n    var valueAngle = parseInt(categories[i].valueText) / totalValue * (360 - OFFSET_ANGLE * categories.length);\n    drawer.drawSector(i + 1, diagramRadius, diagramCanvas.width / 2, diagramRadius * (1 - CENTER_CIRCLE_RATIO) - 2 * PIE_BORDER_RADIUS, drawer.degreesToRadians(angleSum), drawer.degreesToRadians(valueAngle + angleSum), PIE_BORDER_RADIUS, drawer.degreesToRadians(borderRadiusInDegrees));\n    angleSum += valueAngle + OFFSET_ANGLE;\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2RpYWdyYW0vZHJhd0NhbnZhc0RpYWdyYW0uanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvZGlhZ3JhbS9kcmF3Q2FudmFzRGlhZ3JhbS5qcz80ZGI1Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5wYXJzZS1pbnQuanNcIjtcbmltcG9ydCBDYW52YXNEaWFncmFtRHJhd2VyIGZyb20gJy4uLy4uL2NsYXNzZXMvQ2FudmFzRGlhZ3JhbURyYXdlcic7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBkcmF3Q2FudmFzRGlhZ3JhbShfcmVmKSB7XG4gIHZhciBjYXRlZ29yaWVzID0gX3JlZi5jYXRlZ29yaWVzLFxuICAgICAgdG90YWxUZXh0ID0gX3JlZi50b3RhbFRleHQ7XG4gIHZhciBPRkZTRVRfQU5HTEUgPSAxOyAvLyBkZWdyZWVcblxuICB2YXIgUElFX0JPUkRFUl9SQURJVVMgPSA2OyAvLyBweFxuXG4gIHZhciBDRU5URVJfQ0lSQ0xFX1JBVElPID0gMC43O1xuICB2YXIgZGlhZ3JhbUNhbnZhcyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIjZG91Z2hudXREaWFncmFtXCIpO1xuICB2YXIgZGlhZ3JhbVNpemUgPSBkaWFncmFtQ2FudmFzLmNsaWVudFdpZHRoIC0gNDA7XG4gIHZhciBkaWFncmFtUmFkaXVzID0gZGlhZ3JhbVNpemUgLyAyO1xuICB2YXIgdG90YWxWYWx1ZSA9IHBhcnNlSW50KHRvdGFsVGV4dCk7XG4gIHZhciBwZXJpbWV0ZXJJblBpeGVscyA9IDIgKiBNYXRoLlBJICogZGlhZ3JhbVJhZGl1cztcbiAgdmFyIGJvcmRlclJhZGl1c0luRGVncmVlcyA9IFBJRV9CT1JERVJfUkFESVVTIC8gcGVyaW1ldGVySW5QaXhlbHMgKiAzNjA7XG4gIHZhciBkcmF3ZXIgPSBuZXcgQ2FudmFzRGlhZ3JhbURyYXdlcihkaWFncmFtQ2FudmFzKTtcbiAgdmFyIGFuZ2xlU3VtID0gMjQwOyAvLyBpbml0aWFsIGFuZ2xlIGZvciBkZXNpZ24gcHVycG9zZXNcblxuICBmb3IgKHZhciBpID0gMDsgaSA8IGNhdGVnb3JpZXMubGVuZ3RoOyBpKyspIHtcbiAgICB2YXIgdmFsdWVBbmdsZSA9IHBhcnNlSW50KGNhdGVnb3JpZXNbaV0udmFsdWVUZXh0KSAvIHRvdGFsVmFsdWUgKiAoMzYwIC0gT0ZGU0VUX0FOR0xFICogY2F0ZWdvcmllcy5sZW5ndGgpO1xuICAgIGRyYXdlci5kcmF3U2VjdG9yKGkgKyAxLCBkaWFncmFtUmFkaXVzLCBkaWFncmFtQ2FudmFzLndpZHRoIC8gMiwgZGlhZ3JhbVJhZGl1cyAqICgxIC0gQ0VOVEVSX0NJUkNMRV9SQVRJTykgLSAyICogUElFX0JPUkRFUl9SQURJVVMsIGRyYXdlci5kZWdyZWVzVG9SYWRpYW5zKGFuZ2xlU3VtKSwgZHJhd2VyLmRlZ3JlZXNUb1JhZGlhbnModmFsdWVBbmdsZSArIGFuZ2xlU3VtKSwgUElFX0JPUkRFUl9SQURJVVMsIGRyYXdlci5kZWdyZWVzVG9SYWRpYW5zKGJvcmRlclJhZGl1c0luRGVncmVlcykpO1xuICAgIGFuZ2xlU3VtICs9IHZhbHVlQW5nbGUgKyBPRkZTRVRfQU5HTEU7XG4gIH1cbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/diagram/drawCanvasDiagram.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/diagram/renderDiagramDescription.js":
-/*!********************************************************************!*\
-  !*** ./src/js/renderFunctions/diagram/renderDiagramDescription.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderDiagramDescription)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.parse-int.js */ \"./node_modules/core-js/modules/es.parse-int.js\");\n/* harmony import */ var core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_int_js__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\nfunction renderDiagramDescription(data) {\n  return \"\\n    <figcaption class=\\\"diagram__description description-table\\\">\\n      <table class=\\\"description-table__table\\\" aria-label=\\\"\\u0422\\u0430\\u0431\\u043B\\u0438\\u0446\\u0430 \\u0441 \\u0434\\u0430\\u043D\\u043D\\u044B\\u043C\\u0438, \\u043E\\u0442\\u043E\\u0431\\u0440\\u0430\\u0436\\u0451\\u043D\\u043D\\u044B\\u043C\\u0438 \\u043D\\u0430 \\u043A\\u0440\\u0443\\u0433\\u043E\\u0432\\u043E\\u0439 \\u0434\\u0438\\u0430\\u0433\\u0440\\u0430\\u043C\\u043C\\u0435\\\">\\n        <thead class=\\\"visually-hidden\\\">\\n          <tr>\\n            <th>\\u041E\\u0431\\u043E\\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u0435 \\u043D\\u0430 \\u0434\\u0438\\u0430\\u0433\\u0440\\u0430\\u043C\\u043C\\u0435</th>\\n            <th>\".concat(data.title, \"</th>\\n            <th>\\u0420\\u0430\\u0437\\u043D\\u0438\\u0446\\u0430, \\u043F\\u043E \\u0441\\u0440\\u0430\\u0432\\u043D\\u0435\\u043D\\u0438\\u044E \\u0441 \\u043F\\u0440\\u0435\\u0434\\u044B\\u0434\\u0443\\u0449\\u0438\\u043C \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u0435\\u043C</th>\\n            <th>\\u0422\\u0435\\u043A\\u0443\\u0449\\u0435\\u0435 \\u0437\\u043D\\u0430\\u0447\\u0435\\u043D\\u0438\\u0435</th>\\n          </tr>\\n        </thead>\\n        <tbody>\\n          \").concat(data.categories.reduce(function (markup, category, i) {\n    markup += \"\\n              <tr>\\n                <td><span class=\\\"description-table__category-color description-table__category-color_\".concat(i + 1, \"\\\"></span></td>\\n                <td class=\\\"description-table__category\\\">\").concat(category.title, \"</td>\\n                <td>+\").concat(parseInt(category.differenceText), \"</td>\\n                <td>\").concat(parseInt(category.valueText), \"</td>\\n              </tr>\\n            \");\n    return markup;\n  }, \"\"), \"\\n        </tbody>\\n      </table>\\n    </figcaption>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2RpYWdyYW0vcmVuZGVyRGlhZ3JhbURlc2NyaXB0aW9uLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2RpYWdyYW0vcmVuZGVyRGlhZ3JhbURlc2NyaXB0aW9uLmpzPzFkZWYiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LnJlZHVjZS5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLnBhcnNlLWludC5qc1wiO1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyRGlhZ3JhbURlc2NyaXB0aW9uKGRhdGEpIHtcbiAgcmV0dXJuIFwiXFxuICAgIDxmaWdjYXB0aW9uIGNsYXNzPVxcXCJkaWFncmFtX19kZXNjcmlwdGlvbiBkZXNjcmlwdGlvbi10YWJsZVxcXCI+XFxuICAgICAgPHRhYmxlIGNsYXNzPVxcXCJkZXNjcmlwdGlvbi10YWJsZV9fdGFibGVcXFwiIGFyaWEtbGFiZWw9XFxcIlxcdTA0MjJcXHUwNDMwXFx1MDQzMVxcdTA0M0JcXHUwNDM4XFx1MDQ0NlxcdTA0MzAgXFx1MDQ0MSBcXHUwNDM0XFx1MDQzMFxcdTA0M0RcXHUwNDNEXFx1MDQ0QlxcdTA0M0NcXHUwNDM4LCBcXHUwNDNFXFx1MDQ0MlxcdTA0M0VcXHUwNDMxXFx1MDQ0MFxcdTA0MzBcXHUwNDM2XFx1MDQ1MVxcdTA0M0RcXHUwNDNEXFx1MDQ0QlxcdTA0M0NcXHUwNDM4IFxcdTA0M0RcXHUwNDMwIFxcdTA0M0FcXHUwNDQwXFx1MDQ0M1xcdTA0MzNcXHUwNDNFXFx1MDQzMlxcdTA0M0VcXHUwNDM5IFxcdTA0MzRcXHUwNDM4XFx1MDQzMFxcdTA0MzNcXHUwNDQwXFx1MDQzMFxcdTA0M0NcXHUwNDNDXFx1MDQzNVxcXCI+XFxuICAgICAgICA8dGhlYWQgY2xhc3M9XFxcInZpc3VhbGx5LWhpZGRlblxcXCI+XFxuICAgICAgICAgIDx0cj5cXG4gICAgICAgICAgICA8dGg+XFx1MDQxRVxcdTA0MzFcXHUwNDNFXFx1MDQzN1xcdTA0M0RcXHUwNDMwXFx1MDQ0N1xcdTA0MzVcXHUwNDNEXFx1MDQzOFxcdTA0MzUgXFx1MDQzRFxcdTA0MzAgXFx1MDQzNFxcdTA0MzhcXHUwNDMwXFx1MDQzM1xcdTA0NDBcXHUwNDMwXFx1MDQzQ1xcdTA0M0NcXHUwNDM1PC90aD5cXG4gICAgICAgICAgICA8dGg+XCIuY29uY2F0KGRhdGEudGl0bGUsIFwiPC90aD5cXG4gICAgICAgICAgICA8dGg+XFx1MDQyMFxcdTA0MzBcXHUwNDM3XFx1MDQzRFxcdTA0MzhcXHUwNDQ2XFx1MDQzMCwgXFx1MDQzRlxcdTA0M0UgXFx1MDQ0MVxcdTA0NDBcXHUwNDMwXFx1MDQzMlxcdTA0M0RcXHUwNDM1XFx1MDQzRFxcdTA0MzhcXHUwNDRFIFxcdTA0NDEgXFx1MDQzRlxcdTA0NDBcXHUwNDM1XFx1MDQzNFxcdTA0NEJcXHUwNDM0XFx1MDQ0M1xcdTA0NDlcXHUwNDM4XFx1MDQzQyBcXHUwNDM3XFx1MDQzRFxcdTA0MzBcXHUwNDQ3XFx1MDQzNVxcdTA0M0RcXHUwNDM4XFx1MDQzNVxcdTA0M0M8L3RoPlxcbiAgICAgICAgICAgIDx0aD5cXHUwNDIyXFx1MDQzNVxcdTA0M0FcXHUwNDQzXFx1MDQ0OVxcdTA0MzVcXHUwNDM1IFxcdTA0MzdcXHUwNDNEXFx1MDQzMFxcdTA0NDdcXHUwNDM1XFx1MDQzRFxcdTA0MzhcXHUwNDM1PC90aD5cXG4gICAgICAgICAgPC90cj5cXG4gICAgICAgIDwvdGhlYWQ+XFxuICAgICAgICA8dGJvZHk+XFxuICAgICAgICAgIFwiKS5jb25jYXQoZGF0YS5jYXRlZ29yaWVzLnJlZHVjZShmdW5jdGlvbiAobWFya3VwLCBjYXRlZ29yeSwgaSkge1xuICAgIG1hcmt1cCArPSBcIlxcbiAgICAgICAgICAgICAgPHRyPlxcbiAgICAgICAgICAgICAgICA8dGQ+PHNwYW4gY2xhc3M9XFxcImRlc2NyaXB0aW9uLXRhYmxlX19jYXRlZ29yeS1jb2xvciBkZXNjcmlwdGlvbi10YWJsZV9fY2F0ZWdvcnktY29sb3JfXCIuY29uY2F0KGkgKyAxLCBcIlxcXCI+PC9zcGFuPjwvdGQ+XFxuICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cXFwiZGVzY3JpcHRpb24tdGFibGVfX2NhdGVnb3J5XFxcIj5cIikuY29uY2F0KGNhdGVnb3J5LnRpdGxlLCBcIjwvdGQ+XFxuICAgICAgICAgICAgICAgIDx0ZD4rXCIpLmNvbmNhdChwYXJzZUludChjYXRlZ29yeS5kaWZmZXJlbmNlVGV4dCksIFwiPC90ZD5cXG4gICAgICAgICAgICAgICAgPHRkPlwiKS5jb25jYXQocGFyc2VJbnQoY2F0ZWdvcnkudmFsdWVUZXh0KSwgXCI8L3RkPlxcbiAgICAgICAgICAgICAgPC90cj5cXG4gICAgICAgICAgICBcIik7XG4gICAgcmV0dXJuIG1hcmt1cDtcbiAgfSwgXCJcIiksIFwiXFxuICAgICAgICA8L3Rib2R5PlxcbiAgICAgIDwvdGFibGU+XFxuICAgIDwvZmlnY2FwdGlvbj5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/diagram/renderDiagramDescription.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/diagram/renderDiagramSlide.js":
-/*!**************************************************************!*\
-  !*** ./src/js/renderFunctions/diagram/renderDiagramSlide.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderDiagramSlide)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _renderDiagramDescription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./renderDiagramDescription */ \"./src/js/renderFunctions/diagram/renderDiagramDescription.js\");\n\n\n/**\n * @typedef Category\n * @type {Object}\n * @property {string} title - title of the category.\n * @property {string} valueText - string with some value consisting of the number and optionally of the string.\n * @property {string} differenceText - difference between current and previous periods for this category.\n */\n\n/**\n * Render diagram slide content.\n *\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup for slide.\n */\n\nfunction renderDiagramSlide(data) {\n  return \"\\n    <figure class=\\\"diagram\\\">\\n      <h3 class=\\\"visually-hidden\\\">\\u041A\\u043E\\u043B\\u044C\\u0446\\u0435\\u0432\\u0430\\u044F \\u0434\\u0438\\u0430\\u0433\\u0440\\u0430\\u043C\\u043C\\u0430</h3>\\n      <div class=\\\"diagram__wrap\\\">\\n        <div class=\\\"diagram__main-description\\\">\\n          <p class=\\\"diagram__total headline\\\">\".concat(data.totalText, \"</p>\\n          <p class=\\\"diagram__difference subhead subhead_dim\\\">\").concat(data.differenceText, \"</p>\\n        </div>\\n        <div class=\\\"diagram__doughnut-wrap\\\">\\n          <canvas id=\\\"doughnutDiagram\\\" class=\\\"diagram__canvas\\\" width=\\\"400\\\" height=\\\"400\\\"></canvas>\\n        </div>\\n      </div>\\n      \").concat((0,_renderDiagramDescription__WEBPACK_IMPORTED_MODULE_1__.default)(data), \"\\n    </figure>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2RpYWdyYW0vcmVuZGVyRGlhZ3JhbVNsaWRlLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2RpYWdyYW0vcmVuZGVyRGlhZ3JhbVNsaWRlLmpzPzVmMGEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmFycmF5LmNvbmNhdC5qc1wiO1xuaW1wb3J0IHJlbmRlckRpYWdyYW1EZXNjcmlwdGlvbiBmcm9tICcuL3JlbmRlckRpYWdyYW1EZXNjcmlwdGlvbic7XG4vKipcbiAqIEB0eXBlZGVmIENhdGVnb3J5XG4gKiBAdHlwZSB7T2JqZWN0fVxuICogQHByb3BlcnR5IHtzdHJpbmd9IHRpdGxlIC0gdGl0bGUgb2YgdGhlIGNhdGVnb3J5LlxuICogQHByb3BlcnR5IHtzdHJpbmd9IHZhbHVlVGV4dCAtIHN0cmluZyB3aXRoIHNvbWUgdmFsdWUgY29uc2lzdGluZyBvZiB0aGUgbnVtYmVyIGFuZCBvcHRpb25hbGx5IG9mIHRoZSBzdHJpbmcuXG4gKiBAcHJvcGVydHkge3N0cmluZ30gZGlmZmVyZW5jZVRleHQgLSBkaWZmZXJlbmNlIGJldHdlZW4gY3VycmVudCBhbmQgcHJldmlvdXMgcGVyaW9kcyBmb3IgdGhpcyBjYXRlZ29yeS5cbiAqL1xuXG4vKipcbiAqIFJlbmRlciBkaWFncmFtIHNsaWRlIGNvbnRlbnQuXG4gKlxuICogQHBhcmFtIHtTbGlkZURhdGF9IGRhdGEgLSBzbGlkZSBkYXRhLlxuICpcbiAqIEByZXR1cm5zIHtzdHJpbmd9IC0gbWFya3VwIGZvciBzbGlkZS5cbiAqL1xuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJEaWFncmFtU2xpZGUoZGF0YSkge1xuICByZXR1cm4gXCJcXG4gICAgPGZpZ3VyZSBjbGFzcz1cXFwiZGlhZ3JhbVxcXCI+XFxuICAgICAgPGgzIGNsYXNzPVxcXCJ2aXN1YWxseS1oaWRkZW5cXFwiPlxcdTA0MUFcXHUwNDNFXFx1MDQzQlxcdTA0NENcXHUwNDQ2XFx1MDQzNVxcdTA0MzJcXHUwNDMwXFx1MDQ0RiBcXHUwNDM0XFx1MDQzOFxcdTA0MzBcXHUwNDMzXFx1MDQ0MFxcdTA0MzBcXHUwNDNDXFx1MDQzQ1xcdTA0MzA8L2gzPlxcbiAgICAgIDxkaXYgY2xhc3M9XFxcImRpYWdyYW1fX3dyYXBcXFwiPlxcbiAgICAgICAgPGRpdiBjbGFzcz1cXFwiZGlhZ3JhbV9fbWFpbi1kZXNjcmlwdGlvblxcXCI+XFxuICAgICAgICAgIDxwIGNsYXNzPVxcXCJkaWFncmFtX190b3RhbCBoZWFkbGluZVxcXCI+XCIuY29uY2F0KGRhdGEudG90YWxUZXh0LCBcIjwvcD5cXG4gICAgICAgICAgPHAgY2xhc3M9XFxcImRpYWdyYW1fX2RpZmZlcmVuY2Ugc3ViaGVhZCBzdWJoZWFkX2RpbVxcXCI+XCIpLmNvbmNhdChkYXRhLmRpZmZlcmVuY2VUZXh0LCBcIjwvcD5cXG4gICAgICAgIDwvZGl2PlxcbiAgICAgICAgPGRpdiBjbGFzcz1cXFwiZGlhZ3JhbV9fZG91Z2hudXQtd3JhcFxcXCI+XFxuICAgICAgICAgIDxjYW52YXMgaWQ9XFxcImRvdWdobnV0RGlhZ3JhbVxcXCIgY2xhc3M9XFxcImRpYWdyYW1fX2NhbnZhc1xcXCIgd2lkdGg9XFxcIjQwMFxcXCIgaGVpZ2h0PVxcXCI0MDBcXFwiPjwvY2FudmFzPlxcbiAgICAgICAgPC9kaXY+XFxuICAgICAgPC9kaXY+XFxuICAgICAgXCIpLmNvbmNhdChyZW5kZXJEaWFncmFtRGVzY3JpcHRpb24oZGF0YSksIFwiXFxuICAgIDwvZmlndXJlPlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/diagram/renderDiagramSlide.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/leaders/renderLeadersHistogramBar.js":
-/*!*********************************************************************!*\
-  !*** ./src/js/renderFunctions/leaders/renderLeadersHistogramBar.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderLeadersHistogramBar)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _common_renderPersonCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/renderPersonCard */ \"./src/js/renderFunctions/common/renderPersonCard.js\");\n\n\nvar selectedRendered = false;\nfunction renderLeadersHistogramBar(person, index, slideData, barsCount) {\n  var isSelectedUser = person.id === slideData.selectedUserId;\n\n  if (!isSelectedUser && index > 4 || slideData.selectedUserId && index === 4 && slideData.selectedUserId !== person.id && !selectedRendered) {\n    return \"\";\n  }\n\n  if (isSelectedUser) {\n    selectedRendered = true;\n  }\n\n  return \"\\n    <li class=\\\"leaders-histogram__bar-wrap \".concat(isSelectedUser && index + 1 > barsCount ? \"leaders-histogram__bar-wrap_no-number\" : \"\", \"\\\">\\n      \").concat((0,_common_renderPersonCard__WEBPACK_IMPORTED_MODULE_1__.default)(person, index + 1, slideData.selectedUserId, index === 0 && slideData.emoji, barsCount), \"\\n      <div class=\\\"leaders-histogram__bar column-bar column-bar_wide \").concat(index === 0 ? \"leaders-histogram__bar_first column-bar_active\" : \"\", \"\\\"></div>\\n    </li>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2xlYWRlcnMvcmVuZGVyTGVhZGVyc0hpc3RvZ3JhbUJhci5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3JlbmRlckZ1bmN0aW9ucy9sZWFkZXJzL3JlbmRlckxlYWRlcnNIaXN0b2dyYW1CYXIuanM/M2ZiNiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuY29uY2F0LmpzXCI7XG5pbXBvcnQgcmVuZGVyUGVyc29uQ2FyZCBmcm9tICcuLi9jb21tb24vcmVuZGVyUGVyc29uQ2FyZCc7XG52YXIgc2VsZWN0ZWRSZW5kZXJlZCA9IGZhbHNlO1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gcmVuZGVyTGVhZGVyc0hpc3RvZ3JhbUJhcihwZXJzb24sIGluZGV4LCBzbGlkZURhdGEsIGJhcnNDb3VudCkge1xuICB2YXIgaXNTZWxlY3RlZFVzZXIgPSBwZXJzb24uaWQgPT09IHNsaWRlRGF0YS5zZWxlY3RlZFVzZXJJZDtcblxuICBpZiAoIWlzU2VsZWN0ZWRVc2VyICYmIGluZGV4ID4gNCB8fCBzbGlkZURhdGEuc2VsZWN0ZWRVc2VySWQgJiYgaW5kZXggPT09IDQgJiYgc2xpZGVEYXRhLnNlbGVjdGVkVXNlcklkICE9PSBwZXJzb24uaWQgJiYgIXNlbGVjdGVkUmVuZGVyZWQpIHtcbiAgICByZXR1cm4gXCJcIjtcbiAgfVxuXG4gIGlmIChpc1NlbGVjdGVkVXNlcikge1xuICAgIHNlbGVjdGVkUmVuZGVyZWQgPSB0cnVlO1xuICB9XG5cbiAgcmV0dXJuIFwiXFxuICAgIDxsaSBjbGFzcz1cXFwibGVhZGVycy1oaXN0b2dyYW1fX2Jhci13cmFwIFwiLmNvbmNhdChpc1NlbGVjdGVkVXNlciAmJiBpbmRleCArIDEgPiBiYXJzQ291bnQgPyBcImxlYWRlcnMtaGlzdG9ncmFtX19iYXItd3JhcF9uby1udW1iZXJcIiA6IFwiXCIsIFwiXFxcIj5cXG4gICAgICBcIikuY29uY2F0KHJlbmRlclBlcnNvbkNhcmQocGVyc29uLCBpbmRleCArIDEsIHNsaWRlRGF0YS5zZWxlY3RlZFVzZXJJZCwgaW5kZXggPT09IDAgJiYgc2xpZGVEYXRhLmVtb2ppLCBiYXJzQ291bnQpLCBcIlxcbiAgICAgIDxkaXYgY2xhc3M9XFxcImxlYWRlcnMtaGlzdG9ncmFtX19iYXIgY29sdW1uLWJhciBjb2x1bW4tYmFyX3dpZGUgXCIpLmNvbmNhdChpbmRleCA9PT0gMCA/IFwibGVhZGVycy1oaXN0b2dyYW1fX2Jhcl9maXJzdCBjb2x1bW4tYmFyX2FjdGl2ZVwiIDogXCJcIiwgXCJcXFwiPjwvZGl2PlxcbiAgICA8L2xpPlxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/leaders/renderLeadersHistogramBar.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/leaders/renderLeadersSlide.js":
-/*!**************************************************************!*\
-  !*** ./src/js/renderFunctions/leaders/renderLeadersSlide.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderLeadersSlide)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _renderLeadersHistogramBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./renderLeadersHistogramBar */ \"./src/js/renderFunctions/leaders/renderLeadersHistogramBar.js\");\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n\n\n\n\n/**\n * Render leaders slide content.\n *\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup for slide.\n */\n\nfunction renderLeadersSlide(data) {\n  var barsCount = globalThis.innerWidth < _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__.LANDSCAPE_PHONE_MIN_WIDTH ? 3 : 5;\n  return \"\\n<ol class=\\\"leaders-histogram\\\">\\n  \".concat(data.users.reduce(function (markup, user, i) {\n    markup += (0,_renderLeadersHistogramBar__WEBPACK_IMPORTED_MODULE_2__.default)(user, i, data, barsCount);\n    return markup;\n  }, \"\"), \"\\n</ol>  \\n\");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2xlYWRlcnMvcmVuZGVyTGVhZGVyc1NsaWRlLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL2xlYWRlcnMvcmVuZGVyTGVhZGVyc1NsaWRlLmpzPzQ5YzciXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmdsb2JhbC10aGlzLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkucmVkdWNlLmpzXCI7XG5pbXBvcnQgcmVuZGVyTGVhZGVyc0hpc3RvZ3JhbUJhciBmcm9tICcuL3JlbmRlckxlYWRlcnNIaXN0b2dyYW1CYXInO1xuaW1wb3J0IHsgTEFORFNDQVBFX1BIT05FX01JTl9XSURUSCB9IGZyb20gJy4uLy4uL3V0aWxzL2NvbnN0YW50cy9zY3JlZW5EaW1lbnNpb25zJztcbi8qKlxuICogUmVuZGVyIGxlYWRlcnMgc2xpZGUgY29udGVudC5cbiAqXG4gKiBAcGFyYW0ge1NsaWRlRGF0YX0gZGF0YSAtIHNsaWRlIGRhdGEuXG4gKlxuICogQHJldHVybnMge3N0cmluZ30gLSBtYXJrdXAgZm9yIHNsaWRlLlxuICovXG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIHJlbmRlckxlYWRlcnNTbGlkZShkYXRhKSB7XG4gIHZhciBiYXJzQ291bnQgPSBnbG9iYWxUaGlzLmlubmVyV2lkdGggPCBMQU5EU0NBUEVfUEhPTkVfTUlOX1dJRFRIID8gMyA6IDU7XG4gIHJldHVybiBcIlxcbjxvbCBjbGFzcz1cXFwibGVhZGVycy1oaXN0b2dyYW1cXFwiPlxcbiAgXCIuY29uY2F0KGRhdGEudXNlcnMucmVkdWNlKGZ1bmN0aW9uIChtYXJrdXAsIHVzZXIsIGkpIHtcbiAgICBtYXJrdXAgKz0gcmVuZGVyTGVhZGVyc0hpc3RvZ3JhbUJhcih1c2VyLCBpLCBkYXRhLCBiYXJzQ291bnQpO1xuICAgIHJldHVybiBtYXJrdXA7XG4gIH0sIFwiXCIpLCBcIlxcbjwvb2w+ICBcXG5cIik7XG59Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/leaders/renderLeadersSlide.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/vote/adjustVoteSlidePaddings.js":
-/*!****************************************************************!*\
-  !*** ./src/js/renderFunctions/vote/adjustVoteSlidePaddings.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ adjustVoteSlideIndents)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.number.to-precision.js */ \"./node_modules/core-js/modules/es.number.to-precision.js\");\n/* harmony import */ var core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_precision_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n\n\n\nfunction adjustVoteSlideIndents() {\n  if (globalThis.innerWidth >= _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_2__.LANDSCAPE_DEFAULT_WIDTH) {\n    return;\n  }\n\n  var votingWrap = document.querySelector(\".voting-layout\");\n  var prevButton = document.querySelector(\".voting-layout__button_prev\");\n  var nextButton = document.querySelector(\".voting-layout__button_next\");\n  var firstPerson = votingWrap.querySelector(\".voting-layout__person_1\");\n  var secondPerson = votingWrap.querySelector(\".voting-layout__person_2\");\n  var thirdPerson = votingWrap.querySelector(\".voting-layout__person_3\");\n  var fifthPerson = votingWrap.querySelector(\".voting-layout__person_5\");\n  var seventhPerson = votingWrap.querySelector(\".voting-layout__person_7\");\n  var eighthPerson = votingWrap.querySelector(\".voting-layout__person_8\");\n  var bigShift = firstPerson.offsetTop.toPrecision(3);\n  var smallShift = ((votingWrap.clientHeight - prevButton.clientHeight * 2 - secondPerson.clientHeight * 2) / 5).toPrecision(3);\n  prevButton.style.top = \"\".concat(smallShift, \"px\");\n  nextButton.style.bottom = \"\".concat(smallShift, \"px\");\n  firstPerson.style.marginTop = \"\".concat(bigShift, \"px\");\n  secondPerson.style.transform = \"translateY(\".concat(2 * smallShift + prevButton.clientHeight, \"px)\");\n  thirdPerson.style.marginTop = \"\".concat(bigShift, \"px\");\n  fifthPerson.style.transform = \"translateY(-\".concat(2 * smallShift + nextButton.clientHeight, \"px)\");\n\n  if (eighthPerson) {\n    seventhPerson.style.marginBottom = \"\".concat(bigShift, \"px\");\n    eighthPerson.style.marginBottom = \"\".concat(bigShift, \"px\");\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL3ZvdGUvYWRqdXN0Vm90ZVNsaWRlUGFkZGluZ3MuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy9yZW5kZXJGdW5jdGlvbnMvdm90ZS9hZGp1c3RWb3RlU2xpZGVQYWRkaW5ncy5qcz9jNzQ2Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5nbG9iYWwtdGhpcy5qc1wiO1xuaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLm51bWJlci50by1wcmVjaXNpb24uanNcIjtcbmltcG9ydCB7IExBTkRTQ0FQRV9ERUZBVUxUX1dJRFRIIH0gZnJvbSAnLi4vLi4vdXRpbHMvY29uc3RhbnRzL3NjcmVlbkRpbWVuc2lvbnMnO1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gYWRqdXN0Vm90ZVNsaWRlSW5kZW50cygpIHtcbiAgaWYgKGdsb2JhbFRoaXMuaW5uZXJXaWR0aCA+PSBMQU5EU0NBUEVfREVGQVVMVF9XSURUSCkge1xuICAgIHJldHVybjtcbiAgfVxuXG4gIHZhciB2b3RpbmdXcmFwID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi52b3RpbmctbGF5b3V0XCIpO1xuICB2YXIgcHJldkJ1dHRvbiA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIudm90aW5nLWxheW91dF9fYnV0dG9uX3ByZXZcIik7XG4gIHZhciBuZXh0QnV0dG9uID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi52b3RpbmctbGF5b3V0X19idXR0b25fbmV4dFwiKTtcbiAgdmFyIGZpcnN0UGVyc29uID0gdm90aW5nV3JhcC5xdWVyeVNlbGVjdG9yKFwiLnZvdGluZy1sYXlvdXRfX3BlcnNvbl8xXCIpO1xuICB2YXIgc2Vjb25kUGVyc29uID0gdm90aW5nV3JhcC5xdWVyeVNlbGVjdG9yKFwiLnZvdGluZy1sYXlvdXRfX3BlcnNvbl8yXCIpO1xuICB2YXIgdGhpcmRQZXJzb24gPSB2b3RpbmdXcmFwLnF1ZXJ5U2VsZWN0b3IoXCIudm90aW5nLWxheW91dF9fcGVyc29uXzNcIik7XG4gIHZhciBmaWZ0aFBlcnNvbiA9IHZvdGluZ1dyYXAucXVlcnlTZWxlY3RvcihcIi52b3RpbmctbGF5b3V0X19wZXJzb25fNVwiKTtcbiAgdmFyIHNldmVudGhQZXJzb24gPSB2b3RpbmdXcmFwLnF1ZXJ5U2VsZWN0b3IoXCIudm90aW5nLWxheW91dF9fcGVyc29uXzdcIik7XG4gIHZhciBlaWdodGhQZXJzb24gPSB2b3RpbmdXcmFwLnF1ZXJ5U2VsZWN0b3IoXCIudm90aW5nLWxheW91dF9fcGVyc29uXzhcIik7XG4gIHZhciBiaWdTaGlmdCA9IGZpcnN0UGVyc29uLm9mZnNldFRvcC50b1ByZWNpc2lvbigzKTtcbiAgdmFyIHNtYWxsU2hpZnQgPSAoKHZvdGluZ1dyYXAuY2xpZW50SGVpZ2h0IC0gcHJldkJ1dHRvbi5jbGllbnRIZWlnaHQgKiAyIC0gc2Vjb25kUGVyc29uLmNsaWVudEhlaWdodCAqIDIpIC8gNSkudG9QcmVjaXNpb24oMyk7XG4gIHByZXZCdXR0b24uc3R5bGUudG9wID0gXCJcIi5jb25jYXQoc21hbGxTaGlmdCwgXCJweFwiKTtcbiAgbmV4dEJ1dHRvbi5zdHlsZS5ib3R0b20gPSBcIlwiLmNvbmNhdChzbWFsbFNoaWZ0LCBcInB4XCIpO1xuICBmaXJzdFBlcnNvbi5zdHlsZS5tYXJnaW5Ub3AgPSBcIlwiLmNvbmNhdChiaWdTaGlmdCwgXCJweFwiKTtcbiAgc2Vjb25kUGVyc29uLnN0eWxlLnRyYW5zZm9ybSA9IFwidHJhbnNsYXRlWShcIi5jb25jYXQoMiAqIHNtYWxsU2hpZnQgKyBwcmV2QnV0dG9uLmNsaWVudEhlaWdodCwgXCJweClcIik7XG4gIHRoaXJkUGVyc29uLnN0eWxlLm1hcmdpblRvcCA9IFwiXCIuY29uY2F0KGJpZ1NoaWZ0LCBcInB4XCIpO1xuICBmaWZ0aFBlcnNvbi5zdHlsZS50cmFuc2Zvcm0gPSBcInRyYW5zbGF0ZVkoLVwiLmNvbmNhdCgyICogc21hbGxTaGlmdCArIG5leHRCdXR0b24uY2xpZW50SGVpZ2h0LCBcInB4KVwiKTtcblxuICBpZiAoZWlnaHRoUGVyc29uKSB7XG4gICAgc2V2ZW50aFBlcnNvbi5zdHlsZS5tYXJnaW5Cb3R0b20gPSBcIlwiLmNvbmNhdChiaWdTaGlmdCwgXCJweFwiKTtcbiAgICBlaWdodGhQZXJzb24uc3R5bGUubWFyZ2luQm90dG9tID0gXCJcIi5jb25jYXQoYmlnU2hpZnQsIFwicHhcIik7XG4gIH1cbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/vote/adjustVoteSlidePaddings.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/vote/renderVoteSlide.js":
-/*!********************************************************!*\
-  !*** ./src/js/renderFunctions/vote/renderVoteSlide.js ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderVoteSlide)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ \"./node_modules/core-js/modules/es.array.reduce.js\");\n/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _renderVotingCandidates__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./renderVotingCandidates */ \"./src/js/renderFunctions/vote/renderVotingCandidates.js\");\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n\n\n\n\n\nvar LANDSCAPE_CANDIDATES_QUANTITY = 6;\nvar PORTRAIT_CANDIDATES_QUANTITY = 8;\nvar TABLET_CANDIDATES_QUANTITY = 10;\n/**\n * Render vote slide content.\n *\n * @param {SlideData} data - slide data.\n *\n * @returns {string} - markup for slide.\n */\n\nfunction renderVoteSlide(data) {\n  var candidatesNumber;\n\n  if (globalThis.innerWidth < _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_4__.LANDSCAPE_DEFAULT_WIDTH) {\n    candidatesNumber = PORTRAIT_CANDIDATES_QUANTITY;\n  } else if (globalThis.innerWidth >= _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_4__.LANDSCAPE_DEFAULT_WIDTH && globalThis.innerWidth < _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_4__.TABLET_MIN_WIDTH) {\n    candidatesNumber = LANDSCAPE_CANDIDATES_QUANTITY;\n  } else {\n    candidatesNumber = TABLET_CANDIDATES_QUANTITY;\n  }\n\n  var offset = data.offset || 0;\n  var decreasedOffset = offset - candidatesNumber;\n  var increasedOffset = offset + candidatesNumber;\n  var maxOffset = data.users.length - candidatesNumber;\n  offset = offset > maxOffset ? maxOffset : offset;\n  var prevOffset = decreasedOffset > 0 ? decreasedOffset : 0;\n  var nextOffset = increasedOffset < maxOffset ? increasedOffset : maxOffset;\n  var actionParamsPrev = JSON.stringify({\n    alias: \"vote\",\n    data: {\n      offset: prevOffset\n    }\n  });\n  var actionParamsNext = JSON.stringify({\n    alias: \"vote\",\n    data: {\n      offset: nextOffset\n    }\n  });\n  var currentCandidatesNumber = 0;\n  return \"\\n    <div class=\\\"voting-layout\\\">\\n      <button class=\\\"voting-layout__button voting-layout__button_prev\\\" type=\\\"button\\\" \".concat(offset <= 0 ? \"disabled\" : \"\", \" aria-label=\\\"\\u041F\\u0440\\u0435\\u0434\\u044B\\u0434\\u0443\\u0449\\u0438\\u0435 \\u043A\\u0430\\u043D\\u0434\\u0438\\u0434\\u0430\\u0442\\u044B\\\" data-action=\\\"update\\\" data-params=\").concat(actionParamsPrev, \">\\n        <svg width=\\\"64\\\" height=\\\"64\\\" class=\\\"inline-icon__icon\\\">\\n          <use xlink:href=\\\"#button\\\"></use>\\n        </svg>\\n      </button>\\n      <ul class=\\\"voting-layout__candidates voting-candidates\\\">\\n        \").concat(data.users.reduce(function (markup, user, i) {\n    if (offset > i || currentCandidatesNumber >= candidatesNumber) {\n      return markup;\n    }\n\n    markup += (0,_renderVotingCandidates__WEBPACK_IMPORTED_MODULE_3__.default)(user, data, currentCandidatesNumber);\n    currentCandidatesNumber++;\n    return markup;\n  }, \"\"), \"\\n      </ul>\\n      <button class=\\\"voting-layout__button voting-layout__button_next\\\" type=\\\"button\\\" \").concat(offset + candidatesNumber >= data.users.length ? \"disabled\" : \"\", \" aria-label=\\\"\\u0421\\u043B\\u0435\\u0434\\u0443\\u044E\\u0449\\u0438\\u0435 \\u043A\\u0430\\u043D\\u0434\\u0438\\u0434\\u0430\\u0442\\u044B\\\" data-action=\\\"update\\\" data-params=\").concat(actionParamsNext, \">\\n        <svg width=\\\"64\\\" height=\\\"64\\\" class=\\\"inline-icon__icon\\\">\\n          <use xlink:href=\\\"#button\\\"></use>\\n        </svg>\\n      </button>\\n    </div>  \\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL3ZvdGUvcmVuZGVyVm90ZVNsaWRlLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL3ZvdGUvcmVuZGVyVm90ZVNsaWRlLmpzPzA3NzkiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmdsb2JhbC10aGlzLmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuY29uY2F0LmpzXCI7XG5pbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkucmVkdWNlLmpzXCI7XG5pbXBvcnQgcmVuZGVyVm90aW5nQ2FuZGlkYXRlcyBmcm9tICcuL3JlbmRlclZvdGluZ0NhbmRpZGF0ZXMnO1xuaW1wb3J0IHsgTEFORFNDQVBFX0RFRkFVTFRfV0lEVEgsIFRBQkxFVF9NSU5fV0lEVEggfSBmcm9tICcuLi8uLi91dGlscy9jb25zdGFudHMvc2NyZWVuRGltZW5zaW9ucyc7XG52YXIgTEFORFNDQVBFX0NBTkRJREFURVNfUVVBTlRJVFkgPSA2O1xudmFyIFBPUlRSQUlUX0NBTkRJREFURVNfUVVBTlRJVFkgPSA4O1xudmFyIFRBQkxFVF9DQU5ESURBVEVTX1FVQU5USVRZID0gMTA7XG4vKipcbiAqIFJlbmRlciB2b3RlIHNsaWRlIGNvbnRlbnQuXG4gKlxuICogQHBhcmFtIHtTbGlkZURhdGF9IGRhdGEgLSBzbGlkZSBkYXRhLlxuICpcbiAqIEByZXR1cm5zIHtzdHJpbmd9IC0gbWFya3VwIGZvciBzbGlkZS5cbiAqL1xuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJWb3RlU2xpZGUoZGF0YSkge1xuICB2YXIgY2FuZGlkYXRlc051bWJlcjtcblxuICBpZiAoZ2xvYmFsVGhpcy5pbm5lcldpZHRoIDwgTEFORFNDQVBFX0RFRkFVTFRfV0lEVEgpIHtcbiAgICBjYW5kaWRhdGVzTnVtYmVyID0gUE9SVFJBSVRfQ0FORElEQVRFU19RVUFOVElUWTtcbiAgfSBlbHNlIGlmIChnbG9iYWxUaGlzLmlubmVyV2lkdGggPj0gTEFORFNDQVBFX0RFRkFVTFRfV0lEVEggJiYgZ2xvYmFsVGhpcy5pbm5lcldpZHRoIDwgVEFCTEVUX01JTl9XSURUSCkge1xuICAgIGNhbmRpZGF0ZXNOdW1iZXIgPSBMQU5EU0NBUEVfQ0FORElEQVRFU19RVUFOVElUWTtcbiAgfSBlbHNlIHtcbiAgICBjYW5kaWRhdGVzTnVtYmVyID0gVEFCTEVUX0NBTkRJREFURVNfUVVBTlRJVFk7XG4gIH1cblxuICB2YXIgb2Zmc2V0ID0gZGF0YS5vZmZzZXQgfHwgMDtcbiAgdmFyIGRlY3JlYXNlZE9mZnNldCA9IG9mZnNldCAtIGNhbmRpZGF0ZXNOdW1iZXI7XG4gIHZhciBpbmNyZWFzZWRPZmZzZXQgPSBvZmZzZXQgKyBjYW5kaWRhdGVzTnVtYmVyO1xuICB2YXIgbWF4T2Zmc2V0ID0gZGF0YS51c2Vycy5sZW5ndGggLSBjYW5kaWRhdGVzTnVtYmVyO1xuICBvZmZzZXQgPSBvZmZzZXQgPiBtYXhPZmZzZXQgPyBtYXhPZmZzZXQgOiBvZmZzZXQ7XG4gIHZhciBwcmV2T2Zmc2V0ID0gZGVjcmVhc2VkT2Zmc2V0ID4gMCA/IGRlY3JlYXNlZE9mZnNldCA6IDA7XG4gIHZhciBuZXh0T2Zmc2V0ID0gaW5jcmVhc2VkT2Zmc2V0IDwgbWF4T2Zmc2V0ID8gaW5jcmVhc2VkT2Zmc2V0IDogbWF4T2Zmc2V0O1xuICB2YXIgYWN0aW9uUGFyYW1zUHJldiA9IEpTT04uc3RyaW5naWZ5KHtcbiAgICBhbGlhczogXCJ2b3RlXCIsXG4gICAgZGF0YToge1xuICAgICAgb2Zmc2V0OiBwcmV2T2Zmc2V0XG4gICAgfVxuICB9KTtcbiAgdmFyIGFjdGlvblBhcmFtc05leHQgPSBKU09OLnN0cmluZ2lmeSh7XG4gICAgYWxpYXM6IFwidm90ZVwiLFxuICAgIGRhdGE6IHtcbiAgICAgIG9mZnNldDogbmV4dE9mZnNldFxuICAgIH1cbiAgfSk7XG4gIHZhciBjdXJyZW50Q2FuZGlkYXRlc051bWJlciA9IDA7XG4gIHJldHVybiBcIlxcbiAgICA8ZGl2IGNsYXNzPVxcXCJ2b3RpbmctbGF5b3V0XFxcIj5cXG4gICAgICA8YnV0dG9uIGNsYXNzPVxcXCJ2b3RpbmctbGF5b3V0X19idXR0b24gdm90aW5nLWxheW91dF9fYnV0dG9uX3ByZXZcXFwiIHR5cGU9XFxcImJ1dHRvblxcXCIgXCIuY29uY2F0KG9mZnNldCA8PSAwID8gXCJkaXNhYmxlZFwiIDogXCJcIiwgXCIgYXJpYS1sYWJlbD1cXFwiXFx1MDQxRlxcdTA0NDBcXHUwNDM1XFx1MDQzNFxcdTA0NEJcXHUwNDM0XFx1MDQ0M1xcdTA0NDlcXHUwNDM4XFx1MDQzNSBcXHUwNDNBXFx1MDQzMFxcdTA0M0RcXHUwNDM0XFx1MDQzOFxcdTA0MzRcXHUwNDMwXFx1MDQ0MlxcdTA0NEJcXFwiIGRhdGEtYWN0aW9uPVxcXCJ1cGRhdGVcXFwiIGRhdGEtcGFyYW1zPVwiKS5jb25jYXQoYWN0aW9uUGFyYW1zUHJldiwgXCI+XFxuICAgICAgICA8c3ZnIHdpZHRoPVxcXCI2NFxcXCIgaGVpZ2h0PVxcXCI2NFxcXCIgY2xhc3M9XFxcImlubGluZS1pY29uX19pY29uXFxcIj5cXG4gICAgICAgICAgPHVzZSB4bGluazpocmVmPVxcXCIjYnV0dG9uXFxcIj48L3VzZT5cXG4gICAgICAgIDwvc3ZnPlxcbiAgICAgIDwvYnV0dG9uPlxcbiAgICAgIDx1bCBjbGFzcz1cXFwidm90aW5nLWxheW91dF9fY2FuZGlkYXRlcyB2b3RpbmctY2FuZGlkYXRlc1xcXCI+XFxuICAgICAgICBcIikuY29uY2F0KGRhdGEudXNlcnMucmVkdWNlKGZ1bmN0aW9uIChtYXJrdXAsIHVzZXIsIGkpIHtcbiAgICBpZiAob2Zmc2V0ID4gaSB8fCBjdXJyZW50Q2FuZGlkYXRlc051bWJlciA+PSBjYW5kaWRhdGVzTnVtYmVyKSB7XG4gICAgICByZXR1cm4gbWFya3VwO1xuICAgIH1cblxuICAgIG1hcmt1cCArPSByZW5kZXJWb3RpbmdDYW5kaWRhdGVzKHVzZXIsIGRhdGEsIGN1cnJlbnRDYW5kaWRhdGVzTnVtYmVyKTtcbiAgICBjdXJyZW50Q2FuZGlkYXRlc051bWJlcisrO1xuICAgIHJldHVybiBtYXJrdXA7XG4gIH0sIFwiXCIpLCBcIlxcbiAgICAgIDwvdWw+XFxuICAgICAgPGJ1dHRvbiBjbGFzcz1cXFwidm90aW5nLWxheW91dF9fYnV0dG9uIHZvdGluZy1sYXlvdXRfX2J1dHRvbl9uZXh0XFxcIiB0eXBlPVxcXCJidXR0b25cXFwiIFwiKS5jb25jYXQob2Zmc2V0ICsgY2FuZGlkYXRlc051bWJlciA+PSBkYXRhLnVzZXJzLmxlbmd0aCA/IFwiZGlzYWJsZWRcIiA6IFwiXCIsIFwiIGFyaWEtbGFiZWw9XFxcIlxcdTA0MjFcXHUwNDNCXFx1MDQzNVxcdTA0MzRcXHUwNDQzXFx1MDQ0RVxcdTA0NDlcXHUwNDM4XFx1MDQzNSBcXHUwNDNBXFx1MDQzMFxcdTA0M0RcXHUwNDM0XFx1MDQzOFxcdTA0MzRcXHUwNDMwXFx1MDQ0MlxcdTA0NEJcXFwiIGRhdGEtYWN0aW9uPVxcXCJ1cGRhdGVcXFwiIGRhdGEtcGFyYW1zPVwiKS5jb25jYXQoYWN0aW9uUGFyYW1zTmV4dCwgXCI+XFxuICAgICAgICA8c3ZnIHdpZHRoPVxcXCI2NFxcXCIgaGVpZ2h0PVxcXCI2NFxcXCIgY2xhc3M9XFxcImlubGluZS1pY29uX19pY29uXFxcIj5cXG4gICAgICAgICAgPHVzZSB4bGluazpocmVmPVxcXCIjYnV0dG9uXFxcIj48L3VzZT5cXG4gICAgICAgIDwvc3ZnPlxcbiAgICAgIDwvYnV0dG9uPlxcbiAgICA8L2Rpdj4gIFxcbiAgXCIpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/vote/renderVoteSlide.js\n");
-
-/***/ }),
-
-/***/ "./src/js/renderFunctions/vote/renderVotingCandidates.js":
-/*!***************************************************************!*\
-  !*** ./src/js/renderFunctions/vote/renderVotingCandidates.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ renderVotingCandidates)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _common_renderPersonCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/renderPersonCard */ \"./src/js/renderFunctions/common/renderPersonCard.js\");\n\n\nfunction renderVotingCandidates(person, slideData, index) {\n  var actionParams = JSON.stringify({\n    alias: \"leaders\",\n    data: {\n      selectedUserId: person.id\n    }\n  });\n  return \"\\n    <li class=\\\"voting-layout__person voting-layout__person_\".concat(index + 1, \"\\\">\\n      <a class=\\\"voting-layout__candidate-link\\\" href=\\\"#\\\" data-action=\\\"update\\\" data-params=\").concat(actionParams, \">\\n        \").concat((0,_common_renderPersonCard__WEBPACK_IMPORTED_MODULE_1__.default)(person, null, slideData.selectedUserId, null), \"\\n      </a>\\n    </li>\\n  \");\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvcmVuZGVyRnVuY3Rpb25zL3ZvdGUvcmVuZGVyVm90aW5nQ2FuZGlkYXRlcy5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3JlbmRlckZ1bmN0aW9ucy92b3RlL3JlbmRlclZvdGluZ0NhbmRpZGF0ZXMuanM/MjgxMSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuYXJyYXkuY29uY2F0LmpzXCI7XG5pbXBvcnQgcmVuZGVyUGVyc29uQ2FyZCBmcm9tICcuLi9jb21tb24vcmVuZGVyUGVyc29uQ2FyZCc7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiByZW5kZXJWb3RpbmdDYW5kaWRhdGVzKHBlcnNvbiwgc2xpZGVEYXRhLCBpbmRleCkge1xuICB2YXIgYWN0aW9uUGFyYW1zID0gSlNPTi5zdHJpbmdpZnkoe1xuICAgIGFsaWFzOiBcImxlYWRlcnNcIixcbiAgICBkYXRhOiB7XG4gICAgICBzZWxlY3RlZFVzZXJJZDogcGVyc29uLmlkXG4gICAgfVxuICB9KTtcbiAgcmV0dXJuIFwiXFxuICAgIDxsaSBjbGFzcz1cXFwidm90aW5nLWxheW91dF9fcGVyc29uIHZvdGluZy1sYXlvdXRfX3BlcnNvbl9cIi5jb25jYXQoaW5kZXggKyAxLCBcIlxcXCI+XFxuICAgICAgPGEgY2xhc3M9XFxcInZvdGluZy1sYXlvdXRfX2NhbmRpZGF0ZS1saW5rXFxcIiBocmVmPVxcXCIjXFxcIiBkYXRhLWFjdGlvbj1cXFwidXBkYXRlXFxcIiBkYXRhLXBhcmFtcz1cIikuY29uY2F0KGFjdGlvblBhcmFtcywgXCI+XFxuICAgICAgICBcIikuY29uY2F0KHJlbmRlclBlcnNvbkNhcmQocGVyc29uLCBudWxsLCBzbGlkZURhdGEuc2VsZWN0ZWRVc2VySWQsIG51bGwpLCBcIlxcbiAgICAgIDwvYT5cXG4gICAgPC9saT5cXG4gIFwiKTtcbn0iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./src/js/renderFunctions/vote/renderVotingCandidates.js\n");
-
-/***/ }),
-
-/***/ "./src/js/stories.js":
-/*!***************************!*\
-  !*** ./src/js/stories.js ***!
-  \***************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ \"./node_modules/core-js/modules/es.array.concat.js\");\n/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _src_scss_stories_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/scss/stories.scss */ \"./src/scss/stories.scss\");\n/* harmony import */ var _utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/constants/screenDimensions */ \"./src/js/utils/constants/screenDimensions.js\");\n/* harmony import */ var _utils_functions_debounce__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/functions/debounce */ \"./src/js/utils/functions/debounce.js\");\n/* harmony import */ var _renderFunctions_common_renderCaption__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./renderFunctions/common/renderCaption */ \"./src/js/renderFunctions/common/renderCaption.js\");\n/* harmony import */ var _renderFunctions_common_renderSlideContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./renderFunctions/common/renderSlideContent */ \"./src/js/renderFunctions/common/renderSlideContent.js\");\n/* harmony import */ var _renderFunctions_diagram_drawCanvasDiagram__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./renderFunctions/diagram/drawCanvasDiagram */ \"./src/js/renderFunctions/diagram/drawCanvasDiagram.js\");\n/* harmony import */ var _renderFunctions_common_setVhCssProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./renderFunctions/common/setVhCssProperty */ \"./src/js/renderFunctions/common/setVhCssProperty.js\");\n/* harmony import */ var _renderFunctions_vote_adjustVoteSlidePaddings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./renderFunctions/vote/adjustVoteSlidePaddings */ \"./src/js/renderFunctions/vote/adjustVoteSlidePaddings.js\");\n\n\n\n\n\n\n\n\n\n\n\nif (true) {\n  module.hot.accept();\n}\n\nvar previousWindowWidth = globalThis.innerWidth;\nvar previousWindowHeight = globalThis.innerHeight;\nvar savedSlideName;\nvar savedSlideData;\n/**\n * @typedef SlideData\n * @type {Object|string}\n * @property {string} title - slide title.\n * @property {string} subtitle - slide subtitle (sprint number).\n * @property {string} emoji - emoji for design goals.\n * @property {number} [selectedUserId] - id of voted person.\n * @property {number} [offset] - index of the person to be displayed first.\n * @property {HistoryValue[]} [values] - history chart values.\n * @property {string} [totalText] - total value of diagram representation.\n * @property {string} [differenceText] - description of the difference between current and previous values.\n * @property {Category[]} [categories] - categories for diagram representation.\n * @property {Object} [data] - activity data ordered by day of the week with array with 24 values corresponding to the hours.\n * @property {Person[]} users - ordered list of teammates.\n */\n\n/**\n * @typedef Person\n * @type {Object}\n * @property {number} id - person id.\n * @property {string} name - person full name.\n * @property {string} avatar - name of image file with person photo.\n * @property {string} valueText - string with some value consisting of the number and optionally of the string.\n */\n\n/**\n * Main render function.\n *\n * @param {SlideType} alias - alias of slide to render.\n * @param {SlideData|string} data - slide data or JSON with data.\n *\n * @returns {string} - markup for page rendering or empty string if there is no such slide type or data was not provided.\n */\n\nwindow.renderTemplate = function (alias, data) {\n  if (!alias || !data) {\n    return \"\";\n  }\n\n  if (typeof data === \"string\") {\n    data = JSON.parse(data);\n  }\n\n  savedSlideName = alias;\n  savedSlideData = data;\n  return \"\\n    <main class=\\\"slide slide_\".concat(alias, \"\\\">\\n      \").concat((0,_renderFunctions_common_renderCaption__WEBPACK_IMPORTED_MODULE_5__.default)(data), \"\\n      <div class=\\\"slide__content\\\">\\n        \").concat((0,_renderFunctions_common_renderSlideContent__WEBPACK_IMPORTED_MODULE_6__.default)(alias, data), \"\\n      </div>\\n    </main>\\n  \");\n};\n/**\n * Post render function for calculations and logic depending on the rendered content\n *\n * @param {SlideType} alias - alias of slide to render.\n * @param {SlideData|string} data - slide data or JSON with data.\n */\n\n\nwindow.postRenderScript = function (alias, data) {\n  if (!data) {\n    return \"\";\n  }\n\n  if (typeof data === \"string\") {\n    data = JSON.parse(data);\n  }\n\n  switch (alias) {\n    case 'vote':\n      (0,_renderFunctions_vote_adjustVoteSlidePaddings__WEBPACK_IMPORTED_MODULE_9__.default)();\n      break;\n\n    case 'diagram':\n      (0,_renderFunctions_diagram_drawCanvasDiagram__WEBPACK_IMPORTED_MODULE_7__.default)(data);\n      break;\n\n    default:\n      break;\n  }\n};\n\nvar RESIZE_DEBOUNCE_DELAY = 120; // ms\n\nvar debouncedWindowResizeHandler = (0,_utils_functions_debounce__WEBPACK_IMPORTED_MODULE_4__.default)(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);\n(0,_renderFunctions_common_setVhCssProperty__WEBPACK_IMPORTED_MODULE_8__.default)();\nglobalThis.addEventListener(\"resize\", debouncedWindowResizeHandler);\n\nfunction renderPage() {\n  document.querySelector(\"#output\").innerHTML = globalThis.renderTemplate(savedSlideName, savedSlideData);\n  globalThis.postRenderScript(savedSlideName, savedSlideData);\n}\n\nfunction windowResizeHandler() {\n  if (previousWindowHeight !== globalThis.innerHeight) {\n    if (document.querySelector(\".slide_activity\")) {\n      renderPage();\n    }\n\n    (0,_renderFunctions_common_setVhCssProperty__WEBPACK_IMPORTED_MODULE_8__.default)();\n\n    if (document.querySelector(\".slide_vote\")) {\n      (0,_renderFunctions_vote_adjustVoteSlidePaddings__WEBPACK_IMPORTED_MODULE_9__.default)();\n    }\n\n    if (document.querySelector(\".slide_chart\")) {\n      renderPage();\n    }\n  }\n\n  if (isRerenderNecessary()) {\n    renderPage();\n  }\n\n  previousWindowHeight = globalThis.innerHeight;\n  previousWindowWidth = globalThis.innerWidth;\n}\n\nfunction isOrientationChange() {\n  return previousWindowWidth > previousWindowHeight && globalThis.innerWidth < globalThis.innerHeight || previousWindowWidth < previousWindowHeight && globalThis.innerWidth > globalThis.innerHeight;\n}\n\nfunction isRerenderThreshold(width) {\n  return previousWindowWidth < width && globalThis.innerWidth >= width || previousWindowWidth >= width && globalThis.innerWidth < width;\n}\n\nfunction isRerenderNecessary() {\n  return isOrientationChange() || isRerenderThreshold(_utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__.LANDSCAPE_PHONE_MIN_WIDTH) || isRerenderThreshold(_utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__.LANDSCAPE_DEFAULT_WIDTH) || isRerenderThreshold(_utils_constants_screenDimensions__WEBPACK_IMPORTED_MODULE_3__.TABLET_MIN_WIDTH);\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvc3Rvcmllcy5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3N0b3JpZXMuanM/YThkMCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgXCJjb3JlLWpzL21vZHVsZXMvZXMuZ2xvYmFsLXRoaXMuanNcIjtcbmltcG9ydCBcImNvcmUtanMvbW9kdWxlcy9lcy5hcnJheS5jb25jYXQuanNcIjtcbmltcG9ydCAnLi4vLi4vc3JjL3Njc3Mvc3Rvcmllcy5zY3NzJztcbmltcG9ydCB7IExBTkRTQ0FQRV9ERUZBVUxUX1dJRFRILCBMQU5EU0NBUEVfUEhPTkVfTUlOX1dJRFRILCBUQUJMRVRfTUlOX1dJRFRIIH0gZnJvbSAnLi91dGlscy9jb25zdGFudHMvc2NyZWVuRGltZW5zaW9ucyc7XG5pbXBvcnQgZGVib3VuY2UgZnJvbSAnLi91dGlscy9mdW5jdGlvbnMvZGVib3VuY2UnO1xuaW1wb3J0IHJlbmRlckNhcHRpb24gZnJvbSAnLi9yZW5kZXJGdW5jdGlvbnMvY29tbW9uL3JlbmRlckNhcHRpb24nO1xuaW1wb3J0IHJlbmRlclNsaWRlQ29udGVudCBmcm9tICcuL3JlbmRlckZ1bmN0aW9ucy9jb21tb24vcmVuZGVyU2xpZGVDb250ZW50JztcbmltcG9ydCBkcmF3Q2FudmFzRGlhZ3JhbSBmcm9tICcuL3JlbmRlckZ1bmN0aW9ucy9kaWFncmFtL2RyYXdDYW52YXNEaWFncmFtJztcbmltcG9ydCBzZXRWaENzc1Byb3BlcnR5IGZyb20gJy4vcmVuZGVyRnVuY3Rpb25zL2NvbW1vbi9zZXRWaENzc1Byb3BlcnR5JztcbmltcG9ydCBhZGp1c3RWb3RlU2xpZGVJbmRlbnRzIGZyb20gJy4vcmVuZGVyRnVuY3Rpb25zL3ZvdGUvYWRqdXN0Vm90ZVNsaWRlUGFkZGluZ3MnO1xuXG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpO1xufVxuXG52YXIgcHJldmlvdXNXaW5kb3dXaWR0aCA9IGdsb2JhbFRoaXMuaW5uZXJXaWR0aDtcbnZhciBwcmV2aW91c1dpbmRvd0hlaWdodCA9IGdsb2JhbFRoaXMuaW5uZXJIZWlnaHQ7XG52YXIgc2F2ZWRTbGlkZU5hbWU7XG52YXIgc2F2ZWRTbGlkZURhdGE7XG4vKipcbiAqIEB0eXBlZGVmIFNsaWRlRGF0YVxuICogQHR5cGUge09iamVjdHxzdHJpbmd9XG4gKiBAcHJvcGVydHkge3N0cmluZ30gdGl0bGUgLSBzbGlkZSB0aXRsZS5cbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBzdWJ0aXRsZSAtIHNsaWRlIHN1YnRpdGxlIChzcHJpbnQgbnVtYmVyKS5cbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBlbW9qaSAtIGVtb2ppIGZvciBkZXNpZ24gZ29hbHMuXG4gKiBAcHJvcGVydHkge251bWJlcn0gW3NlbGVjdGVkVXNlcklkXSAtIGlkIG9mIHZvdGVkIHBlcnNvbi5cbiAqIEBwcm9wZXJ0eSB7bnVtYmVyfSBbb2Zmc2V0XSAtIGluZGV4IG9mIHRoZSBwZXJzb24gdG8gYmUgZGlzcGxheWVkIGZpcnN0LlxuICogQHByb3BlcnR5IHtIaXN0b3J5VmFsdWVbXX0gW3ZhbHVlc10gLSBoaXN0b3J5IGNoYXJ0IHZhbHVlcy5cbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBbdG90YWxUZXh0XSAtIHRvdGFsIHZhbHVlIG9mIGRpYWdyYW0gcmVwcmVzZW50YXRpb24uXG4gKiBAcHJvcGVydHkge3N0cmluZ30gW2RpZmZlcmVuY2VUZXh0XSAtIGRlc2NyaXB0aW9uIG9mIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gY3VycmVudCBhbmQgcHJldmlvdXMgdmFsdWVzLlxuICogQHByb3BlcnR5IHtDYXRlZ29yeVtdfSBbY2F0ZWdvcmllc10gLSBjYXRlZ29yaWVzIGZvciBkaWFncmFtIHJlcHJlc2VudGF0aW9uLlxuICogQHByb3BlcnR5IHtPYmplY3R9IFtkYXRhXSAtIGFjdGl2aXR5IGRhdGEgb3JkZXJlZCBieSBkYXkgb2YgdGhlIHdlZWsgd2l0aCBhcnJheSB3aXRoIDI0IHZhbHVlcyBjb3JyZXNwb25kaW5nIHRvIHRoZSBob3Vycy5cbiAqIEBwcm9wZXJ0eSB7UGVyc29uW119IHVzZXJzIC0gb3JkZXJlZCBsaXN0IG9mIHRlYW1tYXRlcy5cbiAqL1xuXG4vKipcbiAqIEB0eXBlZGVmIFBlcnNvblxuICogQHR5cGUge09iamVjdH1cbiAqIEBwcm9wZXJ0eSB7bnVtYmVyfSBpZCAtIHBlcnNvbiBpZC5cbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBuYW1lIC0gcGVyc29uIGZ1bGwgbmFtZS5cbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBhdmF0YXIgLSBuYW1lIG9mIGltYWdlIGZpbGUgd2l0aCBwZXJzb24gcGhvdG8uXG4gKiBAcHJvcGVydHkge3N0cmluZ30gdmFsdWVUZXh0IC0gc3RyaW5nIHdpdGggc29tZSB2YWx1ZSBjb25zaXN0aW5nIG9mIHRoZSBudW1iZXIgYW5kIG9wdGlvbmFsbHkgb2YgdGhlIHN0cmluZy5cbiAqL1xuXG4vKipcbiAqIE1haW4gcmVuZGVyIGZ1bmN0aW9uLlxuICpcbiAqIEBwYXJhbSB7U2xpZGVUeXBlfSBhbGlhcyAtIGFsaWFzIG9mIHNsaWRlIHRvIHJlbmRlci5cbiAqIEBwYXJhbSB7U2xpZGVEYXRhfHN0cmluZ30gZGF0YSAtIHNsaWRlIGRhdGEgb3IgSlNPTiB3aXRoIGRhdGEuXG4gKlxuICogQHJldHVybnMge3N0cmluZ30gLSBtYXJrdXAgZm9yIHBhZ2UgcmVuZGVyaW5nIG9yIGVtcHR5IHN0cmluZyBpZiB0aGVyZSBpcyBubyBzdWNoIHNsaWRlIHR5cGUgb3IgZGF0YSB3YXMgbm90IHByb3ZpZGVkLlxuICovXG5cbndpbmRvdy5yZW5kZXJUZW1wbGF0ZSA9IGZ1bmN0aW9uIChhbGlhcywgZGF0YSkge1xuICBpZiAoIWFsaWFzIHx8ICFkYXRhKSB7XG4gICAgcmV0dXJuIFwiXCI7XG4gIH1cblxuICBpZiAodHlwZW9mIGRhdGEgPT09IFwic3RyaW5nXCIpIHtcbiAgICBkYXRhID0gSlNPTi5wYXJzZShkYXRhKTtcbiAgfVxuXG4gIHNhdmVkU2xpZGVOYW1lID0gYWxpYXM7XG4gIHNhdmVkU2xpZGVEYXRhID0gZGF0YTtcbiAgcmV0dXJuIFwiXFxuICAgIDxtYWluIGNsYXNzPVxcXCJzbGlkZSBzbGlkZV9cIi5jb25jYXQoYWxpYXMsIFwiXFxcIj5cXG4gICAgICBcIikuY29uY2F0KHJlbmRlckNhcHRpb24oZGF0YSksIFwiXFxuICAgICAgPGRpdiBjbGFzcz1cXFwic2xpZGVfX2NvbnRlbnRcXFwiPlxcbiAgICAgICAgXCIpLmNvbmNhdChyZW5kZXJTbGlkZUNvbnRlbnQoYWxpYXMsIGRhdGEpLCBcIlxcbiAgICAgIDwvZGl2PlxcbiAgICA8L21haW4+XFxuICBcIik7XG59O1xuLyoqXG4gKiBQb3N0IHJlbmRlciBmdW5jdGlvbiBmb3IgY2FsY3VsYXRpb25zIGFuZCBsb2dpYyBkZXBlbmRpbmcgb24gdGhlIHJlbmRlcmVkIGNvbnRlbnRcbiAqXG4gKiBAcGFyYW0ge1NsaWRlVHlwZX0gYWxpYXMgLSBhbGlhcyBvZiBzbGlkZSB0byByZW5kZXIuXG4gKiBAcGFyYW0ge1NsaWRlRGF0YXxzdHJpbmd9IGRhdGEgLSBzbGlkZSBkYXRhIG9yIEpTT04gd2l0aCBkYXRhLlxuICovXG5cblxud2luZG93LnBvc3RSZW5kZXJTY3JpcHQgPSBmdW5jdGlvbiAoYWxpYXMsIGRhdGEpIHtcbiAgaWYgKCFkYXRhKSB7XG4gICAgcmV0dXJuIFwiXCI7XG4gIH1cblxuICBpZiAodHlwZW9mIGRhdGEgPT09IFwic3RyaW5nXCIpIHtcbiAgICBkYXRhID0gSlNPTi5wYXJzZShkYXRhKTtcbiAgfVxuXG4gIHN3aXRjaCAoYWxpYXMpIHtcbiAgICBjYXNlICd2b3RlJzpcbiAgICAgIGFkanVzdFZvdGVTbGlkZUluZGVudHMoKTtcbiAgICAgIGJyZWFrO1xuXG4gICAgY2FzZSAnZGlhZ3JhbSc6XG4gICAgICBkcmF3Q2FudmFzRGlhZ3JhbShkYXRhKTtcbiAgICAgIGJyZWFrO1xuXG4gICAgZGVmYXVsdDpcbiAgICAgIGJyZWFrO1xuICB9XG59O1xuXG52YXIgUkVTSVpFX0RFQk9VTkNFX0RFTEFZID0gMTIwOyAvLyBtc1xuXG52YXIgZGVib3VuY2VkV2luZG93UmVzaXplSGFuZGxlciA9IGRlYm91bmNlKHdpbmRvd1Jlc2l6ZUhhbmRsZXIsIFJFU0laRV9ERUJPVU5DRV9ERUxBWSk7XG5zZXRWaENzc1Byb3BlcnR5KCk7XG5nbG9iYWxUaGlzLmFkZEV2ZW50TGlzdGVuZXIoXCJyZXNpemVcIiwgZGVib3VuY2VkV2luZG93UmVzaXplSGFuZGxlcik7XG5cbmZ1bmN0aW9uIHJlbmRlclBhZ2UoKSB7XG4gIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIjb3V0cHV0XCIpLmlubmVySFRNTCA9IGdsb2JhbFRoaXMucmVuZGVyVGVtcGxhdGUoc2F2ZWRTbGlkZU5hbWUsIHNhdmVkU2xpZGVEYXRhKTtcbiAgZ2xvYmFsVGhpcy5wb3N0UmVuZGVyU2NyaXB0KHNhdmVkU2xpZGVOYW1lLCBzYXZlZFNsaWRlRGF0YSk7XG59XG5cbmZ1bmN0aW9uIHdpbmRvd1Jlc2l6ZUhhbmRsZXIoKSB7XG4gIGlmIChwcmV2aW91c1dpbmRvd0hlaWdodCAhPT0gZ2xvYmFsVGhpcy5pbm5lckhlaWdodCkge1xuICAgIGlmIChkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnNsaWRlX2FjdGl2aXR5XCIpKSB7XG4gICAgICByZW5kZXJQYWdlKCk7XG4gICAgfVxuXG4gICAgc2V0VmhDc3NQcm9wZXJ0eSgpO1xuXG4gICAgaWYgKGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuc2xpZGVfdm90ZVwiKSkge1xuICAgICAgYWRqdXN0Vm90ZVNsaWRlSW5kZW50cygpO1xuICAgIH1cblxuICAgIGlmIChkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnNsaWRlX2NoYXJ0XCIpKSB7XG4gICAgICByZW5kZXJQYWdlKCk7XG4gICAgfVxuICB9XG5cbiAgaWYgKGlzUmVyZW5kZXJOZWNlc3NhcnkoKSkge1xuICAgIHJlbmRlclBhZ2UoKTtcbiAgfVxuXG4gIHByZXZpb3VzV2luZG93SGVpZ2h0ID0gZ2xvYmFsVGhpcy5pbm5lckhlaWdodDtcbiAgcHJldmlvdXNXaW5kb3dXaWR0aCA9IGdsb2JhbFRoaXMuaW5uZXJXaWR0aDtcbn1cblxuZnVuY3Rpb24gaXNPcmllbnRhdGlvbkNoYW5nZSgpIHtcbiAgcmV0dXJuIHByZXZpb3VzV2luZG93V2lkdGggPiBwcmV2aW91c1dpbmRvd0hlaWdodCAmJiBnbG9iYWxUaGlzLmlubmVyV2lkdGggPCBnbG9iYWxUaGlzLmlubmVySGVpZ2h0IHx8IHByZXZpb3VzV2luZG93V2lkdGggPCBwcmV2aW91c1dpbmRvd0hlaWdodCAmJiBnbG9iYWxUaGlzLmlubmVyV2lkdGggPiBnbG9iYWxUaGlzLmlubmVySGVpZ2h0O1xufVxuXG5mdW5jdGlvbiBpc1JlcmVuZGVyVGhyZXNob2xkKHdpZHRoKSB7XG4gIHJldHVybiBwcmV2aW91c1dpbmRvd1dpZHRoIDwgd2lkdGggJiYgZ2xvYmFsVGhpcy5pbm5lcldpZHRoID49IHdpZHRoIHx8IHByZXZpb3VzV2luZG93V2lkdGggPj0gd2lkdGggJiYgZ2xvYmFsVGhpcy5pbm5lcldpZHRoIDwgd2lkdGg7XG59XG5cbmZ1bmN0aW9uIGlzUmVyZW5kZXJOZWNlc3NhcnkoKSB7XG4gIHJldHVybiBpc09yaWVudGF0aW9uQ2hhbmdlKCkgfHwgaXNSZXJlbmRlclRocmVzaG9sZChMQU5EU0NBUEVfUEhPTkVfTUlOX1dJRFRIKSB8fCBpc1JlcmVuZGVyVGhyZXNob2xkKExBTkRTQ0FQRV9ERUZBVUxUX1dJRFRIKSB8fCBpc1JlcmVuZGVyVGhyZXNob2xkKFRBQkxFVF9NSU5fV0lEVEgpO1xufSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/stories.js\n");
-
-/***/ }),
-
-/***/ "./src/js/utils/constants/screenDimensions.js":
-/*!****************************************************!*\
-  !*** ./src/js/utils/constants/screenDimensions.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"TABLET_MIN_WIDTH\": () => (/* binding */ TABLET_MIN_WIDTH),\n/* harmony export */   \"LANDSCAPE_DEFAULT_WIDTH\": () => (/* binding */ LANDSCAPE_DEFAULT_WIDTH),\n/* harmony export */   \"LANDSCAPE_PHONE_MIN_WIDTH\": () => (/* binding */ LANDSCAPE_PHONE_MIN_WIDTH),\n/* harmony export */   \"PORTRAIT_DEFAULT_WIDTH\": () => (/* binding */ PORTRAIT_DEFAULT_WIDTH)\n/* harmony export */ });\nvar TABLET_MIN_WIDTH = 768; // px\n\nvar LANDSCAPE_DEFAULT_WIDTH = 668; // px\n\nvar LANDSCAPE_PHONE_MIN_WIDTH = 576; // px\n\nvar PORTRAIT_DEFAULT_WIDTH = 376; // px//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvdXRpbHMvY29uc3RhbnRzL3NjcmVlbkRpbWVuc2lvbnMuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9qcy91dGlscy9jb25zdGFudHMvc2NyZWVuRGltZW5zaW9ucy5qcz85YjIyIl0sInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB2YXIgVEFCTEVUX01JTl9XSURUSCA9IDc2ODsgLy8gcHhcblxuZXhwb3J0IHZhciBMQU5EU0NBUEVfREVGQVVMVF9XSURUSCA9IDY2ODsgLy8gcHhcblxuZXhwb3J0IHZhciBMQU5EU0NBUEVfUEhPTkVfTUlOX1dJRFRIID0gNTc2OyAvLyBweFxuXG5leHBvcnQgdmFyIFBPUlRSQUlUX0RFRkFVTFRfV0lEVEggPSAzNzY7IC8vIHB4Il0sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/utils/constants/screenDimensions.js\n");
-
-/***/ }),
-
-/***/ "./src/js/utils/functions/debounce.js":
-/*!********************************************!*\
-  !*** ./src/js/utils/functions/debounce.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ debounce)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_web_timers_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.timers.js */ \"./node_modules/core-js/modules/web.timers.js\");\n/* harmony import */ var core_js_modules_web_timers_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_timers_js__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction debounce(func, ms, immediate) {\n  var timeout;\n  return function () {\n    var context = this;\n    var args = arguments;\n\n    var delayedFunc = function delayedFunc() {\n      timeout = null;\n\n      if (!immediate) {\n        func.apply(context, args);\n      }\n    };\n\n    var callNow = immediate && !timeout;\n    clearTimeout(timeout);\n    timeout = setTimeout(delayedFunc, ms);\n\n    if (callNow) {\n      func.apply(context, args);\n    }\n  };\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvdXRpbHMvZnVuY3Rpb25zL2RlYm91bmNlLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvdXRpbHMvZnVuY3Rpb25zL2RlYm91bmNlLmpzP2MzMDciXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL3dlYi50aW1lcnMuanNcIjtcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIGRlYm91bmNlKGZ1bmMsIG1zLCBpbW1lZGlhdGUpIHtcbiAgdmFyIHRpbWVvdXQ7XG4gIHJldHVybiBmdW5jdGlvbiAoKSB7XG4gICAgdmFyIGNvbnRleHQgPSB0aGlzO1xuICAgIHZhciBhcmdzID0gYXJndW1lbnRzO1xuXG4gICAgdmFyIGRlbGF5ZWRGdW5jID0gZnVuY3Rpb24gZGVsYXllZEZ1bmMoKSB7XG4gICAgICB0aW1lb3V0ID0gbnVsbDtcblxuICAgICAgaWYgKCFpbW1lZGlhdGUpIHtcbiAgICAgICAgZnVuYy5hcHBseShjb250ZXh0LCBhcmdzKTtcbiAgICAgIH1cbiAgICB9O1xuXG4gICAgdmFyIGNhbGxOb3cgPSBpbW1lZGlhdGUgJiYgIXRpbWVvdXQ7XG4gICAgY2xlYXJUaW1lb3V0KHRpbWVvdXQpO1xuICAgIHRpbWVvdXQgPSBzZXRUaW1lb3V0KGRlbGF5ZWRGdW5jLCBtcyk7XG5cbiAgICBpZiAoY2FsbE5vdykge1xuICAgICAgZnVuYy5hcHBseShjb250ZXh0LCBhcmdzKTtcbiAgICB9XG4gIH07XG59Il0sIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/js/utils/functions/debounce.js\n");
-
-/***/ }),
-
-/***/ "./src/js/utils/functions/integerDivision.js":
-/*!***************************************************!*\
-  !*** ./src/js/utils/functions/integerDivision.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ integerDivision)\n/* harmony export */ });\nfunction integerDivision(value, divider) {\n  return (value - value % divider) / divider;\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvdXRpbHMvZnVuY3Rpb25zL2ludGVnZXJEaXZpc2lvbi5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL3lhbmRleC1zaHJpLy4vc3JjL2pzL3V0aWxzL2Z1bmN0aW9ucy9pbnRlZ2VyRGl2aXNpb24uanM/ODk0NCJdLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBpbnRlZ2VyRGl2aXNpb24odmFsdWUsIGRpdmlkZXIpIHtcbiAgcmV0dXJuICh2YWx1ZSAtIHZhbHVlICUgZGl2aWRlcikgLyBkaXZpZGVyO1xufSJdLCJtYXBwaW5ncyI6Ijs7OztBQUFBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/utils/functions/integerDivision.js\n");
-
-/***/ }),
-
-/***/ "./src/js/utils/functions/isLandscape.js":
-/*!***********************************************!*\
-  !*** ./src/js/utils/functions/isLandscape.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ isLandscape)\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.global-this.js */ \"./node_modules/core-js/modules/es.global-this.js\");\n/* harmony import */ var core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_global_this_js__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction isLandscape() {\n  return globalThis.innerWidth > globalThis.innerHeight;\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvanMvdXRpbHMvZnVuY3Rpb25zL2lzTGFuZHNjYXBlLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8veWFuZGV4LXNocmkvLi9zcmMvanMvdXRpbHMvZnVuY3Rpb25zL2lzTGFuZHNjYXBlLmpzPzg0MDIiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFwiY29yZS1qcy9tb2R1bGVzL2VzLmdsb2JhbC10aGlzLmpzXCI7XG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBpc0xhbmRzY2FwZSgpIHtcbiAgcmV0dXJuIGdsb2JhbFRoaXMuaW5uZXJXaWR0aCA+IGdsb2JhbFRoaXMuaW5uZXJIZWlnaHQ7XG59Il0sIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./src/js/utils/functions/isLandscape.js\n");
-
-/***/ }),
-
-/***/ "./src/scss/stories.scss":
-/*!*******************************!*\
-  !*** ./src/scss/stories.scss ***!
-  \*******************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n    if(true) {\n      // 1617563790278\n      var cssReload = __webpack_require__(/*! ./node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js */ \"./node_modules/mini-css-extract-plugin/dist/hmr/hotModuleReplacement.js\")(module.id, {\"locals\":false});\n      module.hot.dispose(cssReload);\n      module.hot.accept(undefined, cssReload);\n    }\n  //# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvc2Nzcy9zdG9yaWVzLnNjc3MuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95YW5kZXgtc2hyaS8uL3NyYy9zY3NzL3N0b3JpZXMuc2Nzcz8xZTdkIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIGV4dHJhY3RlZCBieSBtaW5pLWNzcy1leHRyYWN0LXBsdWdpblxuZXhwb3J0IHt9O1xuICAgIGlmKG1vZHVsZS5ob3QpIHtcbiAgICAgIC8vIDE2MTc1NjM3OTAyNzhcbiAgICAgIHZhciBjc3NSZWxvYWQgPSByZXF1aXJlKFwiL2hvbWUveXVyeS9maWxlcy9wcm9qZWN0cy95YW5kZXgtc2hyaS9ub2RlX21vZHVsZXMvbWluaS1jc3MtZXh0cmFjdC1wbHVnaW4vZGlzdC9obXIvaG90TW9kdWxlUmVwbGFjZW1lbnQuanNcIikobW9kdWxlLmlkLCB7XCJsb2NhbHNcIjpmYWxzZX0pO1xuICAgICAgbW9kdWxlLmhvdC5kaXNwb3NlKGNzc1JlbG9hZCk7XG4gICAgICBtb2R1bGUuaG90LmFjY2VwdCh1bmRlZmluZWQsIGNzc1JlbG9hZCk7XG4gICAgfVxuICAiXSwibWFwcGluZ3MiOiI7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/scss/stories.scss\n");
-
-/***/ })
-
-},
-/******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ "use strict";
-/******/ 
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-/******/ __webpack_require__.O(0, ["vendor"], () => (__webpack_exec__("./node_modules/webpack-hot-middleware/client.js?path=/__webpack_hmr&timeout=20000"), __webpack_exec__("./src/js/stories.js")));
-/******/ var __webpack_exports__ = __webpack_require__.O();
-/******/ }
-]);
+function renderLeadersSlide(data) {
+  const barsCount = globalThis.innerWidth < LANDSCAPE_PHONE_MIN_WIDTH ? 3 : 5;
+  return `
+    <ol class="leaders-histogram">
+      ${data.users.reduce((markup, user, i) => {
+    markup += renderLeadersHistogramBar(user, i, data, barsCount);
+    return markup;
+  }, ``)}
+    </ol>  
+  `;
+}
+
+let selectedRendered = false;
+function renderLeadersHistogramBar(person, index, slideData, barsCount) {
+  const isSelectedUser = person.id === slideData.selectedUserId;
+  if ((!isSelectedUser && index > 4) || (slideData.selectedUserId && index === 4 && slideData.selectedUserId !== person.id && !selectedRendered)) {
+    return ``;
+  }
+
+  if (isSelectedUser) {
+    selectedRendered = true;
+  }
+
+  return `
+    <li class="leaders-histogram__bar-wrap ${isSelectedUser && index + 1 > barsCount ? `leaders-histogram__bar-wrap_no-number` : ``}">
+      ${renderPersonCard(person, index + 1, slideData.selectedUserId, index === 0 && slideData.emoji, barsCount)}
+      <div class="leaders-histogram__bar column-bar column-bar_wide ${index === 0 ? `leaders-histogram__bar_first column-bar_active` : ``}"></div>
+    </li>
+  `;
+}
+
+function adjustVoteSlideIndents() {
+  if (globalThis.innerWidth >= LANDSCAPE_DEFAULT_WIDTH) {
+    return;
+  }
+
+  const votingWrap = document.querySelector(`.voting-layout`);
+  const prevButton = document.querySelector(`.voting-layout__button_prev`);
+  const nextButton = document.querySelector(`.voting-layout__button_next`);
+  const firstPerson = votingWrap.querySelector(`.voting-layout__person_1`);
+  const secondPerson = votingWrap.querySelector(`.voting-layout__person_2`);
+  const thirdPerson = votingWrap.querySelector(`.voting-layout__person_3`);
+  const fifthPerson = votingWrap.querySelector(`.voting-layout__person_5`);
+  const seventhPerson = votingWrap.querySelector(`.voting-layout__person_7`);
+  const eighthPerson = votingWrap.querySelector(`.voting-layout__person_8`);
+  const bigShift = firstPerson.offsetTop.toPrecision(3);
+  const smallShift = ((votingWrap.clientHeight - prevButton.clientHeight * 2 - secondPerson.clientHeight * 2) / 5).toPrecision(3);
+
+  prevButton.style.top = `${smallShift}px`;
+  nextButton.style.bottom = `${smallShift}px`;
+  firstPerson.style.marginTop = `${bigShift}px`;
+  secondPerson.style.transform = `translateY(${2 * smallShift + prevButton.clientHeight}px)`;
+  thirdPerson.style.marginTop = `${bigShift}px`;
+  fifthPerson.style.transform = `translateY(-${2 * smallShift + nextButton.clientHeight}px)`;
+  if (eighthPerson) {
+    seventhPerson.style.marginBottom = `${bigShift}px`;
+    eighthPerson.style.marginBottom = `${bigShift}px`;
+  }
+}
+
+const LANDSCAPE_CANDIDATES_QUANTITY = 6;
+const PORTRAIT_CANDIDATES_QUANTITY = 8;
+const TABLET_CANDIDATES_QUANTITY = 10;
+/**
+ * Render vote slide content.
+ *
+ * @param {SlideData} data - slide data.
+ *
+ * @returns {string} - markup for slide.
+ */
+function renderVoteSlide(data) {
+  let candidatesNumber;
+  if (globalThis.innerWidth < LANDSCAPE_DEFAULT_WIDTH) {
+    candidatesNumber = PORTRAIT_CANDIDATES_QUANTITY;
+  } else if (globalThis.innerWidth >= LANDSCAPE_DEFAULT_WIDTH && globalThis.innerWidth < TABLET_MIN_WIDTH) {
+    candidatesNumber = LANDSCAPE_CANDIDATES_QUANTITY;
+  } else {
+    candidatesNumber = TABLET_CANDIDATES_QUANTITY;
+  }
+
+  let offset = data.offset || 0;
+  const decreasedOffset = offset - candidatesNumber;
+  const increasedOffset = offset + candidatesNumber;
+  const maxOffset = data.users.length - candidatesNumber;
+  offset = offset > maxOffset ? maxOffset : offset;
+  const prevOffset = decreasedOffset > 0 ? decreasedOffset : 0;
+  const nextOffset = increasedOffset < maxOffset ? increasedOffset : maxOffset;
+  const actionParamsPrev = JSON.stringify({
+    alias: `vote`,
+    data: {
+      offset: prevOffset
+    }
+  });
+  const actionParamsNext = JSON.stringify({
+    alias: `vote`,
+    data: {
+      offset: nextOffset
+    }
+  });
+  let currentCandidatesNumber = 0;
+
+  return `
+    <div class="voting-layout">
+      <button class="voting-layout__button voting-layout__button_prev" type="button" ${
+    offset <= 0 ? `disabled` : ``
+  } aria-label="Предыдущие кандидаты" data-action="update" data-params=${actionParamsPrev}>
+        <svg width="64" height="64" class="inline-icon__icon">
+          <use xlink:href="#button"></use>
+        </svg>
+      </button>
+      <ul class="voting-layout__candidates voting-candidates">
+        ${data.users.reduce((markup, user, i) => {
+    if (offset > i || currentCandidatesNumber >= candidatesNumber) {
+      return markup;
+    }
+
+    markup += renderVotingCandidates(user, data, currentCandidatesNumber);
+    currentCandidatesNumber++;
+    return markup;
+  }, ``)}
+      </ul>
+      <button class="voting-layout__button voting-layout__button_next" type="button" ${
+    offset + candidatesNumber >= data.users.length ? `disabled` : ``
+  } aria-label="Следующие кандидаты" data-action="update" data-params=${actionParamsNext}>
+        <svg width="64" height="64" class="inline-icon__icon">
+          <use xlink:href="#button"></use>
+        </svg>
+      </button>
+    </div>  
+  `;
+}
+
+function renderVotingCandidates(person, slideData, index) {
+  const actionParams = JSON.stringify({
+    alias: `leaders`,
+    data: {
+      selectedUserId: person.id
+    }
+  });
+
+  return `
+    <li class="voting-layout__person voting-layout__person_${index + 1}">
+      <a class="voting-layout__candidate-link" href="#" data-action="update" data-params=${actionParams}>
+        ${renderPersonCard(person, null, slideData.selectedUserId, null)}
+      </a>
+    </li>
+  `;
+}
+
+function processActivityData({ data }) {
+  if (!isLandscape()) {
+    return data;
+  }
+
+  const processedData = {};
+
+  Object.keys(data).forEach((day) => {
+    data[day].forEach((hourValue, hour) => {
+      processedData[day] = processedData[day] || [];
+      if (hour % 2 === 0) {
+        processedData[day].push(hourValue + data[day][hour + 1])
+      }
+    });
+  });
+
+  return processedData;
+}
+
+function getIntervals({ data }) {
+  const CALCULATED_INTERVALS_COUNT = 3;
+
+  let currentMaxValue = +Object.values(data).reduce((max, dayValues) => {
+    let dayMax = 0;
+    for (let i = 0; i < dayValues.length; i++) {
+      if (dayValues[i] > dayMax) {
+        dayMax = dayValues[i];
+      }
+    }
+    return dayMax > max ? dayMax : max;
+  }, 0);
+
+  const intervals = [];
+  const interval = integerDivision(currentMaxValue, CALCULATED_INTERVALS_COUNT);
+  let reminder = currentMaxValue - interval * CALCULATED_INTERVALS_COUNT;
+
+  for (let i = 0; i < CALCULATED_INTERVALS_COUNT; i++) {
+    const intervalMaximum = currentMaxValue;
+    currentMaxValue -= interval;
+    if (reminder) {
+      currentMaxValue--;
+      reminder--;
+    }
+
+    intervals.push([currentMaxValue + 1, intervalMaximum]);
+  }
+
+  return intervals.reverse();
+}
+
+function renderActivityHeatmap(data) {
+  const intervals = getIntervals({ data });
+
+  const svgIconMap = new Map();
+  svgIconMap.set([0, 0], `s`);
+
+  [`m`, `l`, `xl`].forEach((iconName, i) => {
+    svgIconMap.set(intervals[i], iconName);
+  });
+
+  return `
+    <div class="heatmap">
+      ${Object.keys(data).reduce((dayMarkup, day) => {
+    dayMarkup += `
+          <div class="heatmap__day-data">
+            ${data[day].reduce((hourMarkup, hourValue) => {
+      let currentSvgIcon;
+      for (const entry of svgIconMap) {
+        const interval = entry[0];
+        const svgIconSize = entry[1];
+
+        if (hourValue >= interval[0] && hourValue <= interval[1]) {
+          currentSvgIcon = `#bar-${svgIconSize}`;
+          break;
+        }
+      }
+      hourMarkup += `
+                <div class=${isLandscape() ? `heatmap__two-hour-data` : `heatmap__hour-data`}>
+                  <svg class="heatmap__bar heatmap__${currentSvgIcon.slice(1).replace(`-`, `_`)}">
+                    <use xlink:href=${currentSvgIcon}></use>
+                  </svg>
+                </div>
+              `;
+      return hourMarkup;
+    }, ``)}
+          </div>
+        `
+    return dayMarkup;
+  }, ``)}
+    </div>
+  `;
+}
+
+function renderActivityCells({ data }) {
+  const DAY_HOURS = 24;
+  let tableBody = ``;
+
+  for (let hour = 0; hour < DAY_HOURS; hour++) {
+    tableBody += `
+      <tr>
+        <th>${hour}:00 - ${hour + 1}:00</th>
+    `;
+    for (const day of Object.keys(data)) {
+      tableBody += `
+        <td>${data[day][hour]}</td>
+      `;
+    }
+    tableBody += `</tr>`;
+  }
+
+  return tableBody;
+}
+
+function renderActivityTableData(data) {
+  return `
+    <div class="visually-hidden">
+      <table aria-label="Данные с графика активности в различные часы">
+        <thead>
+          <tr>
+            <th>Временной интервал</th>
+            <th>Понедельник</th>
+            <th>Вторник</th>
+            <th>Среда</th>
+            <th>Четверг</th>
+            <th>Пятница</th>
+            <th>Суббота</th>
+            <th>Воскресенье</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${renderActivityCells(data)}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderActivityChartLegend(data) {
+  const intervals = getIntervals({ data });
+
+  return `
+    <figcaption class="activity-chart__legend activity-legend">
+      <ul class="activity-legend__categories">
+        <li class="activity-legend__category activity-legend__category_scale">
+          <span class="activity-legend__scale-line"></span>
+          <span class="activity-legend__value main-text main-text_dim">${isLandscape() ? `2 часа` : `1 час`}</span>
+        </li>
+        <li class="activity-legend__category activity-legend__category_0">
+          <span class="activity-legend__bar"></span>
+          <span class="activity-legend__value main-text main-text_dim">0</span>
+        </li>
+        ${intervals.reduce((markup, interval, i) => {
+    markup += `
+            <li class="activity-legend__category activity-legend__category_${i + 1}">
+              <span class="activity-legend__bar"></span>
+              <span class="activity-legend__value main-text main-text_dim">${
+      interval[0] === interval[1] ? interval[0] : `${interval[0]} — ${interval[1]}`
+    }</span>
+            </li>
+          `;
+    return markup;
+  }, ``)}
+      </ul>
+    </figcaption>
+  `;
+}
+
+function renderActivitySlide(data) {
+  const processedData = processActivityData(data);
+
+  return `
+    <figure class="activity-chart">
+      <div class="activity-chart__wrap">
+        ${renderActivityHeatmap(processedData)}
+        ${renderActivityTableData(data)}        
+      </div>
+      ${renderActivityChartLegend(processedData)}
+    </figure>
+  `;
+}
+
+function renderHistoryHistogramBar(itemValue, maxValue, chartHeight) {
+  const barPercentageHeight = itemValue.value / maxValue;
+  const barHeight = `${(barPercentageHeight * chartHeight).toPrecision(4)}px`;
+  const value = parseInt(itemValue.value);
+
+  return `
+    <li class="history-histogram__bar-wrap ${itemValue.active ? `history-histogram__bar-wrap_active` : ``}">
+      <h4 class="history-histogram__bar-label main-text main-text_dim">${itemValue.title}</h4>
+      <div class="history-histogram__bar column-bar ${itemValue.active ? `column-bar_active` : ``}" style="height: ${barHeight}" aria-label="Значение: ${itemValue.value}"></div>
+      <span class="history-histogram__value subhead subhead_dim" aria-hidden="true">${value || ''}</span>
+    </li>
+  `;
+}
+
+function renderHistoryLeadersPerson(person) {
+  return `
+    <li class="history-leaders__person chart-leader">
+      ${renderImg(person.avatar, person.name, 40, 40, `chart-leader__avatar`)}
+      <div class="chart-leader__text">
+        <h4 class="chart-leader__name">${person.name}</h4>
+        <p class="chart-leader__value caption caption_dim">${person.valueText}</p>
+      </div>
+    </li>
+  `;
+}
+
+/**
+ * @typedef HistoryValue
+ * @type {Object}
+ * @property {string} title - title of time period.
+ * @property {number} value - value for period.
+ * @property {boolean} active - true if period is active else false.
+ */
+
+/**
+ * Render chart slide content.
+ *
+ * @param {SlideData} data - slide data.
+ *
+ * @returns {string} - markup for slide.
+ */
+function renderChartSlide(data) {
+  const fullChartHeightRatio = isLandscape() ? 185 / PORTRAIT_DEFAULT_WIDTH : 403 / LANDSCAPE_DEFAULT_WIDTH;
+  const maxBarHeightRatio = isLandscape() ? 117 / PORTRAIT_DEFAULT_WIDTH : 270 / LANDSCAPE_DEFAULT_WIDTH;
+
+  const fullChartHeight = (fullChartHeightRatio * globalThis.innerHeight).toPrecision(5);
+  const chartHeight = maxBarHeightRatio * globalThis.innerHeight;
+  const maxValue = data.values.reduce((max, dataValue) => {
+    return max < dataValue.value ? dataValue.value : max;
+  }, 0);
+
+  return `
+    <div class="chart-slide">
+      <section class="history-histogram chart-slide__histogram">
+        <h3 class="visually-hidden">Диаграмма</h3>
+        <div class="history-histogram__chart" style="height: ${fullChartHeight + `px`}">
+          <ul class="history-histogram__values">
+            ${data.values.reduce((markup, value) => {
+    markup += renderHistoryHistogramBar(value, maxValue, chartHeight);
+    return markup;
+  }, ``)}
+          </ul>
+        </div>
+      </section>
+      <section class="history-leaders chart-slide__leaders">
+        <h3 class="visually-hidden">Лидеры</h3>
+        <ul class="history-leaders__list">
+          ${data.users.reduce((markup, user, i) => {
+    if (i < 2) {
+      markup += renderHistoryLeadersPerson(user);
+    }
+    return markup;
+  }, ``)}
+        </ul>
+      </section>
+    </div>
+  `;
+}
+
+function renderDiagramDescription(data) {
+  return `
+    <figcaption class="diagram__description description-table">
+      <table class="description-table__table" aria-label="Таблица с данными, отображёнными на круговой диаграмме">
+        <thead class="visually-hidden">
+          <tr>
+            <th>Обозначение на диаграмме</th>
+            <th>${data.title}</th>
+            <th>Разница, по сравнению с предыдущим значением</th>
+            <th>Текущее значение</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.categories.reduce((markup, category, i) => {
+    markup += `
+              <tr>
+                <td><span class="description-table__category-color description-table__category-color_${i + 1}"></span></td>
+                <td class="description-table__category">${category.title}</td>
+                <td>+${parseInt(category.differenceText)}</td>
+                <td>${parseInt(category.valueText)}</td>
+              </tr>
+            `;
+    return markup;
+  }, ``)}
+        </tbody>
+      </table>
+    </figcaption>
+  `;
+}
+
+class CanvasDiagramDrawer {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = this.canvas.getContext(`2d`);
+    this.theme = document.querySelector(`body`).classList.contains(`theme_light`) ? `light` : `dark`;
+    this.shadowOffset = 1000; // px
+  }
+
+  drawBorderRadius(centerX, centerY, radiusControlPoint, angleControlPoint, radiusEndPoint, angleEndPoint) {
+    const borderRadiusControlPoint = this.getCirclePoint(centerX, centerY, radiusControlPoint, angleControlPoint);
+    const borderRadiusEndPoint = this.getCirclePoint(centerX, centerY, radiusEndPoint, angleEndPoint);
+
+    this.ctx.quadraticCurveTo(borderRadiusControlPoint.x, borderRadiusControlPoint.y, borderRadiusEndPoint.x, borderRadiusEndPoint.y);
+  }
+
+  drawSector(sectorNumber, radius, center, ringWidth, startAngle, endAngle, borderRadiusSize, borderRadiusInRads, isAuxiliary) {
+    const centerX = isAuxiliary ? center + this.shadowOffset : center; // For inset shadows drawing
+    const centerY = center;
+    const innerRadius = radius - ringWidth - 2 * borderRadiusSize;
+
+    this.ctx.beginPath();
+    // Outer radius
+    this.ctx.arc(centerX, centerY, radius, startAngle + borderRadiusInRads, endAngle - borderRadiusInRads);
+    // Outer first border radius
+    this.drawBorderRadius(centerX, centerY, radius, endAngle, radius - borderRadiusSize, endAngle);
+    // Ring line border
+    this.moveAlongRadius(centerX, centerY, innerRadius + borderRadiusSize, endAngle);
+    // Inner first border radius
+    this.drawBorderRadius(centerX, centerY, innerRadius, endAngle, innerRadius, endAngle - borderRadiusInRads);
+    // Inner radius
+    this.ctx.arc(centerX, centerY, radius - ringWidth - 2 * borderRadiusSize, endAngle - borderRadiusInRads, startAngle + borderRadiusInRads, true);
+    // Inner second border radius
+    this.drawBorderRadius(centerX, centerY, innerRadius, startAngle, innerRadius + borderRadiusSize, startAngle);
+    // Ring line border
+    this.moveAlongRadius(centerX, centerY, radius - borderRadiusSize, startAngle);
+    // Outer second border radius
+    this.drawBorderRadius(centerX, centerY, radius, startAngle, radius, startAngle + borderRadiusInRads);
+
+    if (!isAuxiliary) {
+      this.ctx.fillStyle = this._createRadialGradient(sectorNumber, centerY, radius);
+      this.ctx.fill();
+      this._addShadows(...arguments);
+    }
+  }
+
+  moveAlongRadius(centerX, centerY, radius, angle) {
+    const endPoint = this.getCirclePoint(centerX, centerY, radius, angle);
+
+    this.ctx.lineTo(endPoint.x, endPoint.y);
+  }
+
+  getCirclePoint(centerX, centerY, radiusPart, angle) {
+    const point = { x: 0, y: 0 };
+
+    if (angle >= 0 && angle < Math.PI / 2) {
+      point.x = centerX + radiusPart * Math.sin(Math.PI / 2 - angle);
+      point.y = centerY + radiusPart * Math.sin(angle);
+    } else if (angle >= Math.PI / 2 && angle < Math.PI) {
+      angle = angle - Math.PI / 2;
+      point.x = centerX - radiusPart * Math.sin(angle);
+      point.y = centerY + radiusPart * Math.sin(Math.PI / 2 - angle);
+    } else if (angle >= Math.PI && angle < 3 * Math.PI / 2) {
+      angle = angle - Math.PI;
+      point.x = centerX - radiusPart * Math.sin(Math.PI / 2 - angle);
+      point.y = centerY - radiusPart * Math.sin(angle);
+    } else {
+      angle = angle - 3 * Math.PI / 2;
+      point.x = centerX + radiusPart * Math.sin(angle);
+      point.y = centerY - radiusPart * Math.sin(Math.PI / 2 - angle);
+    }
+
+    return point;
+  }
+
+  degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  /**
+   * Config of sectors gradients
+   */
+  _createRadialGradient(sectorNumber, center, mainRadius) {
+    let firstCircleRadiusRatio;
+    let secondCircleRadiusRatio;
+    let firstColorStop;
+    let secondColorStop;
+
+    switch (sectorNumber) {
+      case 1:
+        if (this.theme === `dark`) {
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(211, 136, 4, 1)`;
+          secondColorStop = `rgba(80, 52, 4, 1)`;
+        } else {
+          firstCircleRadiusRatio = 0.8125;
+          firstColorStop = `rgba(255, 215, 112, 1)`;
+          secondColorStop = `rgba(255, 250, 222, 1)`;
+        }
+        break;
+      case 2:
+        if (this.theme === `dark`) {
+          firstCircleRadiusRatio = 0.7292;
+          firstColorStop = `rgba(62, 42, 7, 1)`;
+          secondColorStop = `rgba(16, 12, 5, 1)`;
+        } else {
+          firstCircleRadiusRatio = 0.8125;
+          firstColorStop = `rgba(255, 238, 194, 1)`;
+          secondColorStop = `rgba(255, 253, 243, 1)`;
+        }
+        break;
+      case 3:
+        if (this.theme === `dark`) {
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(89, 88, 85, 1)`;
+          secondColorStop = `rgba(37, 28, 5, 1)`;
+        } else {
+          firstCircleRadiusRatio = 0.8281;
+          firstColorStop = `rgba(240, 240, 240, 1)`;
+          secondCircleRadiusRatio = 0.9219;
+          secondColorStop = `rgba(252, 252, 252, 1)`;
+        }
+        break;
+      case 4:
+        if (this.theme === `dark`) {
+          firstCircleRadiusRatio = 0.7188;
+          firstColorStop = `rgba(49, 47, 44, 1)`;
+          secondColorStop = `rgba(35, 27, 4, 1)`;
+        } else {
+          firstCircleRadiusRatio = 0.8281;
+          firstColorStop = `rgba(233, 233, 233, 1)`;
+          secondCircleRadiusRatio = 0.9219;
+          secondColorStop = `rgba(252, 252, 252, 1)`;
+        }
+        break;
+    }
+
+    const gradient = this.ctx.createRadialGradient(center, center, firstCircleRadiusRatio * mainRadius, center, center, mainRadius * (secondCircleRadiusRatio || 1));
+
+    gradient.addColorStop(0, firstColorStop);
+    gradient.addColorStop(1, secondColorStop);
+
+    return gradient;
+  }
+
+  _addShadows() {
+    const slideNumber = arguments[0];
+    const shadowsConfig = this._getShadows(slideNumber);
+
+    this.drawSector(...arguments, true);
+
+    shadowsConfig.forEach(shadow => {
+      this.ctx.shadowColor = shadow.color;
+      this.ctx.shadowBlur = shadow.blur || 10;
+      this.ctx.lineWidth = shadow.blur || 10;
+      this.ctx.shadowOffsetX = shadow.shadowOffsetX ? -this.shadowOffset + shadow.shadowOffsetX : -this.shadowOffset;
+      this.ctx.shadowOffsetY = shadow.shadowOffsetY || 0;
+
+      if (shadow.inset) {
+        this.ctx.globalCompositeOperation = `source-atop`;
+      }
+
+      if (shadow.spread) {
+        const scaleFactor = 0.5;
+        this.ctx.save();
+        this.ctx.scale(scaleFactor, scaleFactor);
+      }
+
+      this.ctx.stroke();
+
+      this.ctx.restore();
+      this.ctx.globalCompositeOperation = `source-over`;
+    });
+  }
+
+  _getShadows(slideNumber) {
+    const shadows = [];
+    const insetBorderShadow = {
+      blur: 1,
+      color: `rgba(255, 255, 255, 0.5)`,
+      shadowOffsetX: -1,
+      shadowOffsetY: 1,
+      inset: true
+    };
+
+    switch (slideNumber) {
+      case 1:
+        if (this.theme === `dark`) {
+          shadows.push(
+            {
+              spread: -8,
+              color: `rgba(248, 158, 0, 0.2)`,
+              inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(255, 162, 0, 0.9)`,
+              inset: true
+            }
+          );
+        } else {
+          shadows.push(
+            insetBorderShadow,
+            {
+              color: `rgba(255, 176, 57, 0.9)`,
+              inset: true
+            }
+          );
+        }
+        break;
+      case 2:
+        if (this.theme === `dark`) {
+          shadows.push(
+            {
+              spread: -8,
+              color: `rgba(147, 93, 0, 0.2)`,
+              inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(202, 176, 57, 0.4)`,
+              inset: true
+            }
+          );
+        } else {
+          shadows.push(
+            insetBorderShadow,
+            {
+              color: `rgba(255, 176, 57, 0.4)`,
+              inset: true
+            }
+          );
+        }
+        break;
+      case 3:
+        if (this.theme === `dark`) {
+          shadows.push(
+            {
+              spread: -8,
+              color: `rgba(0, 0, 0, 0.2)`,
+              inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(139, 139, 139, 0.9)`,
+              inset: true
+            }
+          );
+        } else {
+          shadows.push(
+            insetBorderShadow,
+            {
+              color: `rgba(105, 105, 105, 0.2)`,
+              inset: true
+            }
+          );
+        }
+        break;
+      case 4:
+        if (this.theme === `dark`) {
+          shadows.push(
+            {
+              spread: -8,
+              color: `rgba(96, 96, 96, 0.2)`,
+              inset: false
+            },
+            insetBorderShadow,
+            {
+              color: `rgba(38, 38, 38, 0.9)`,
+              inset: true
+            }
+          );
+        } else {
+          shadows.push(
+            {
+              color: `rgba(131, 131, 131, 0.6)`,
+              inset: true
+            },
+            insetBorderShadow
+          );
+        }
+        break;
+    }
+
+    return shadows;
+  }
+}
+
+function drawCanvasDiagram({ categories, totalText }) {
+  const OFFSET_ANGLE = 1; // degree
+  const PIE_BORDER_RADIUS = 6; // px
+  const CENTER_CIRCLE_RATIO = 0.7;
+  const diagramCanvas = document.querySelector(`#doughnutDiagram`);
+  const diagramSize = diagramCanvas.clientWidth - 40;
+  const diagramRadius = diagramSize / 2;
+  const totalValue = parseInt(totalText);
+  const perimeterInPixels = 2 * Math.PI * diagramRadius;
+  const borderRadiusInDegrees = PIE_BORDER_RADIUS / perimeterInPixels * 360;
+
+  const drawer = new CanvasDiagramDrawer(diagramCanvas);
+  let angleSum = 240; // initial angle for design purposes
+
+  for (let i = 0; i < categories.length; i++) {
+    const valueAngle = parseInt(categories[i].valueText) / totalValue * (360 - OFFSET_ANGLE * categories.length);
+    drawer.drawSector(
+      i + 1,
+      diagramRadius,
+      diagramCanvas.width / 2,
+      diagramRadius * (1 - CENTER_CIRCLE_RATIO) - 2 * PIE_BORDER_RADIUS,
+      drawer.degreesToRadians(angleSum),
+      drawer.degreesToRadians(valueAngle + angleSum),
+      PIE_BORDER_RADIUS,
+      drawer.degreesToRadians(borderRadiusInDegrees)
+    );
+
+    angleSum += valueAngle + OFFSET_ANGLE;
+  }
+}
+
+/**
+ * @typedef Category
+ * @type {Object}
+ * @property {string} title - title of the category.
+ * @property {string} valueText - string with some value consisting of the number and optionally of the string.
+ * @property {string} differenceText - difference between current and previous periods for this category.
+ */
+
+/**
+ * Render diagram slide content.
+ *
+ * @param {SlideData} data - slide data.
+ *
+ * @returns {string} - markup for slide.
+ */
+function renderDiagramSlide(data) {
+  return `
+    <figure class="diagram">
+      <h3 class="visually-hidden">Кольцевая диаграмма</h3>
+      <div class="diagram__wrap">
+        <div class="diagram__main-description">
+          <p class="diagram__total headline">${data.totalText}</p>
+          <p class="diagram__difference subhead subhead_dim">${data.differenceText}</p>
+        </div>
+        <div class="diagram__doughnut-wrap">
+          <canvas id="doughnutDiagram" class="diagram__canvas" width="400" height="400"></canvas>
+        </div>
+      </div>
+      ${renderDiagramDescription(data)}
+    </figure>
+  `;
+}
+
+/**
+ * @typedef {'leaders' | 'vote' | 'activity' | 'chart' | 'diagram'} SlideType
+ */
+
+/**
+ * Render content of the slide of the required type.
+ *
+ * @param {SlideType} slideType - alias of slide to render.
+ * @param {SlideData} data - slide data.
+ *
+ * @returns {string} - markup with slide content.
+ */
+function renderSlideContent(slideType, data) {
+  switch (slideType) {
+    case 'leaders':
+      return renderLeadersSlide(data);
+    case 'vote':
+      return renderVoteSlide(data);
+    case 'activity':
+      return renderActivitySlide(data);
+    case 'chart':
+      return renderChartSlide(data);
+    case 'diagram':
+      return renderDiagramSlide(data);
+  }
+}
+
+let previousWindowWidth = globalThis.innerWidth;
+let previousWindowHeight = globalThis.innerHeight;
+let savedSlideName;
+let savedSlideData;
+
+/**
+ * @typedef SlideData
+ * @type {Object|string}
+ * @property {string} title - slide title.
+ * @property {string} subtitle - slide subtitle (sprint number).
+ * @property {string} emoji - emoji for design goals.
+ * @property {number} [selectedUserId] - id of voted person.
+ * @property {number} [offset] - index of the person to be displayed first.
+ * @property {HistoryValue[]} [values] - history chart values.
+ * @property {string} [totalText] - total value of diagram representation.
+ * @property {string} [differenceText] - description of the difference between current and previous values.
+ * @property {Category[]} [categories] - categories for diagram representation.
+ * @property {Object} [data] - activity data ordered by day of the week with array with 24 values corresponding to the hours.
+ * @property {Person[]} users - ordered list of teammates.
+ */
+
+/**
+ * @typedef Person
+ * @type {Object}
+ * @property {number} id - person id.
+ * @property {string} name - person full name.
+ * @property {string} avatar - name of image file with person photo.
+ * @property {string} valueText - string with some value consisting of the number and optionally of the string.
+ */
+
+/**
+ * Main render function.
+ *
+ * @param {SlideType} alias - alias of slide to render.
+ * @param {SlideData|string} data - slide data or JSON with data.
+ *
+ * @returns {string} - markup for page rendering or empty string if there is no such slide type or data was not provided.
+ */
+window.renderTemplate = function(alias, data) {
+  if (!alias || !data) {
+    return ``;
+  }
+
+  if (typeof data === `string`) {
+    data = JSON.parse(data);
+  }
+
+  savedSlideName = alias;
+  savedSlideData = data;
+
+  return `
+    <main class="slide slide_${alias}">
+      ${renderCaption(data)}
+      <div class="slide__content">
+        ${renderSlideContent(alias, data)}
+      </div>
+    </main>
+  `;
+}
+
+/**
+ * Post render function for calculations and logic depending on the rendered content
+ *
+ * @param {SlideType} alias - alias of slide to render.
+ * @param {SlideData|string} data - slide data or JSON with data.
+ */
+window.postRenderScript = function(alias, data) {
+  if (!data) {
+    return ``;
+  }
+
+  if (typeof data === `string`) {
+    data = JSON.parse(data);
+  }
+
+  switch (alias) {
+    case 'vote':
+      adjustVoteSlideIndents();
+      break;
+    case 'diagram':
+      drawCanvasDiagram(data);
+      break;
+    default:
+      break;
+  }
+}
+
+const RESIZE_DEBOUNCE_DELAY = 120; // ms
+const debouncedWindowResizeHandler = debounce(windowResizeHandler, RESIZE_DEBOUNCE_DELAY);
+setVhCssProperty();
+globalThis.addEventListener(`resize`, debouncedWindowResizeHandler);
+
+function renderPage() {
+  document.querySelector(`#output`).innerHTML = globalThis.renderTemplate(savedSlideName, savedSlideData);
+  globalThis.postRenderScript(savedSlideName, savedSlideData);
+}
+
+function windowResizeHandler() {
+  if (previousWindowHeight !== globalThis.innerHeight) {
+    if (document.querySelector(`.slide_activity`)) {
+      renderPage();
+    }
+
+    setVhCssProperty();
+
+    if (document.querySelector(`.slide_vote`)) {
+      adjustVoteSlideIndents();
+    }
+
+    if (document.querySelector(`.slide_chart`)) {
+      renderPage();
+    }
+  }
+
+  if (isRerenderNecessary()) {
+    renderPage();
+  }
+
+  previousWindowHeight = globalThis.innerHeight;
+  previousWindowWidth = globalThis.innerWidth;
+}
+
+function isOrientationChange() {
+  return (previousWindowWidth > previousWindowHeight && globalThis.innerWidth < globalThis.innerHeight) || (previousWindowWidth < previousWindowHeight && globalThis.innerWidth > globalThis.innerHeight);
+}
+
+function isRerenderThreshold(width) {
+  return (previousWindowWidth < width && globalThis.innerWidth >= width) ||
+    (previousWindowWidth >= width && globalThis.innerWidth < width);
+}
+
+function isRerenderNecessary() {
+  return isOrientationChange() || isRerenderThreshold(LANDSCAPE_PHONE_MIN_WIDTH) ||
+    isRerenderThreshold(LANDSCAPE_DEFAULT_WIDTH) || isRerenderThreshold(TABLET_MIN_WIDTH);
+}
+
+const searchParams = new URLSearchParams(document.location.search);
+const theme = searchParams.get('theme') || 'dark';
+let svgSprite = document.querySelector('#svg-sprite');
+
+if (!svgSprite) {
+  svgSprite = document.createElementNS(`http://www.w3.org/2000/svg`, `svg`);
+  svgSprite.classList.add(`visually-hidden`);
+  document.body.insertAdjacentElement(`afterbegin`, svgSprite);
+}
+
+document.body.classList.add(`theme_${theme}`);
+
+if (theme === 'dark') {
+  svgSprite.innerHTML = `
+      <defs>
+      <symbol id="button" viewbox="0 0 64 64">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M32 62C48.5685 62 62 48.5685 62 32C62 15.4315 48.5685 2 32 2C15.4315 2 2 15.4315 2 32C2 48.5685 15.4315 62 32 62ZM32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64ZM59 32C59 46.9117 46.9117 59 32 59C17.0883 59 5 46.9117 5 32C5 17.0883 17.0883 5 32 5C46.9117 5 59 17.0883 59 32ZM25.0607 27.9393C24.4749 27.3536 23.5251 27.3536 22.9393 27.9393C22.3536 28.5251 22.3536 29.4749 22.9393 30.0607L30.9393 38.0607C31.5251 38.6464 32.4749 38.6464 33.0607 38.0607L41.0607 30.0607C41.6464 29.4749 41.6464 28.5251 41.0607 27.9393C40.4749 27.3536 39.5251 27.3536 38.9393 27.9393L32 34.8787L25.0607 27.9393Z"></path>
+      </symbol>
+      <symbol id="bar-s" viewbox="0 0 34 34">
+          <mask id="mask0-s" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="1" width="34" height="32">
+              <path d="M0 14.9767C0 13.7308 0.580524 12.5561 1.5702 11.7993L14.5702 1.85808C16.0044 0.761324 17.9956 0.761325 19.4298 1.85808L32.4298 11.7993C33.4195 12.5561 34 13.7308 34 14.9767V19.0233C34 20.2692 33.4195 21.4439 32.4298 22.2007L19.4298 32.1419C17.9956 33.2387 16.0044 33.2387 14.5702 32.1419L1.5702 22.2007C0.580524 21.4439 0 20.2692 0 19.0233V14.9767Z" fill="#151311"></path>
+          </mask>
+          <g mask="url(#mask0-s)">
+              <g filter="url(#filter0_ii-s)">
+                  <path d="M0 13.9883C0 13.3654 0.290262 12.778 0.7851 12.3996L15.7851 0.929041C16.5022 0.380661 17.4978 0.380662 18.2149 0.929041L33.2149 12.3996C33.7097 12.778 34 13.3654 34 13.9883V20.0117C34 20.6346 33.7097 21.222 33.2149 21.6004L18.2149 33.071C17.4978 33.6193 16.5022 33.6193 15.7851 33.071L0.785101 21.6004C0.290263 21.222 0 20.6346 0 20.0117V13.9883Z" fill="url(#paint0_radial-s)" fill-opacity="0.65"></path>
+              </g>
+              <g filter="url(#filter1_iif-s)">
+                  <path d="M34 20.0117V13L17 26V34L33.2149 21.6004C33.7097 21.222 34 20.6346 34 20.0117Z" fill="url(#paint1_radial-s)" fill-opacity="0.8"></path>
+              </g>
+              <g filter="url(#filter2_if-s)">
+                  <path d="M17 0L0 13L14.5702 24.1419C16.0044 25.2387 17.9956 25.2387 19.4298 24.1419L34 13L17 0Z" fill="url(#paint2_radial-s)" fill-opacity="0.7"></path>
+              </g>
+          </g>
+          <defs>
+              <filter id="filter0_ii-s" x="-1" y="0.517754" width="36" height="33.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="1" dy="1"></feoffset>
+                  <fegaussianblur stddeviation="8"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1"></feoffset>
+                  <fegaussianblur stddeviation="1"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+              </filter>
+              <filter id="filter1_iif-s" x="15" y="11" width="21" height="25" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="8"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1" dy="1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <filter id="filter2_if-s" x="-2" y="-1" width="37" height="26.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-2"></feoffset>
+                  <fegaussianblur stddeviation="1"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.9272 0 0 0 0 0.91928 0 0 0 0 0.9128 0 0 0 0.15 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="0.5" result="effect2_foregroundBlur"></fegaussianblur>
+              </filter>
+              <radialgradient id="paint0_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.2818 26.6165) rotate(-156.928) scale(77.2877 1713.92)">
+                  <stop stop-color="#131110"></stop>
+                  <stop offset="1"></stop>
+              </radialgradient>
+              <radialgradient id="paint1_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(23.0802 22.3714) rotate(-101.873) scale(99.4275 2181.5)">
+                  <stop offset="0.0001" stop-color="#3A3530"></stop>
+                  <stop offset="1" stop-color="#49423D"></stop>
+              </radialgradient>
+              <radialgradient id="paint2_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 18.9502) rotate(-163.167) scale(41.2679 899.814)">
+                  <stop stop-color="#3E3934"></stop>
+                  <stop offset="1" stop-color="#221F1C"></stop>
+              </radialgradient>
+          </defs>
+      </symbol>
+      <symbol id="bar-m" viewbox="0 0 34 41">
+          <mask id="mask0-m" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="40">
+              <path opacity="0.95" d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint0_radial-m)" fill-opacity="0.95"></path>
+          </mask>
+          <g mask="url(#mask0-m)">
+              <g filter="url(#filter0_ii-m)">
+                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint1_radial-m)" fill-opacity="0.9"></path>
+              </g>
+              <g filter="url(#filter1_iif-m)">
+                  <path d="M34 27.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V41L33.2149 28.6004C33.7097 28.222 34 27.6346 34 27.0117Z" fill="url(#paint2_radial-m)" fill-opacity="0.9"></path>
+              </g>
+              <g filter="url(#filter2_iif-m)">
+                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-m)" fill-opacity="0.9"></path>
+              </g>
+          </g>
+          <defs>
+              <filter id="filter0_ii-m" x="-1" y="0.0355148" width="37" height="41.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+              </filter>
+              <filter id="filter1_iif-m" x="15" y="-3" width="21" height="46" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="8"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1" dy="1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <filter id="filter2_iif-m" x="-2" y="-2" width="38" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="8"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-2"></feoffset>
+                  <fegaussianblur stddeviation="1"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <radialgradient id="paint0_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
+                  <stop offset="0.0001" stop-color="#231600"></stop>
+                  <stop offset="1" stop-color="#705C5E"></stop>
+              </radialgradient>
+              <radialgradient id="paint1_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
+                  <stop offset="0.0001" stop-color="#231600"></stop>
+                  <stop offset="1" stop-color="#705C5E"></stop>
+              </radialgradient>
+              <radialgradient id="paint2_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(37.2501 16.8307) rotate(-115.254) scale(83.8533 1990.08)">
+                  <stop offset="0.0001" stop-color="#231600"></stop>
+                  <stop offset="1" stop-color="#705C5E"></stop>
+              </radialgradient>
+              <radialgradient id="paint3_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
+                  <stop offset="0.0001" stop-color="#231600"></stop>
+                  <stop offset="1" stop-color="#705C5E"></stop>
+              </radialgradient>
+          </defs>
+      </symbol>
+      <symbol id="bar-l" viewbox="0 0 34 57">
+          <mask id="mask0-l" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="56">
+              <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint0_radial-l)" fill-opacity="0.95"></path>
+          </mask>
+          <g mask="url(#mask0-l)">
+              <g filter="url(#filter0_ii-l)">
+                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint1_radial-l)" fill-opacity="0.9"></path>
+              </g>
+              <g filter="url(#filter1_dif-l)">
+                  <path d="M34 43.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V57L33.2149 44.6004C33.7097 44.222 34 43.6346 34 43.0117Z" fill="url(#paint2_radial-l)"></path>
+              </g>
+              <g filter="url(#filter2_iif-l)">
+                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-l)" fill-opacity="0.8"></path>
+              </g>
+          </g>
+          <defs>
+              <filter id="filter0_ii-l" x="-1" y="0.0355148" width="37" height="57.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1" dy="1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+              </filter>
+              <filter id="filter1_dif-l" x="12" y="-6" width="27" height="71" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
+                  <feoffset dy="4"></feoffset>
+                  <fegaussianblur stddeviation="2"></fegaussianblur>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
+                  <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
+                  <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-2" dy="-1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="2.5" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <filter id="filter2_iif-l" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="8"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-2"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.922292 0 0 0 0 0.60255 0 0 0 0 0.0485417 0 0 0 0.5 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <radialgradient id="paint0_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
+                  <stop offset="0.0001" stop-color="#211602"></stop>
+                  <stop offset="1" stop-color="#AC7109"></stop>
+              </radialgradient>
+              <radialgradient id="paint1_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
+                  <stop offset="0.0001" stop-color="#211602"></stop>
+                  <stop offset="1" stop-color="#AC7109"></stop>
+              </radialgradient>
+              <radialgradient id="paint2_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 47.8734) rotate(-106.704) scale(52.0707 812.895)">
+                  <stop offset="0.0625" stop-color="#201502"></stop>
+                  <stop offset="1" stop-color="#C7830A"></stop>
+              </radialgradient>
+              <radialgradient id="paint3_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
+                  <stop offset="0.0001" stop-color="#211602"></stop>
+                  <stop offset="1" stop-color="#AC7109"></stop>
+              </radialgradient>
+          </defs>
+      </symbol>
+      <symbol id="bar-xl" viewbox="0 0 34 73">
+          <mask id="mask0-xl" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="72">
+              <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint0_radial-xl)" fill-opacity="0.95"></path>
+          </mask>
+          <g mask="url(#mask0-xl)">
+              <g filter="url(#filter0_ii-xl)">
+                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint1_radial-xl)"></path>
+              </g>
+              <g filter="url(#filter1_dif-xl)">
+                  <path d="M34 59.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V73L33.2149 60.6004C33.7097 60.222 34 59.6346 34 59.0117Z" fill="url(#paint2_radial-xl)"></path>
+              </g>
+              <g filter="url(#filter2_iif-xl)">
+                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-xl)" fill-opacity="0.8"></path>
+              </g>
+          </g>
+          <defs>
+              <filter id="filter0_ii-xl" x="-1" y="0.0355072" width="37" height="73.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1" dy="1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+              </filter>
+              <filter id="filter1_dif-xl" x="13" y="-5" width="25" height="86" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
+                  <feoffset dy="4"></feoffset>
+                  <fegaussianblur stddeviation="2"></fegaussianblur>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
+                  <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
+                  <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-1" dy="-1"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="2" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <filter id="filter2_iif-xl" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="2" dy="2"></feoffset>
+                  <fegaussianblur stddeviation="15.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                  <feoffset dx="-2"></feoffset>
+                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+              </filter>
+              <radialgradient id="paint0_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
+                  <stop stop-color="#201502"></stop>
+                  <stop offset="1" stop-color="#C7830A"></stop>
+              </radialgradient>
+              <radialgradient id="paint1_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
+                  <stop stop-color="#201502"></stop>
+                  <stop offset="1" stop-color="#C7830A"></stop>
+              </radialgradient>
+              <radialgradient id="paint2_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 61.3557) rotate(-100.534) scale(54.7003 683.353)">
+                  <stop stop-color="#201502"></stop>
+                  <stop offset="1" stop-color="#C7830A"></stop>
+              </radialgradient>
+              <radialgradient id="paint3_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(19.1537 23.663) rotate(-102.078) scale(61.741 1819.91)">
+                  <stop stop-color="#201502"></stop>
+                  <stop offset="1" stop-color="#C7830A"></stop>
+              </radialgradient>
+          </defs>
+      </symbol>
+      </defs>
+  `;
+} else {
+  svgSprite.innerHTML = `
+      <defs>
+          <symbol id="button" viewbox="0 0 64 64">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M32 62C48.5685 62 62 48.5685 62 32C62 15.4315 48.5685 2 32 2C15.4315 2 2 15.4315 2 32C2 48.5685 15.4315 62 32 62ZM32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64ZM59 32C59 46.9117 46.9117 59 32 59C17.0883 59 5 46.9117 5 32C5 17.0883 17.0883 5 32 5C46.9117 5 59 17.0883 59 32ZM25.0607 27.9393C24.4749 27.3536 23.5251 27.3536 22.9393 27.9393C22.3536 28.5251 22.3536 29.4749 22.9393 30.0607L30.9393 38.0607C31.5251 38.6464 32.4749 38.6464 33.0607 38.0607L41.0607 30.0607C41.6464 29.4749 41.6464 28.5251 41.0607 27.9393C40.4749 27.3536 39.5251 27.3536 38.9393 27.9393L32 34.8787L25.0607 27.9393Z"></path>
+          </symbol>
+          <symbol id="bar-s" viewbox="0 0 45 45">
+              <mask id="mask0-s" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="1" width="45" height="42">
+                  <path opacity="0.92" d="M0.866699 19.8603C0.866699 18.2578 1.61341 16.7467 2.88641 15.7733L19.608 2.9862C21.4528 1.57546 24.014 1.57546 25.8588 2.9862L42.5803 15.7733C43.8533 16.7467 44.6 18.2578 44.6 19.8603V25.0654C44.6 26.6679 43.8533 28.179 42.5803 29.1524L25.8588 41.9395C24.014 43.3503 21.4528 43.3503 19.608 41.9395L2.88641 29.1524C1.61341 28.179 0.866699 26.6679 0.866699 25.0654V19.8603Z" fill="#2b1f00"></path>
+              </mask>
+              <g mask="url(#mask0-s)">
+                  <g filter="url(#filter0_ii-s)">
+                      <path d="M0.866699 18.589C0.866699 17.7878 1.24006 17.0323 1.87655 16.5455L21.1707 1.79119C22.0931 1.08583 23.3737 1.08583 24.2961 1.79119L43.5902 16.5455C44.2267 17.0323 44.6 17.7878 44.6 18.589V26.3367C44.6 27.1379 44.2267 27.8935 43.5902 28.3802L24.2961 43.1345C23.3737 43.8399 22.0931 43.8399 21.1707 43.1345L1.87655 28.3802C1.24006 27.8935 0.866699 27.1379 0.866699 26.3367V18.589Z" fill="url(#paint0_radial-s)" fill-opacity="0.8"></path>
+                  </g>
+                  <g filter="url(#filter1_if-s)">
+                      <path d="M44.6 26.3367V22.5235C44.6 20.3925 42.1575 19.1855 40.4648 20.48L23.7432 33.2671C23.1067 33.7538 22.7333 34.5093 22.7333 35.3106V44.3295L43.5902 28.3802C44.2266 27.8935 44.6 27.1379 44.6 26.3367Z" fill="url(#paint1_radial-s)" fill-opacity="0.8"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-s)">
+                      <path d="M22.7334 0.596191L0.866699 17.3178L19.608 31.6493C21.4528 33.0601 24.014 33.0601 25.8588 31.6493L44.6 17.3178L22.7334 0.596191Z" fill="url(#paint2_radial-s)" fill-opacity="0.9"></path>
+                  </g>
+              </g>
+              <defs>
+                  <filter id="filter0_ii-s" x="-0.419575" y="1.26215" width="46.3059" height="43.6877" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="10.2902"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.414167 0 0 0 0 0.414167 0 0 0 0 0.414167 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627"></feoffset>
+                      <fegaussianblur stddeviation="1.28627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_if-s" x="20.1608" y="17.3737" width="27.0118" height="29.5284" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1.28627" result="effect2_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-s" x="-0.419575" y="-0.690083" width="47.5922" height="35.97" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="12.8627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.643333 0 0 0 0 0.643333 0 0 0 0 0.643333 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2.57255"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0 0.98 0 0 0 0.8 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.643137" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(39.8174 34.8323) rotate(-161.19) scale(66.2871 1469.97)">
+                      <stop stop-color="#fafafa"></stop>
+                      <stop offset="1" stop-color="#fafafa"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(41.3843 28.2511) rotate(-173.454) scale(39.4888 63.5928)">
+                      <stop stop-color="#eaeaea"></stop>
+                      <stop offset="0.0001" stop-color="#e9e9e9"></stop>
+                      <stop offset="1" stop-color="#e4e4e4"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(46.5294 19.8903) rotate(-165.964) scale(42.4276 24.7298)">
+                      <stop stop-color="#fafafa"></stop>
+                      <stop offset="1" stop-color="#F8F8F8"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-m" viewbox="0 0 45 54">
+              <mask id="mask0-m" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="45" height="53">
+                  <path opacity="0.92" d="M0.733398 18.8484C0.733398 17.2459 1.48011 15.7348 2.75311 14.7614L19.4747 1.97429C21.3195 0.563563 23.8807 0.563562 25.7255 1.97429L42.447 14.7614C43.72 15.7348 44.4667 17.2459 44.4667 18.8484V34.3437C44.4667 35.9462 43.72 37.4573 42.447 38.4307L25.7255 51.2178C23.8807 52.6285 21.3195 52.6285 19.4747 51.2178L2.75311 38.4307C1.48011 37.4573 0.733398 35.9462 0.733398 34.3437V18.8484Z" fill="#171100"></path>
+              </mask>
+              <g mask="url(#mask0-m)">
+                  <g filter="url(#filter0_ii-m)">
+                      <path d="M0.733398 18.8484C0.733398 17.2459 1.48011 15.7348 2.75311 14.7614L19.4747 1.97429C21.3195 0.563563 23.8807 0.563562 25.7255 1.97429L42.447 14.7614C43.72 15.7348 44.4667 17.2459 44.4667 18.8484V34.3437C44.4667 35.9462 43.72 37.4573 42.447 38.4307L25.7255 51.2178C23.8807 52.6285 21.3195 52.6285 19.4747 51.2178L2.75311 38.4307C1.48011 37.4573 0.733398 35.9462 0.733398 34.3437V18.8484Z" fill="url(#paint0_radial-m)" fill-opacity="0.9"></path>
+                  </g>
+                  <g filter="url(#filter1_iif-m)">
+                      <path d="M44.4667 35.615V17.5771C44.4667 16.7759 44.0933 16.0203 43.4568 15.5336L22.6 -0.41571V53.6078L43.4569 37.6585C44.0933 37.1718 44.4667 36.4162 44.4667 35.615Z" fill="url(#paint1_radial-m)" fill-opacity="0.9"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-m)">
+                      <path d="M19.4747 1.97429L0.733398 16.3059L19.4747 30.6374C21.3195 32.0482 23.8807 32.0482 25.7255 30.6374L44.4667 16.3059L25.7255 1.97429C23.8807 0.563562 21.3195 0.563563 19.4747 1.97429Z" fill="url(#paint2_radial-m)" fill-opacity="0.9"></path>
+                  </g>
+              </g>
+              <defs>
+                  <filter id="filter0_ii-m" x="-0.552876" y="0.91626" width="47.5922" height="53.9322" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="6.43137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.815479 0 0 0 0 0.82293 0 0 0 0 0.904885 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.97 0 0 0 0 0.97 0 0 0 0 0.97 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_iif-m" x="20.0275" y="-2.98826" width="27.0118" height="59.1686" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="10.2902"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.783083 0 0 0 0 0.767481 0 0 0 0 0.76025 0 0 0 0.3 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.97 0 0 0 0 0.97 0 0 0 0 0.97 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1.28627" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-m" x="-0.552876" y="-0.370015" width="47.5922" height="34.638" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="3.85882"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.858292 0 0 0 0 0.848099 0 0 0 0 0.843375 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2.57255"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.99 0 0 0 0 0.99 0 0 0 0 0.99 0 0 0 0.8 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.643137" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(33.2823 32.1724) rotate(-113.885) scale(105.746 3435.56)">
+                      <stop stop-color="#eae8e8"></stop>
+                      <stop offset="1" stop-color="#eeedec"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(48.9687 63.2551) rotate(-136.273) scale(81.8783 1943.2)">
+                      <stop stop-color="#e8e6e6"></stop>
+                      <stop offset="1" stop-color="#d6d3d1"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(39.9645 23.9595) rotate(-156.43) scale(56.1337 1223.95)">
+                      <stop stop-color="#f7f7f7"></stop>
+                      <stop offset="1" stop-color="#EAE8E8"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-l" viewbox="0 0 45 74">
+              <mask id="mask0-l" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="45" height="73">
+                  <path opacity="0.92" d="M0.733398 18.3818C0.733398 16.7793 1.48011 15.2682 2.75311 14.2948L19.4747 1.50768C21.3195 0.0969491 23.8807 0.0969484 25.7255 1.50768L42.447 14.2948C43.72 15.2682 44.4667 16.7793 44.4667 18.3818V54.4575C44.4667 56.06 43.72 57.5711 42.447 58.5445L25.7255 71.3316C23.8807 72.7423 21.3195 72.7423 19.4747 71.3316L2.75311 58.5445C1.48011 57.5711 0.733398 56.06 0.733398 54.4575V18.3818Z" fill="#ff8080"></path>
+              </mask>
+              <g mask="url(#mask0-l)">
+                  <g filter="url(#filter0_ii-l)">
+                      <path d="M0.733398 18.3818C0.733398 16.7793 1.48011 15.2682 2.75311 14.2948L19.4747 1.50768C21.3195 0.0969491 23.8807 0.0969484 25.7255 1.50768L42.447 14.2948C43.72 15.2682 44.4667 16.7793 44.4667 18.3818V54.4575C44.4667 56.06 43.72 57.5711 42.447 58.5445L25.7255 71.3316C23.8807 72.7423 21.3195 72.7423 19.4747 71.3316L2.75311 58.5445C1.48011 57.5711 0.733398 56.06 0.733398 54.4575V18.3818Z" fill="url(#paint0_radial-l)"></path>
+                  </g>
+                  <g filter="url(#filter1_iif-l)">
+                      <path d="M44.4667 54.4575V18.3818C44.4667 16.7793 43.72 15.2682 42.447 14.2948L30.8705 5.44217C27.485 2.85323 22.6 5.26724 22.6 9.52922V73.7216L42.447 58.5445C43.72 57.5711 44.4667 56.06 44.4667 54.4575Z" fill="url(#paint1_radial-l)" fill-opacity="0.8"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-l)">
+                      <path d="M19.4747 1.50768L0.733398 15.8392L19.4747 30.1708C21.3195 31.5815 23.8807 31.5815 25.7255 30.1708L44.4667 15.8392L25.7255 1.50768C23.8807 0.096948 21.3195 0.096949 19.4747 1.50768Z" fill="url(#paint2_radial-l)" fill-opacity="0.8"></path>
+                  </g>
+              </g>
+              <defs>
+                  <filter id="filter0_ii-l" x="-0.552876" y="0.449646" width="45.0196" height="73.2263" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset></feoffset>
+                      <fegaussianblur stddeviation="12.8627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.69 0 0 0 0 0.225 0 0 0 0.4 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_iif-l" x="20.0275" y="1.80215" width="27.0118" height="74.492" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset></feoffset>
+                      <fegaussianblur stddeviation="12.8627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.69 0 0 0 0 0.225 0 0 0 0.4 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1.28627" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-l" x="-0.552876" y="-0.836629" width="47.5922" height="34.638" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="10.2902"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.72 0 0 0 0 3.33786e-08 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2.57255"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.643137" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(2.66281 22.9138) rotate(68.6417) scale(54.5546 31.9803)">
+                      <stop stop-color="#fffffe"></stop>
+                      <stop offset="1" stop-color="#fff6e4"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(32.8902 8.1216) rotate(90) scale(90.6824 26.5793)">
+                      <stop stop-color="#ffeab4"></stop>
+                      <stop offset="1" stop-color="#ffe7b4"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(39.9645 23.4928) rotate(-168.354) scale(53.8454 1174.06)">
+                      <stop offset="0.0364583" stop-color="#fffaed"></stop>
+                      <stop offset="1" stop-color="#FFEDC9"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-xl" viewbox="0 0 44 95">
+              <mask id="mask0-xl" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="44" height="93">
+                  <path opacity="0.92" d="M0.199951 18.3583C0.199951 16.7558 0.946665 15.2447 2.21966 14.2713L18.9412 1.48418C20.786 0.0734504 23.3472 0.0734494 25.192 1.48418L41.9136 14.2713C43.1866 15.2447 43.9333 16.7558 43.9333 18.3583V75.0144C43.9333 76.6169 43.1866 78.1279 41.9136 79.1014L25.192 91.8885C23.3472 93.2992 20.786 93.2992 18.9412 91.8885L2.21966 79.1014C0.946666 78.1279 0.199951 76.6169 0.199951 75.0144V18.3583Z" fill="#261c00"></path>
+              </mask>
+              <g mask="url(#mask0-xl)">
+                  <g filter="url(#filter0_ii-xl)">
+                      <path d="M0.199951 18.3583C0.199951 16.7558 0.946665 15.2447 2.21966 14.2713L18.9412 1.48418C20.786 0.0734504 23.3472 0.0734494 25.192 1.48418L41.9136 14.2713C43.1866 15.2447 43.9333 16.7558 43.9333 18.3583V75.0144C43.9333 76.6169 43.1866 78.1279 41.9136 79.1014L25.192 91.8885C23.3472 93.2992 20.786 93.2992 18.9412 91.8885L2.21966 79.1014C0.946666 78.1279 0.199951 76.6169 0.199951 75.0144V18.3583Z" fill="url(#paint0_radial-xl)"></path>
+                  </g>
+                  <g filter="url(#filter1_iif-xl)">
+                      <path d="M43.9333 76.2856V17.087C43.9333 16.2858 43.5599 15.5302 42.9234 15.0435L22.0666 -0.905823V94.2785L42.9234 78.3292C43.5599 77.8424 43.9333 77.0869 43.9333 76.2856Z" fill="url(#paint1_radial-xl)" fill-opacity="0.4"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-xl)">
+                      <path d="M18.9412 1.48418L0.199951 15.8157L18.9412 30.1473C20.786 31.558 23.3472 31.558 25.192 30.1473L43.9333 15.8157L25.192 1.48418C23.3472 0.0734494 20.786 0.0734504 18.9412 1.48418Z" fill="url(#paint2_radial-xl)" fill-opacity="0.8"></path>
+                  </g>
+              </g>
+              <defs>
+                  <filter id="filter0_ii-xl" x="-1.08632" y="0.426147" width="45.0196" height="93.8067" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset></feoffset>
+                      <fegaussianblur stddeviation="12.8627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.69 0 0 0 0 0.225 0 0 0 0.4 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_iif-xl" x="19.494" y="-3.47837" width="27.0118" height="100.329" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset></feoffset>
+                      <fegaussianblur stddeviation="12.8627"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.69 0 0 0 0 0.225 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1.28627" dy="1.28627"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1.28627" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-xl" x="-1.08632" y="-0.860127" width="47.5922" height="34.638" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2.57255" dy="2.57255"></feoffset>
+                      <fegaussianblur stddeviation="10.2902"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.72 0 0 0 0 0 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2.57255"></feoffset>
+                      <fegaussianblur stddeviation="0.643137"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.643137" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(-6.87456 11.9569) rotate(67.5294) scale(132.932 35.7564)">
+                      <stop stop-color="#ffdd9c"></stop>
+                      <stop offset="1" stop-color="#ffd363"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(32.3568 27.3922) rotate(90) scale(60.4549 13.8888)">
+                      <stop stop-color="#ffb800"></stop>
+                      <stop offset="1" stop-color="#ffef99" stop-opacity="0.87"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(39.431 23.4694) rotate(-162.739) scale(131.999 2878.14)">
+                      <stop stop-color="#fffaed"></stop>
+                      <stop offset="1" stop-color="#FFB800"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+  </defs>
+  `;
+}

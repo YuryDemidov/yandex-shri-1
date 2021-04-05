@@ -9,7 +9,7 @@ module.exports = () => {
       server: SERVER_PATH,
     },
     output: {
-      path: path.join(__dirname, `../build`),
+      path: path.join(__dirname, `../dist`),
       publicPath: `/`,
       filename: `[name].js`
     },
