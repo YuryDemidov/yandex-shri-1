@@ -1048,7 +1048,239 @@ function isRerenderNecessary() {
     isRerenderThreshold(LANDSCAPE_DEFAULT_WIDTH) || isRerenderThreshold(TABLET_MIN_WIDTH);
 }
 
+const data = [
+  {
+    "alias": "leaders",
+    "data": {
+      "title": "Больше всего коммитов",
+      "subtitle": "Спринт № 213",
+      "emoji": "👑",
+      "users": [
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "32"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "27"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "22"},
+        {"id": 6, "name": "Андрей Мокроусов", "avatar": "6.jpg", "valueText": "20"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "19"}
+      ]
+    }
+  },
+  {
+    "alias": "leaders",
+    "data": {
+      "title": "Самый большой коммит",
+      "subtitle": "Спринт № 213",
+      "emoji": "😮",
+      "users": [
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "4001 строка"},
+        {"id": 5, "name": "Александр Николаичев", "avatar": "5.jpg", "valueText": "3845 строк"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "3640 строк"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "3453 строки"},
+        {"id": 4, "name": "Вадим Пацев", "avatar": "4.jpg", "valueText": "2852 строки"}
+      ]
+    }
+  },
+  {
+    "alias": "vote",
+    "data": {
+      "title": "Самый 🔎 внимательный разработчик",
+      "subtitle": "Спринт № 213",
+      "emoji": "🔎",
+      "selectedUserId": 4,
+      "users": [
+        {"id": 1, "name": "Евгений Дементьев", "avatar": "1.jpg", "valueText": "22 голоса"},
+        {"id": 4, "name": "Вадим Пацев", "avatar": "4.jpg", "valueText": "19 голосов"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "17 голосов"},
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "16 голосов"},
+        {"id": 11, "name": "Юрий Фролов", "avatar": "11.jpg", "valueText": "11 голосов"},
+        {"id": 2, "name": "Александр Шлейко", "avatar": "2.jpg", "valueText": "10 голосов"},
+        {"id": 5, "name": "Александр Николаичев", "avatar": "5.jpg", "valueText": "9 голосов"},
+        {"id": 6, "name": "Андрей Мокроусов", "avatar": "6.jpg", "valueText": "8 голосов"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "7 голосов"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "6 голосов"},
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "5 голосов"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "4 голоса"}
+      ]
+    }
+  },
+  {
+    "alias": "leaders",
+    "data": {
+      "title": "Самый 🔎 внимательный разработчик",
+      "subtitle": "Спринт № 213",
+      "emoji": "🔎",
+      "selectedUserId": 11,
+      "users": [
+        {"id": 1, "name": "Евгений Дементьев", "avatar": "1.jpg", "valueText": "22 голоса"},
+        {"id": 4, "name": "Вадим Пацев", "avatar": "4.jpg", "valueText": "19 голосов"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "17 голосов"},
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "16 голосов"},
+        {"id": 11, "name": "Юрий Фролов", "avatar": "11.jpg", "valueText": "15 голосов"},
+        {"id": 2, "name": "Александр Шлейко", "avatar": "2.jpg", "valueText": "14 голосов"},
+        {"id": 5, "name": "Александр Николаичев", "avatar": "5.jpg", "valueText": "12 голосов"},
+        {"id": 6, "name": "Андрей Мокроусов", "avatar": "6.jpg", "valueText": "9 голосов"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "8 голосов"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "6 голосов"},
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "5 голосов"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "4 голоса"}
+      ]
+    }
+  },
+  {
+    "alias": "vote",
+    "data": {
+      "title": "Самый 👪 командный разработчик",
+      "subtitle": "Спринт № 213",
+      "emoji": "👪",
+      "offset": 8,
+      "users": [
+        {"id": 2, "name": "Александр Шлейко", "avatar": "2.jpg", "valueText": "24 голоса"},
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "21 голос"},
+        {"id": 6, "name": "Андрей Мокроусов", "avatar": "6.jpg", "valueText": "19 голосов"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "18 голосов"},
+        {"id": 1, "name": "Евгений Дементьев", "avatar": "1.jpg", "valueText": "16 голосов"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "14 голосов"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "13 голосов"},
+        {"id": 11, "name": "Юрий Фролов", "avatar": "11.jpg", "valueText": "11 голосов"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "9 голосов"},
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "7 голосов"},
+        {"id": 5, "name": "Александр Николаичев", "avatar": "5.jpg", "valueText": "6 голосов"},
+        {"id": 4, "name": "Вадим Пацев", "avatar": "4.jpg", "valueText": "5 голосов"}
+      ]
+    }
+  },
+  {
+    "alias": "leaders",
+    "data": {
+      "title": "Самый 👪 командный разработчик",
+      "subtitle": "Спринт № 213",
+      "emoji": "👪",
+      "selectedUserId": 6,
+      "users": [
+        {"id": 2, "name": "Александр Шлейко", "avatar": "2.jpg", "valueText": "24 голоса"},
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "21 голос"},
+        {"id": 6, "name": "Андрей Мокроусов", "avatar": "6.jpg", "valueText": "19 голосов"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "18 голосов"},
+        {"id": 1, "name": "Евгений Дементьев", "avatar": "1.jpg", "valueText": "16 голосов"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "14 голосов"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "13 голосов"},
+        {"id": 11, "name": "Юрий Фролов", "avatar": "11.jpg", "valueText": "11 голосов"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "9 голосов"},
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "7 голосов"},
+        {"id": 5, "name": "Александр Николаичев", "avatar": "5.jpg", "valueText": "6 голосов"},
+        {"id": 4, "name": "Вадим Пацев", "avatar": "4.jpg", "valueText": "5 голосов"}
+      ]
+    }
+  },
+  {
+    "alias": "chart",
+    "data": {
+      "title": "Коммиты",
+      "subtitle": "Спринт № 213",
+      "values": [
+        {"title": "203", "value": 108},
+        {"title": "204", "value": 160},
+        {"title": "205", "value": 126},
+        {"title": "206", "value": 134},
+        {"title": "207", "value": 112},
+        {"title": "208", "value": 152},
+        {"title": "209", "value": 128},
+        {"title": "210", "value": 164},
+        {"title": "211", "value": 118},
+        {"title": "212", "value": 140},
+        {"title": "213", "value": 182, "active": true},
+        {"title": "214", "value": 0},
+        {"title": "215", "value": 0},
+        {"title": "216", "value": 0},
+        {"title": "217", "value": 0},
+        {"title": "218", "value": 0}
+      ],
+      "users": [
+        {"id": 3, "name": "Дарья Ковалева", "avatar": "3.jpg", "valueText": "32"},
+        {"id": 9, "name": "Сергей Бережной", "avatar": "9.jpg", "valueText": "27"},
+        {"id": 7, "name": "Дмитрий Андриянов", "avatar": "7.jpg", "valueText": "22"}
+      ]
+    }
+  },
+  {
+    "alias": "chart",
+    "data": {
+      "title": "Строки кода",
+      "subtitle": "Спринт № 213",
+      "values": [
+        {"title": "203", "value": 47798},
+        {"title": "204", "value": 68590},
+        {"title": "205", "value": 55472},
+        {"title": "206", "value": 63073},
+        {"title": "207", "value": 51917},
+        {"title": "208", "value": 65852},
+        {"title": "209", "value": 60693},
+        {"title": "210", "value": 70631},
+        {"title": "211", "value": 57299},
+        {"title": "212", "value": 62839},
+        {"title": "213", "value": 74156, "active": true},
+        {"title": "214", "value": 0},
+        {"title": "215", "value": 0},
+        {"title": "216", "value": 0},
+        {"title": "217", "value": 0},
+        {"title": "218", "value": 0}
+      ],
+      "users": [
+        {"id": 12, "name": "Алексей Ярошевич", "avatar": "12.jpg", "valueText": "8739"},
+        {"id": 8, "name": "Александр Иванков", "avatar": "8.jpg", "valueText": "7538"},
+        {"id": 10, "name": "Яна Берникова", "avatar": "10.jpg", "valueText": "6845"}
+      ]
+    }
+  },
+  {
+    "alias": "diagram",
+    "data": {
+      "title": "Размер коммитов",
+      "subtitle": "Спринт № 213",
+      "totalText": "182 коммита",
+      "differenceText": "+42 с прошлого спринта",
+      "categories": [
+        {"title": "> 1001 строки", "valueText": "30 коммитов", "differenceText": "+8 коммитов"},
+        {"title": "501 — 1000 строк", "valueText": "32 коммита", "differenceText": "+6 коммитов"},
+        {"title": "101 — 500 строк", "valueText": "58 коммитов", "differenceText": "+16 коммитов"},
+        {"title": "1 — 100 строк", "valueText": "62 коммита", "differenceText": "+12 коммитов"}
+      ]
+    }
+  },
+  {
+    "alias": "activity",
+    "data": {
+      "title": "Коммиты, 1 неделя",
+      "subtitle": "Спринт № 213",
+      "data": {
+        "mon": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 3, 2, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        "tue": [0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 0, 4, 0, 0, 0, 0, 1, 0, 3, 0, 0, 2, 1, 0],
+        "wed": [1, 0, 0, 0, 1, 0, 5, 0, 0, 4, 0, 0, 0, 5, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1],
+        "thu": [0, 1, 0, 1, 0, 0, 0, 0, 6, 0, 1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 1, 0, 0, 0],
+        "fri": [0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 5, 0, 4, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0],
+        "sat": [0, 0, 0, 0, 2, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+        "sun": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+      }
+    }
+  },
+  {
+    "alias": "activity",
+    "data": {
+      "title": "Коммиты, 2 неделя",
+      "subtitle": "Спринт № 213",
+      "data": {
+        "mon": [0, 1, 1, 1, 0, 0, 0, 0, 0, 4, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 2],
+        "tue": [0, 1, 2, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "wed": [0, 0, 0, 0, 2, 0, 1, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0],
+        "thu": [0, 0, 2, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 2, 0, 3, 0, 1, 1, 0, 0, 0],
+        "fri": [0, 0, 0, 1, 1, 0, 2, 0, 4, 0, 0, 0, 2, 0, 3, 2, 0, 0, 0, 0, 1, 1, 0, 1],
+        "sat": [1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 2, 2, 0, 2, 0, 0],
+        "sun": [0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1]
+      }
+    }
+  }
+];
 const searchParams = new URLSearchParams(document.location.search);
+const slideIndex = searchParams.get('slide') || 0;
 const theme = searchParams.get('theme') || 'dark';
 let svgSprite = document.querySelector('#svg-sprite');
 
@@ -1057,339 +1289,338 @@ if (!svgSprite) {
   svgSprite.classList.add(`visually-hidden`);
   document.body.insertAdjacentElement(`afterbegin`, svgSprite);
 }
-
 document.body.classList.add(`theme_${theme}`);
 
 if (theme === 'dark') {
   svgSprite.innerHTML = `
       <defs>
-      <symbol id="button" viewbox="0 0 64 64">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M32 62C48.5685 62 62 48.5685 62 32C62 15.4315 48.5685 2 32 2C15.4315 2 2 15.4315 2 32C2 48.5685 15.4315 62 32 62ZM32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64ZM59 32C59 46.9117 46.9117 59 32 59C17.0883 59 5 46.9117 5 32C5 17.0883 17.0883 5 32 5C46.9117 5 59 17.0883 59 32ZM25.0607 27.9393C24.4749 27.3536 23.5251 27.3536 22.9393 27.9393C22.3536 28.5251 22.3536 29.4749 22.9393 30.0607L30.9393 38.0607C31.5251 38.6464 32.4749 38.6464 33.0607 38.0607L41.0607 30.0607C41.6464 29.4749 41.6464 28.5251 41.0607 27.9393C40.4749 27.3536 39.5251 27.3536 38.9393 27.9393L32 34.8787L25.0607 27.9393Z"></path>
-      </symbol>
-      <symbol id="bar-s" viewbox="0 0 34 34">
-          <mask id="mask0-s" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="1" width="34" height="32">
-              <path d="M0 14.9767C0 13.7308 0.580524 12.5561 1.5702 11.7993L14.5702 1.85808C16.0044 0.761324 17.9956 0.761325 19.4298 1.85808L32.4298 11.7993C33.4195 12.5561 34 13.7308 34 14.9767V19.0233C34 20.2692 33.4195 21.4439 32.4298 22.2007L19.4298 32.1419C17.9956 33.2387 16.0044 33.2387 14.5702 32.1419L1.5702 22.2007C0.580524 21.4439 0 20.2692 0 19.0233V14.9767Z" fill="#151311"></path>
-          </mask>
-          <g mask="url(#mask0-s)">
-              <g filter="url(#filter0_ii-s)">
-                  <path d="M0 13.9883C0 13.3654 0.290262 12.778 0.7851 12.3996L15.7851 0.929041C16.5022 0.380661 17.4978 0.380662 18.2149 0.929041L33.2149 12.3996C33.7097 12.778 34 13.3654 34 13.9883V20.0117C34 20.6346 33.7097 21.222 33.2149 21.6004L18.2149 33.071C17.4978 33.6193 16.5022 33.6193 15.7851 33.071L0.785101 21.6004C0.290263 21.222 0 20.6346 0 20.0117V13.9883Z" fill="url(#paint0_radial-s)" fill-opacity="0.65"></path>
+          <symbol id="button" viewbox="0 0 64 64">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M32 62C48.5685 62 62 48.5685 62 32C62 15.4315 48.5685 2 32 2C15.4315 2 2 15.4315 2 32C2 48.5685 15.4315 62 32 62ZM32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 49.6731 14.3269 64 32 64ZM59 32C59 46.9117 46.9117 59 32 59C17.0883 59 5 46.9117 5 32C5 17.0883 17.0883 5 32 5C46.9117 5 59 17.0883 59 32ZM25.0607 27.9393C24.4749 27.3536 23.5251 27.3536 22.9393 27.9393C22.3536 28.5251 22.3536 29.4749 22.9393 30.0607L30.9393 38.0607C31.5251 38.6464 32.4749 38.6464 33.0607 38.0607L41.0607 30.0607C41.6464 29.4749 41.6464 28.5251 41.0607 27.9393C40.4749 27.3536 39.5251 27.3536 38.9393 27.9393L32 34.8787L25.0607 27.9393Z"></path>
+          </symbol>
+          <symbol id="bar-s" viewbox="0 0 34 34">
+              <mask id="mask0-s" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="1" width="34" height="32">
+                  <path d="M0 14.9767C0 13.7308 0.580524 12.5561 1.5702 11.7993L14.5702 1.85808C16.0044 0.761324 17.9956 0.761325 19.4298 1.85808L32.4298 11.7993C33.4195 12.5561 34 13.7308 34 14.9767V19.0233C34 20.2692 33.4195 21.4439 32.4298 22.2007L19.4298 32.1419C17.9956 33.2387 16.0044 33.2387 14.5702 32.1419L1.5702 22.2007C0.580524 21.4439 0 20.2692 0 19.0233V14.9767Z" fill="#151311"></path>
+              </mask>
+              <g mask="url(#mask0-s)">
+                  <g filter="url(#filter0_ii-s)">
+                      <path d="M0 13.9883C0 13.3654 0.290262 12.778 0.7851 12.3996L15.7851 0.929041C16.5022 0.380661 17.4978 0.380662 18.2149 0.929041L33.2149 12.3996C33.7097 12.778 34 13.3654 34 13.9883V20.0117C34 20.6346 33.7097 21.222 33.2149 21.6004L18.2149 33.071C17.4978 33.6193 16.5022 33.6193 15.7851 33.071L0.785101 21.6004C0.290263 21.222 0 20.6346 0 20.0117V13.9883Z" fill="url(#paint0_radial-s)" fill-opacity="0.65"></path>
+                  </g>
+                  <g filter="url(#filter1_iif-s)">
+                      <path d="M34 20.0117V13L17 26V34L33.2149 21.6004C33.7097 21.222 34 20.6346 34 20.0117Z" fill="url(#paint1_radial-s)" fill-opacity="0.8"></path>
+                  </g>
+                  <g filter="url(#filter2_if-s)">
+                      <path d="M17 0L0 13L14.5702 24.1419C16.0044 25.2387 17.9956 25.2387 19.4298 24.1419L34 13L17 0Z" fill="url(#paint2_radial-s)" fill-opacity="0.7"></path>
+                  </g>
               </g>
-              <g filter="url(#filter1_iif-s)">
-                  <path d="M34 20.0117V13L17 26V34L33.2149 21.6004C33.7097 21.222 34 20.6346 34 20.0117Z" fill="url(#paint1_radial-s)" fill-opacity="0.8"></path>
+              <defs>
+                  <filter id="filter0_ii-s" x="-1" y="0.517754" width="36" height="33.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="1" dy="1"></feoffset>
+                      <fegaussianblur stddeviation="8"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1"></feoffset>
+                      <fegaussianblur stddeviation="1"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_iif-s" x="15" y="11" width="21" height="25" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="8"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1" dy="1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_if-s" x="-2" y="-1" width="37" height="26.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2"></feoffset>
+                      <fegaussianblur stddeviation="1"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.9272 0 0 0 0 0.91928 0 0 0 0 0.9128 0 0 0 0.15 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.5" result="effect2_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.2818 26.6165) rotate(-156.928) scale(77.2877 1713.92)">
+                      <stop stop-color="#131110"></stop>
+                      <stop offset="1"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(23.0802 22.3714) rotate(-101.873) scale(99.4275 2181.5)">
+                      <stop offset="0.0001" stop-color="#3A3530"></stop>
+                      <stop offset="1" stop-color="#49423D"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 18.9502) rotate(-163.167) scale(41.2679 899.814)">
+                      <stop stop-color="#3E3934"></stop>
+                      <stop offset="1" stop-color="#221F1C"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-m" viewbox="0 0 34 41">
+              <mask id="mask0-m" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="40">
+                  <path opacity="0.95" d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint0_radial-m)" fill-opacity="0.95"></path>
+              </mask>
+              <g mask="url(#mask0-m)">
+                  <g filter="url(#filter0_ii-m)">
+                      <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint1_radial-m)" fill-opacity="0.9"></path>
+                  </g>
+                  <g filter="url(#filter1_iif-m)">
+                      <path d="M34 27.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V41L33.2149 28.6004C33.7097 28.222 34 27.6346 34 27.0117Z" fill="url(#paint2_radial-m)" fill-opacity="0.9"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-m)">
+                      <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-m)" fill-opacity="0.9"></path>
+                  </g>
               </g>
-              <g filter="url(#filter2_if-s)">
-                  <path d="M17 0L0 13L14.5702 24.1419C16.0044 25.2387 17.9956 25.2387 19.4298 24.1419L34 13L17 0Z" fill="url(#paint2_radial-s)" fill-opacity="0.7"></path>
+              <defs>
+                  <filter id="filter0_ii-m" x="-1" y="0.0355148" width="37" height="41.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_iif-m" x="15" y="-3" width="21" height="46" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="8"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1" dy="1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-m" x="-2" y="-2" width="38" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="8"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2"></feoffset>
+                      <fegaussianblur stddeviation="1"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
+                      <stop offset="0.0001" stop-color="#231600"></stop>
+                      <stop offset="1" stop-color="#705C5E"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
+                      <stop offset="0.0001" stop-color="#231600"></stop>
+                      <stop offset="1" stop-color="#705C5E"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(37.2501 16.8307) rotate(-115.254) scale(83.8533 1990.08)">
+                      <stop offset="0.0001" stop-color="#231600"></stop>
+                      <stop offset="1" stop-color="#705C5E"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint3_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
+                      <stop offset="0.0001" stop-color="#231600"></stop>
+                      <stop offset="1" stop-color="#705C5E"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-l" viewbox="0 0 34 57">
+              <mask id="mask0-l" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="56">
+                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint0_radial-l)" fill-opacity="0.95"></path>
+              </mask>
+              <g mask="url(#mask0-l)">
+                  <g filter="url(#filter0_ii-l)">
+                      <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint1_radial-l)" fill-opacity="0.9"></path>
+                  </g>
+                  <g filter="url(#filter1_dif-l)">
+                      <path d="M34 43.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V57L33.2149 44.6004C33.7097 44.222 34 43.6346 34 43.0117Z" fill="url(#paint2_radial-l)"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-l)">
+                      <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-l)" fill-opacity="0.8"></path>
+                  </g>
               </g>
-          </g>
-          <defs>
-              <filter id="filter0_ii-s" x="-1" y="0.517754" width="36" height="33.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="1" dy="1"></feoffset>
-                  <fegaussianblur stddeviation="8"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1"></feoffset>
-                  <fegaussianblur stddeviation="1"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-              </filter>
-              <filter id="filter1_iif-s" x="15" y="11" width="21" height="25" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="8"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.440542 0 0 0 0 0.400529 0 0 0 0 0.367792 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1" dy="1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <filter id="filter2_if-s" x="-2" y="-1" width="37" height="26.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-2"></feoffset>
-                  <fegaussianblur stddeviation="1"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.9272 0 0 0 0 0.91928 0 0 0 0 0.9128 0 0 0 0.15 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="0.5" result="effect2_foregroundBlur"></fegaussianblur>
-              </filter>
-              <radialgradient id="paint0_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.2818 26.6165) rotate(-156.928) scale(77.2877 1713.92)">
-                  <stop stop-color="#131110"></stop>
-                  <stop offset="1"></stop>
-              </radialgradient>
-              <radialgradient id="paint1_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(23.0802 22.3714) rotate(-101.873) scale(99.4275 2181.5)">
-                  <stop offset="0.0001" stop-color="#3A3530"></stop>
-                  <stop offset="1" stop-color="#49423D"></stop>
-              </radialgradient>
-              <radialgradient id="paint2_radial-s" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 18.9502) rotate(-163.167) scale(41.2679 899.814)">
-                  <stop stop-color="#3E3934"></stop>
-                  <stop offset="1" stop-color="#221F1C"></stop>
-              </radialgradient>
-          </defs>
-      </symbol>
-      <symbol id="bar-m" viewbox="0 0 34 41">
-          <mask id="mask0-m" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="40">
-              <path opacity="0.95" d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint0_radial-m)" fill-opacity="0.95"></path>
-          </mask>
-          <g mask="url(#mask0-m)">
-              <g filter="url(#filter0_ii-m)">
-                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V26.0233C34 27.2692 33.4195 28.4439 32.4298 29.2007L19.4298 39.1419C17.9956 40.2387 16.0044 40.2387 14.5702 39.1419L1.5702 29.2007C0.580524 28.4439 0 27.2692 0 26.0233V13.9767Z" fill="url(#paint1_radial-m)" fill-opacity="0.9"></path>
+              <defs>
+                  <filter id="filter0_ii-l" x="-1" y="0.0355148" width="37" height="57.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1" dy="1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_dif-l" x="12" y="-6" width="27" height="71" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
+                      <feoffset dy="4"></feoffset>
+                      <fegaussianblur stddeviation="2"></fegaussianblur>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
+                      <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
+                      <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2" dy="-1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="2.5" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-l" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="8"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.922292 0 0 0 0 0.60255 0 0 0 0 0.0485417 0 0 0 0.5 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
+                      <stop offset="0.0001" stop-color="#211602"></stop>
+                      <stop offset="1" stop-color="#AC7109"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
+                      <stop offset="0.0001" stop-color="#211602"></stop>
+                      <stop offset="1" stop-color="#AC7109"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 47.8734) rotate(-106.704) scale(52.0707 812.895)">
+                      <stop offset="0.0625" stop-color="#201502"></stop>
+                      <stop offset="1" stop-color="#C7830A"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint3_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
+                      <stop offset="0.0001" stop-color="#211602"></stop>
+                      <stop offset="1" stop-color="#AC7109"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
+          <symbol id="bar-xl" viewbox="0 0 34 73">
+              <mask id="mask0-xl" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="72">
+                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint0_radial-xl)" fill-opacity="0.95"></path>
+              </mask>
+              <g mask="url(#mask0-xl)">
+                  <g filter="url(#filter0_ii-xl)">
+                      <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint1_radial-xl)"></path>
+                  </g>
+                  <g filter="url(#filter1_dif-xl)">
+                      <path d="M34 59.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V73L33.2149 60.6004C33.7097 60.222 34 59.6346 34 59.0117Z" fill="url(#paint2_radial-xl)"></path>
+                  </g>
+                  <g filter="url(#filter2_iif-xl)">
+                      <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-xl)" fill-opacity="0.8"></path>
+                  </g>
               </g>
-              <g filter="url(#filter1_iif-m)">
-                  <path d="M34 27.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V41L33.2149 28.6004C33.7097 28.222 34 27.6346 34 27.0117Z" fill="url(#paint2_radial-m)" fill-opacity="0.9"></path>
-              </g>
-              <g filter="url(#filter2_iif-m)">
-                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-m)" fill-opacity="0.9"></path>
-              </g>
-          </g>
-          <defs>
-              <filter id="filter0_ii-m" x="-1" y="0.0355148" width="37" height="41.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-              </filter>
-              <filter id="filter1_iif-m" x="15" y="-3" width="21" height="46" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="8"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1" dy="1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="1" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <filter id="filter2_iif-m" x="-2" y="-2" width="38" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="8"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.362929 0 0 0 0 0.455371 0 0 0 0 0.554189 0 0 0 0.6 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-2"></feoffset>
-                  <fegaussianblur stddeviation="1"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <radialgradient id="paint0_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
-                  <stop offset="0.0001" stop-color="#231600"></stop>
-                  <stop offset="1" stop-color="#705C5E"></stop>
-              </radialgradient>
-              <radialgradient id="paint1_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3048 24.3353) rotate(-113.885) scale(82.2113 2670.94)">
-                  <stop offset="0.0001" stop-color="#231600"></stop>
-                  <stop offset="1" stop-color="#705C5E"></stop>
-              </radialgradient>
-              <radialgradient id="paint2_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(37.2501 16.8307) rotate(-115.254) scale(83.8533 1990.08)">
-                  <stop offset="0.0001" stop-color="#231600"></stop>
-                  <stop offset="1" stop-color="#705C5E"></stop>
-              </radialgradient>
-              <radialgradient id="paint3_radial-m" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
-                  <stop offset="0.0001" stop-color="#231600"></stop>
-                  <stop offset="1" stop-color="#705C5E"></stop>
-              </radialgradient>
-          </defs>
-      </symbol>
-      <symbol id="bar-l" viewbox="0 0 34 57">
-          <mask id="mask0-l" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="56">
-              <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint0_radial-l)" fill-opacity="0.95"></path>
-          </mask>
-          <g mask="url(#mask0-l)">
-              <g filter="url(#filter0_ii-l)">
-                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V42.0233C34 43.2692 33.4195 44.4439 32.4298 45.2007L19.4298 55.1419C17.9956 56.2387 16.0044 56.2387 14.5702 55.1419L1.5702 45.2007C0.580524 44.4439 0 43.2692 0 42.0233V13.9767Z" fill="url(#paint1_radial-l)" fill-opacity="0.9"></path>
-              </g>
-              <g filter="url(#filter1_dif-l)">
-                  <path d="M34 43.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V57L33.2149 44.6004C33.7097 44.222 34 43.6346 34 43.0117Z" fill="url(#paint2_radial-l)"></path>
-              </g>
-              <g filter="url(#filter2_iif-l)">
-                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-l)" fill-opacity="0.8"></path>
-              </g>
-          </g>
-          <defs>
-              <filter id="filter0_ii-l" x="-1" y="0.0355148" width="37" height="57.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1" dy="1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-              </filter>
-              <filter id="filter1_dif-l" x="12" y="-6" width="27" height="71" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
-                  <feoffset dy="4"></feoffset>
-                  <fegaussianblur stddeviation="2"></fegaussianblur>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
-                  <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
-                  <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-2" dy="-1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="2.5" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <filter id="filter2_iif-l" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="8"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-2"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.922292 0 0 0 0 0.60255 0 0 0 0 0.0485417 0 0 0 0.5 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <radialgradient id="paint0_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
-                  <stop offset="0.0001" stop-color="#211602"></stop>
-                  <stop offset="1" stop-color="#AC7109"></stop>
-              </radialgradient>
-              <radialgradient id="paint1_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(25.3053 42.989) rotate(-109.233) scale(70.4297 2348.99)">
-                  <stop offset="0.0001" stop-color="#211602"></stop>
-                  <stop offset="1" stop-color="#AC7109"></stop>
-              </radialgradient>
-              <radialgradient id="paint2_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 47.8734) rotate(-106.704) scale(52.0707 812.895)">
-                  <stop offset="0.0625" stop-color="#201502"></stop>
-                  <stop offset="1" stop-color="#C7830A"></stop>
-              </radialgradient>
-              <radialgradient id="paint3_radial-l" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(30.4998 17.9502) rotate(-157.423) scale(77.4885 1689.58)">
-                  <stop offset="0.0001" stop-color="#211602"></stop>
-                  <stop offset="1" stop-color="#AC7109"></stop>
-              </radialgradient>
-          </defs>
-      </symbol>
-      <symbol id="bar-xl" viewbox="0 0 34 73">
-          <mask id="mask0-xl" mask-type="alpha" maskunits="userSpaceOnUse" x="0" y="0" width="34" height="72">
-              <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint0_radial-xl)" fill-opacity="0.95"></path>
-          </mask>
-          <g mask="url(#mask0-xl)">
-              <g filter="url(#filter0_ii-xl)">
-                  <path d="M0 13.9767C0 12.7308 0.580524 11.5561 1.5702 10.7993L14.5702 0.858083C16.0044 -0.238676 17.9956 -0.238675 19.4298 0.858083L32.4298 10.7993C33.4195 11.5561 34 12.7308 34 13.9767V58.0233C34 59.2692 33.4195 60.4439 32.4298 61.2007L19.4298 71.1419C17.9956 72.2387 16.0044 72.2387 14.5702 71.1419L1.5702 61.2007C0.580524 60.4439 0 59.2692 0 58.0233V13.9767Z" fill="url(#paint1_radial-xl)"></path>
-              </g>
-              <g filter="url(#filter1_dif-xl)">
-                  <path d="M34 59.0117V12.9883C34 12.3654 33.7097 11.778 33.2149 11.3996L17 -1V73L33.2149 60.6004C33.7097 60.222 34 59.6346 34 59.0117Z" fill="url(#paint2_radial-xl)"></path>
-              </g>
-              <g filter="url(#filter2_iif-xl)">
-                  <path d="M17 -1L0 12L14.5702 23.1419C16.0044 24.2387 17.9956 24.2387 19.4298 23.1419L34 12L17 -1Z" fill="url(#paint3_radial-xl)" fill-opacity="0.8"></path>
-              </g>
-          </g>
-          <defs>
-              <filter id="filter0_ii-xl" x="-1" y="0.0355072" width="37" height="73.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1" dy="1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-              </filter>
-              <filter id="filter1_dif-xl" x="13" y="-5" width="25" height="86" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
-                  <feoffset dy="4"></feoffset>
-                  <fegaussianblur stddeviation="2"></fegaussianblur>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
-                  <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
-                  <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-1" dy="-1"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="2" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <filter id="filter2_iif-xl" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                  <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
-                  <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="2" dy="2"></feoffset>
-                  <fegaussianblur stddeviation="15.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
-                  <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
-                  <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
-                  <feoffset dx="-2"></feoffset>
-                  <fegaussianblur stddeviation="0.5"></fegaussianblur>
-                  <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
-                  <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
-                  <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
-                  <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
-              </filter>
-              <radialgradient id="paint0_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
-                  <stop stop-color="#201502"></stop>
-                  <stop offset="1" stop-color="#C7830A"></stop>
-              </radialgradient>
-              <radialgradient id="paint1_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
-                  <stop stop-color="#201502"></stop>
-                  <stop offset="1" stop-color="#C7830A"></stop>
-              </radialgradient>
-              <radialgradient id="paint2_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 61.3557) rotate(-100.534) scale(54.7003 683.353)">
-                  <stop stop-color="#201502"></stop>
-                  <stop offset="1" stop-color="#C7830A"></stop>
-              </radialgradient>
-              <radialgradient id="paint3_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(19.1537 23.663) rotate(-102.078) scale(61.741 1819.91)">
-                  <stop stop-color="#201502"></stop>
-                  <stop offset="1" stop-color="#C7830A"></stop>
-              </radialgradient>
-          </defs>
-      </symbol>
+              <defs>
+                  <filter id="filter0_ii-xl" x="-1" y="0.0355072" width="37" height="73.929" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1" dy="1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                  </filter>
+                  <filter id="filter1_dif-xl" x="13" y="-5" width="25" height="86" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></fecolormatrix>
+                      <feoffset dy="4"></feoffset>
+                      <fegaussianblur stddeviation="2"></fegaussianblur>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"></fecolormatrix>
+                      <feblend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"></feblend>
+                      <feblend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-1" dy="-1"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="2" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <filter id="filter2_iif-xl" x="-1" y="-2" width="37" height="27.9645" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feflood flood-opacity="0" result="BackgroundImageFix"></feflood>
+                      <feblend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="2" dy="2"></feoffset>
+                      <fegaussianblur stddeviation="15.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.623 0 0 0 0 0.05 0 0 0 0.9 0"></fecolormatrix>
+                      <feblend mode="normal" in2="shape" result="effect1_innerShadow"></feblend>
+                      <fecolormatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></fecolormatrix>
+                      <feoffset dx="-2"></feoffset>
+                      <fegaussianblur stddeviation="0.5"></fegaussianblur>
+                      <fecomposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"></fecomposite>
+                      <fecolormatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"></fecolormatrix>
+                      <feblend mode="normal" in2="effect1_innerShadow" result="effect2_innerShadow"></feblend>
+                      <fegaussianblur stddeviation="0.5" result="effect3_foregroundBlur"></fegaussianblur>
+                  </filter>
+                  <radialgradient id="paint0_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
+                      <stop stop-color="#201502"></stop>
+                      <stop offset="1" stop-color="#C7830A"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint1_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(28.3313 64.8204) rotate(-102.092) scale(67.4131 846.864)">
+                      <stop stop-color="#201502"></stop>
+                      <stop offset="1" stop-color="#C7830A"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint2_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(31.9667 61.3557) rotate(-100.534) scale(54.7003 683.353)">
+                      <stop stop-color="#201502"></stop>
+                      <stop offset="1" stop-color="#C7830A"></stop>
+                  </radialgradient>
+                  <radialgradient id="paint3_radial-xl" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(19.1537 23.663) rotate(-102.078) scale(61.741 1819.91)">
+                      <stop stop-color="#201502"></stop>
+                      <stop offset="1" stop-color="#C7830A"></stop>
+                  </radialgradient>
+              </defs>
+          </symbol>
       </defs>
   `;
 } else {
@@ -1716,3 +1947,6 @@ if (theme === 'dark') {
   </defs>
   `;
 }
+
+document.querySelector('#output').innerHTML = window.renderTemplate(data[slideIndex].alias, data[slideIndex].data);
+window.postRenderScript(data[slideIndex].alias, data[slideIndex].data);
